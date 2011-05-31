@@ -75,6 +75,13 @@
     [[self.account.manager getServersWithCallback] success:^(OpenStackRequest *request) {
         [self enableRefreshButton];
         self.account.servers = [NSMutableDictionary dictionaryWithDictionary:[request servers]];
+
+        for (NSString *serverId in self.account.servers) {
+            Server *server = [self.account.servers objectForKey:serverId];
+            server.image = [self.account.images objectForKey:[NSNumber numberWithInt:server.imageId]];
+            server.flavor = [self.account.flavors objectForKey:[NSNumber numberWithInt:server.flavorId]];
+        }
+        
         [self.account persist];
         [self.tableView reloadData];
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
