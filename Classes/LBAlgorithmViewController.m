@@ -9,6 +9,7 @@
 #import "LBAlgorithmViewController.h"
 #import "LoadBalancer.h"
 #import "UIViewController+Conveniences.h"
+#import "LBAlgorithmAnimationViewController.h"
 
 #define kRandom 0
 #define kRoundRobin 1
@@ -217,7 +218,9 @@
 #pragma mark - Button Handlers
 
 - (void)cameraButtonPressed:(id)sender {
-    [self alert:@"Algorithm Video" message:@"Not yet implemented."];
+    LBAlgorithmAnimationViewController *vc = [[LBAlgorithmAnimationViewController alloc] initWithAlgorithm:self.loadBalancer.algorithm];
+    [self.navigationController presentModalViewController:vc animated:YES];
+    [vc release];
 }
 
 @end

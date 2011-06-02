@@ -43,6 +43,11 @@
 		2725061A1387382A009E5EB4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272506191387382A009E5EB4 /* Security.framework */; };
 		2725061C13873830009E5EB4 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2725061B13873830009E5EB4 /* CFNetwork.framework */; };
 		2725061E13873836009E5EB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2725061D13873835009E5EB4 /* UIKit.framework */; };
+		27265A1C1397EAE5000617C0 /* LBAlgorithmAnimationViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27265A191397EAE5000617C0 /* LBAlgorithmAnimationViewController.h */; };
+		27265A1D1397EAE5000617C0 /* LBAlgorithmAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27265A1A1397EAE5000617C0 /* LBAlgorithmAnimationViewController.m */; };
+		27265A1E1397EAE5000617C0 /* LBAlgorithmAnimationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27265A1B1397EAE5000617C0 /* LBAlgorithmAnimationViewController.xib */; };
+		27265A201397EEEA000617C0 /* LBAlgorithmAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27265A1A1397EAE5000617C0 /* LBAlgorithmAnimationViewController.m */; };
+		27265A211397EEF2000617C0 /* LBAlgorithmAnimationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27265A1B1397EAE5000617C0 /* LBAlgorithmAnimationViewController.xib */; };
 		272833A61270C87C00F8CCDD /* OpenStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272833A41270C87C00F8CCDD /* OpenStackViewController.m */; };
 		272833A81270C87C00F8CCDD /* OpenStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272833A41270C87C00F8CCDD /* OpenStackViewController.m */; };
 		272834C41270D19000F8CCDD /* AccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272834C21270D19000F8CCDD /* AccountManager.m */; };
@@ -1024,6 +1029,9 @@
 		272506191387382A009E5EB4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		2725061B13873830009E5EB4 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		2725061D13873835009E5EB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		27265A191397EAE5000617C0 /* LBAlgorithmAnimationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = LBAlgorithmAnimationViewController.h; sourceTree = "<group>"; };
+		27265A1A1397EAE5000617C0 /* LBAlgorithmAnimationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBAlgorithmAnimationViewController.m; sourceTree = "<group>"; };
+		27265A1B1397EAE5000617C0 /* LBAlgorithmAnimationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBAlgorithmAnimationViewController.xib; sourceTree = "<group>"; };
 		272833A31270C87C00F8CCDD /* OpenStackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenStackViewController.h; sourceTree = "<group>"; };
 		272833A41270C87C00F8CCDD /* OpenStackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenStackViewController.m; sourceTree = "<group>"; };
 		272834C11270D19000F8CCDD /* AccountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountManager.h; sourceTree = "<group>"; };
@@ -2137,6 +2145,9 @@
 				2728B4F613786CEE007DBD80 /* LBServersViewController.h */,
 				2728B4F713786CEE007DBD80 /* LBServersViewController.m */,
 				2728B4F813786CEE007DBD80 /* LBServersViewController.xib */,
+				27265A191397EAE5000617C0 /* LBAlgorithmAnimationViewController.h */,
+				27265A1A1397EAE5000617C0 /* LBAlgorithmAnimationViewController.m */,
+				27265A1B1397EAE5000617C0 /* LBAlgorithmAnimationViewController.xib */,
 			);
 			name = "Add Load Balancer";
 			sourceTree = "<group>";
@@ -3477,6 +3488,7 @@
 				27CFA1061396DA3B0026701A /* wrr-22_s22.png in Resources */,
 				27CFA1081396DA3B0026701A /* wrr-23_s23.png in Resources */,
 				27CFA10A1396DA3B0026701A /* wrr-24_s24.png in Resources */,
+				27265A1E1397EAE5000617C0 /* LBAlgorithmAnimationViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3764,7 +3776,7 @@
 				27CFA1071396DA3B0026701A /* wrr-22_s22.png in Resources */,
 				27CFA1091396DA3B0026701A /* wrr-23_s23.png in Resources */,
 				27CFA10B1396DA3B0026701A /* wrr-24_s24.png in Resources */,
->>>>>>> algorithm animations
+				27265A211397EEF2000617C0 /* LBAlgorithmAnimationViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3942,6 +3954,8 @@
 				7F8F373D13859EDA0034710B /* DDXMLElementAdditions.m in Sources */,
 				7F8F374013859EDA0034710B /* DDXMLNode.m in Sources */,
 				7F8F374313859EDA0034710B /* NSStringAdditions.m in Sources */,
+				27265A1C1397EAE5000617C0 /* LBAlgorithmAnimationViewController.h in Sources */,
+				27265A1D1397EAE5000617C0 /* LBAlgorithmAnimationViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4093,6 +4107,7 @@
 				7F8F373F13859EDA0034710B /* DDXMLElementAdditions.m in Sources */,
 				7F8F374213859EDA0034710B /* DDXMLNode.m in Sources */,
 				7F8F374513859EDA0034710B /* NSStringAdditions.m in Sources */,
+				27265A201397EEEA000617C0 /* LBAlgorithmAnimationViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
