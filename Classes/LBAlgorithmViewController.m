@@ -57,7 +57,6 @@
                        @"LEAST_CONNECTIONS", @"Least Connections",
                        @"WEIGHTED_LEAST_CONNECTIONS", @"Weighted Least Connections",
                        nil];
-
 }
 
 #pragma mark - Table view data source
@@ -157,7 +156,6 @@
     }
     
     cell.textLabel.text = @"";
-//    cell.imageView.image = [UIImage imageNamed:@"purple-camera.png"];
     
     switch (indexPath.section) {
         case kRandom:
@@ -217,8 +215,33 @@
 
 #pragma mark - Button Handlers
 
-- (void)cameraButtonPressed:(id)sender {
-    LBAlgorithmAnimationViewController *vc = [[LBAlgorithmAnimationViewController alloc] initWithAlgorithm:self.loadBalancer.algorithm];
+- (void)cameraButtonPressed:(UIButton *)button {
+    
+    UITableViewCell *cell = (UITableViewCell *) [button superview];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    NSString *algorithm = @"";
+    
+    switch (indexPath.section) {
+        case kRandom:
+            algorithm = @"Random";
+            break;
+        case kRoundRobin:
+            algorithm = @"Round Robin";
+            break;
+        case kWeightedRoundRobin:
+            algorithm = @"Weighted Round Robin";
+            break;
+        case kLeastConnections:
+            algorithm = @"Least Connections";
+            break;
+        case kWeightedLeastConnections:
+            algorithm = @"Weighted Least Connections";
+            break;
+        default:
+            break;
+    }
+
+    LBAlgorithmAnimationViewController *vc = [[LBAlgorithmAnimationViewController alloc] initWithAlgorithm:algorithm];
     [self.navigationController presentModalViewController:vc animated:YES];
     [vc release];
 }

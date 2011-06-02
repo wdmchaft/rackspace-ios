@@ -30,22 +30,45 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)loadAnimation {
+    NSInteger imageCount = 0;
+    NSString *abbreviation = @"";
     
-    self.navigationBar.topItem.title = self.algorithm;
-
-    NSMutableArray *images = [[NSMutableArray alloc] initWithCapacity:17];
-    for (int i = 1; i < 18; i++) {
-        NSString *filename = [NSString stringWithFormat:@"rr-%02d_s%02d.png", i, i];
+    if ([algorithm isEqualToString:@"Round Robin"]) {
+        imageCount = 17;
+        abbreviation = @"rr";
+    } else if ([algorithm isEqualToString:@"Weighted Round Robin"]) {
+        imageCount = 24;
+        abbreviation = @"wrr";
+    } else if ([algorithm isEqualToString:@"Weighted Least Connections"]) {
+        imageCount = 21;
+        abbreviation = @"wlc";
+    } else if ([algorithm isEqualToString:@"Random"]) {
+        imageCount = 17;
+        abbreviation = @"random";
+    } else if ([algorithm isEqualToString:@"Least Connections"]) {
+        imageCount = 14;
+        abbreviation = @"lc";
+    }
+    
+    NSMutableArray *images = [[NSMutableArray alloc] initWithCapacity:imageCount];
+    for (int i = 1; i < imageCount + 1; i++) {
+        NSString *filename = [NSString stringWithFormat:@"%@-%02d_s%02d.png", abbreviation, i, i];
+        NSLog(@"about to add %@", filename);
         [images addObject:[UIImage imageNamed:filename]];
     }
     self.imageView.animationImages = [NSArray arrayWithArray:images];
     self.imageView.animationRepeatCount = 0;
-    self.imageView.animationDuration = 5;
+    self.imageView.animationDuration = imageCount * .4;
     [self.imageView startAnimating];
-
+    
     [images release];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];    
+    self.navigationBar.topItem.title = self.algorithm;
+    [self loadAnimation];
 }
 
 - (void)viewDidUnload {
