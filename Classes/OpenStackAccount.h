@@ -83,6 +83,7 @@
 - (void)refreshCollections;
 - (NSArray *)loadBalancerURLs;
 
+- (NSString *)loadBalancerEndpointForRegion:(NSString *)region;
 - (NSString *)accountNumber;
 
 - (NSArray *)sortedServers;

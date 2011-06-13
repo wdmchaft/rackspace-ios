@@ -54,7 +54,6 @@
     NSMutableArray *images = [[NSMutableArray alloc] initWithCapacity:imageCount];
     for (int i = 1; i < imageCount + 1; i++) {
         NSString *filename = [NSString stringWithFormat:@"%@-%02d_s%02d.png", abbreviation, i, i];
-        NSLog(@"about to add %@", filename);
         [images addObject:[UIImage imageNamed:filename]];
     }
     self.imageView.animationImages = [NSArray arrayWithArray:images];

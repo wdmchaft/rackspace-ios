@@ -80,7 +80,7 @@
                 [folderViewController.tableView reloadData];
                 [activityIndicatorView removeFromSuperviewAndRelease];
                 [self dismissModalViewControllerAnimated:YES];
-                
+                [newFolder release];
                 [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
             }];
             

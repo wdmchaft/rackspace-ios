@@ -303,6 +303,17 @@ static NSMutableDictionary *timers = nil;
     return accountNumber;
 }
 
+- (NSString *)loadBalancerEndpointForRegion:(NSString *)region {
+    NSString *accountNumber = [self accountNumber];
+    if ([region isEqualToString:@"DFW"]) {
+        return [NSString stringWithFormat:@"https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+    } else if ([region isEqualToString:@"ORD"]) {
+        return [NSString stringWithFormat:@"https://ord.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+    } else {
+        return @"";
+    }
+}
+
 - (NSArray *)loadBalancerURLs {
     NSString *accountNumber = [self accountNumber];
     

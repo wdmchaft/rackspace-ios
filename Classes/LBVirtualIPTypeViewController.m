@@ -11,6 +11,7 @@
 #import "LoadBalancer.h"
 #import "AccountManager.h"
 #import "UIViewController+Conveniences.h"
+#import "LBLinkSharedVIPViewController.h"
 
 #define kPublic 0
 #define kServiceNet 1
@@ -94,16 +95,15 @@
     [super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {    
-    return [self.account.loadBalancers objectForKey:self.loadBalancer.region] > 0 ? 3 : 2;
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+    return [self.account.loadBalancers objectForKey:endpoint] > 0 ? 3 : 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -201,13 +201,12 @@
         self.loadBalancer.virtualIPType = @"ServiceNet";
     } else if (indexPath.section == kSharedVirtualIP) {
         self.loadBalancer.virtualIPType = @"Shared Virtual IP";
-        [self alert:@"not implemented" message:@"you'll need to choose another load balancer for this option"];
+        LBLinkSharedVIPViewController *vc = [[LBLinkSharedVIPViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
+        [self.navigationController pushViewController:vc animated:YES];
+        [vc release];
     }    
 
     [self.tableView reloadData];
-    //[NSTimer scheduledTimerWithTimeInterval:0.2 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
-    
-    //[self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

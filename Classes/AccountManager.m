@@ -410,7 +410,6 @@
             self.account.totalBytesUsed = strtoull([numStr UTF8String], NULL, 0);
             [self.account persist];
             [self notify:@"getStorageAccountInfoSucceeded" request:request object:self.account];
-            [numStr release];
         } else {
             [self notify:@"getStorageAccountInfoFailed" request:request object:self.account];
         }

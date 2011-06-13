@@ -42,7 +42,7 @@
 #pragma mark JSON
 
 + (BackupSchedule *)fromJSON:(NSDictionary *)dict {
-    BackupSchedule *backupSchedule = [[BackupSchedule alloc] init];
+    BackupSchedule *backupSchedule = [[[BackupSchedule alloc] init] autorelease];
     backupSchedule.enabled = [[dict objectForKey:@"enabled"] boolValue];
     backupSchedule.weekly = [dict objectForKey:@"weekly"];
     backupSchedule.daily = [dict objectForKey:@"daily"];

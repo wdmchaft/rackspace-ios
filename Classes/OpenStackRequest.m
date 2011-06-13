@@ -586,7 +586,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
 - (NSMutableDictionary *)objects {
     SBJSON *parser = [[SBJSON alloc] init];
     NSArray *jsonObjects = [parser objectWithString:[self responseString]];
-    NSMutableDictionary *objects = [[NSMutableDictionary alloc] initWithCapacity:[jsonObjects count]];
+    NSMutableDictionary *objects = [[[NSMutableDictionary alloc] initWithCapacity:[jsonObjects count]] autorelease];
     
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];

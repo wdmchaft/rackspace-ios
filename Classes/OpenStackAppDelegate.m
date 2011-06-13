@@ -128,6 +128,7 @@
         
         [window addSubview:splitViewController.view];
         [window makeKeyAndVisible];
+        [vc release];
     } else {
         [window addSubview:navigationController.view];
         [window makeKeyAndVisible];
@@ -210,10 +211,10 @@
      */
     // TODO: perhaps this is a good place to release all the stuff allocated in
     // +(void)initialize methods all over the place
-    [[APILogger loggerEntries] release];
-    [[SettingsPluginHandler plugins] release];
-    [[AddServerPluginHandler plugins] release];
-    [[OpenStackAccount accounts] release];
+//    [[APILogger loggerEntries] release];
+//    [[SettingsPluginHandler plugins] release];
+//    [[AddServerPluginHandler plugins] release];
+//    [[OpenStackAccount accounts] release];
 }
 
 - (void) navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{

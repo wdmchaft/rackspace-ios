@@ -355,6 +355,11 @@
 		27560833136F3078009EB5BA /* LBVirtualIPTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2756082E136F3078009EB5BA /* LBVirtualIPTypeViewController.m */; };
 		27560834136F3078009EB5BA /* LBVirtualIPTypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2756082F136F3078009EB5BA /* LBVirtualIPTypeViewController.xib */; };
 		27560835136F3078009EB5BA /* LBVirtualIPTypeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2756082F136F3078009EB5BA /* LBVirtualIPTypeViewController.xib */; };
+		275856621399585000311115 /* LBLinkSharedVIPViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2758565F1399585000311115 /* LBLinkSharedVIPViewController.h */; };
+		275856631399585000311115 /* LBLinkSharedVIPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 275856601399585000311115 /* LBLinkSharedVIPViewController.m */; };
+		275856641399585000311115 /* LBLinkSharedVIPViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 275856611399585000311115 /* LBLinkSharedVIPViewController.xib */; };
+		275856661399735500311115 /* LBLinkSharedVIPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 275856601399585000311115 /* LBLinkSharedVIPViewController.m */; };
+		275856671399741600311115 /* LBLinkSharedVIPViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 275856611399585000311115 /* LBLinkSharedVIPViewController.xib */; };
 		275B3E3E12D99B86003DF100 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27C5D1CF12D690790085648A /* MediaPlayer.framework */; };
 		275B421212DBAE86003DF100 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 275B421112DBAE86003DF100 /* MainWindow-iPad.xib */; };
 		275B44B112DBC5A1003DF100 /* MainWindow-Rackspace-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 275B44B012DBC5A1003DF100 /* MainWindow-Rackspace-iPad.xib */; };
@@ -1174,6 +1179,9 @@
 		2756082D136F3078009EB5BA /* LBVirtualIPTypeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBVirtualIPTypeViewController.h; sourceTree = "<group>"; };
 		2756082E136F3078009EB5BA /* LBVirtualIPTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBVirtualIPTypeViewController.m; sourceTree = "<group>"; };
 		2756082F136F3078009EB5BA /* LBVirtualIPTypeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBVirtualIPTypeViewController.xib; sourceTree = "<group>"; };
+		2758565F1399585000311115 /* LBLinkSharedVIPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = LBLinkSharedVIPViewController.h; sourceTree = "<group>"; };
+		275856601399585000311115 /* LBLinkSharedVIPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBLinkSharedVIPViewController.m; sourceTree = "<group>"; };
+		275856611399585000311115 /* LBLinkSharedVIPViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBLinkSharedVIPViewController.xib; sourceTree = "<group>"; };
 		275B421112DBAE86003DF100 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources-iPad/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		275B44B012DBC5A1003DF100 /* MainWindow-Rackspace-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "MainWindow-Rackspace-iPad.xib"; sourceTree = "<group>"; };
 		275B44CB12DBC7A3003DF100 /* RootViewController-Rackspace.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "RootViewController-Rackspace.xib"; sourceTree = "<group>"; };
@@ -2201,6 +2209,9 @@
 				27265A191397EAE5000617C0 /* LBAlgorithmAnimationViewController.h */,
 				27265A1A1397EAE5000617C0 /* LBAlgorithmAnimationViewController.m */,
 				27265A1B1397EAE5000617C0 /* LBAlgorithmAnimationViewController.xib */,
+				2758565F1399585000311115 /* LBLinkSharedVIPViewController.h */,
+				275856601399585000311115 /* LBLinkSharedVIPViewController.m */,
+				275856611399585000311115 /* LBLinkSharedVIPViewController.xib */,
 			);
 			name = "Add Load Balancer";
 			sourceTree = "<group>";
@@ -3566,6 +3577,7 @@
 				27265AFD139802B6000617C0 /* lc-17_s17.png in Resources */,
 				27265AFF139802B6000617C0 /* lc-18_s18.png in Resources */,
 				27265B01139802B6000617C0 /* lc-19_s19.png in Resources */,
+				275856641399585000311115 /* LBLinkSharedVIPViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3952,6 +3964,7 @@
 				27265AFE139802B6000617C0 /* lc-17_s17.png in Resources */,
 				27265B00139802B6000617C0 /* lc-18_s18.png in Resources */,
 				27265B02139802B6000617C0 /* lc-19_s19.png in Resources */,
+				275856671399741600311115 /* LBLinkSharedVIPViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4131,6 +4144,8 @@
 				7F8F374313859EDA0034710B /* NSStringAdditions.m in Sources */,
 				27265A1C1397EAE5000617C0 /* LBAlgorithmAnimationViewController.h in Sources */,
 				27265A1D1397EAE5000617C0 /* LBAlgorithmAnimationViewController.m in Sources */,
+				275856621399585000311115 /* LBLinkSharedVIPViewController.h in Sources */,
+				275856631399585000311115 /* LBLinkSharedVIPViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4283,6 +4298,7 @@
 				7F8F374213859EDA0034710B /* DDXMLNode.m in Sources */,
 				7F8F374513859EDA0034710B /* NSStringAdditions.m in Sources */,
 				27265A201397EEEA000617C0 /* LBAlgorithmAnimationViewController.m in Sources */,
+				275856661399735500311115 /* LBLinkSharedVIPViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
