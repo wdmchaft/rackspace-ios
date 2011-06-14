@@ -26,6 +26,7 @@ void TrackViewController(UIViewController *vc){
 }
 
 void DispatchAnalytics(){
-    
+# if (!TARGET_IPHONE_SIMULATOR)
     [[GANTracker sharedTracker] dispatch]; 
+# endif
 }

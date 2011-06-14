@@ -16,7 +16,8 @@
             responseBody, requestDate, responseStatusMessage, url;
 
 - (id)initWithRequest:(OpenStackRequest *)request {
-    if (self = [super init]) {
+    self = [super init];
+    if (self) {
         
         if ([request requestMethod] != nil) {
             requestMethod = [[NSString alloc] initWithString:[request requestMethod]];
@@ -58,7 +59,8 @@
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
-    if (self = [super init]) {
+    self = [super init];
+    if (self) {
         requestMethod = [[coder decodeObjectForKey:@"requestMethod"] retain];
         requestBody = [[coder decodeObjectForKey:@"requestBody"] retain];
         requestHeaders = [[coder decodeObjectForKey:@"requestHeaders"] retain];

@@ -40,11 +40,6 @@
       }
 */
 
-    // navigation bar style
-    UIBarStyle *barStyle;
-    UIColor *tintColor;
-    BOOL barTranslucent;
-
     // the name of the provider (example: Rackspace Cloud)
     NSString *name;
     

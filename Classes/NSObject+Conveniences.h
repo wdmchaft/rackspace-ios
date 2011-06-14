@@ -12,7 +12,6 @@
 + (NSString*) stringWithUUID;
 + (NSString *)pluralizedStringForArray:(NSArray *)array noun:(NSString *)noun;
 + (NSString *)pluralizedStringForDictionary:(NSDictionary *)dict noun:(NSString *)noun;
-+ (UIImage *)resizeImage:(UIImage *)image toWidth:(int)width andHeight:(int)height;
 + (BOOL)parseBool:(NSNumber *)number;
 + (BOOL)stringIsEmpty:(NSString *)string;
 + (NSString *)dateToString:(NSDate *)date;

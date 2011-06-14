@@ -33,7 +33,8 @@
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
-    if (self = [super init]) {
+    self = [super init];
+    if (self) {
         [self autoDecode:coder];
         /*
         name = [[coder decodeObjectForKey:@"name"] retain];

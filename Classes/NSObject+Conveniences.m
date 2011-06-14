@@ -40,42 +40,6 @@
     }
 }
 
-+ (UIImage *)resizeImage:(UIImage *)image toWidth:(int)width andHeight:(int)height {
-    int newWidth = width;
-    int newHeight = height;
-    if (width == height || width == 0 || height == 0) {
-        int w = image.size.width;
-        int h = image.size.height;
-        
-        float scale = 0;
-        if (width == height) {
-            scale = fmin((float)width / (float)w, (float)height / (float)h);
-        } else if (width == 0) {
-            scale = (float)height / (float)h;
-        } else if (height == 0) {
-            scale = (float)width / (float)h;
-        }
-        
-        newWidth = floor(scale * w + 0.5);
-        newHeight = floor(scale * h + 0.5);
-    }
-    
-    CGRect area = CGRectMake(0, 0, newWidth, newHeight);
-    CGSize size = area.size;
-    if ([image respondsToSelector:@selector(scale)]) {
-        UIGraphicsBeginImageContextWithOptions(size, NO, image.scale);
-    } else {
-        UIGraphicsBeginImageContext(size);
-    }
-    
-    [image drawInRect:area];
-    
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    [newImage retain];    
-    return newImage;
-}
-
 + (BOOL)parseBool:(NSNumber *)number {
     BOOL result = NO;
     if (number != (NSNumber *)[NSNull null]) {

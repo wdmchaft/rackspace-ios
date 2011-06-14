@@ -7,6 +7,8 @@
 //
 
 #import "GANTracker.h"
+#import <UIKit/UIKit.h>
+
 
 // Analytics Keys
 #define CATEGORY_SERVER @"server"

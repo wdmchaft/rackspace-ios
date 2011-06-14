@@ -65,6 +65,12 @@
     
 }
 
+- (void)presentAndRelease:(NSTimer *)timer {
+    UIViewController *vc = [timer.userInfo objectForKey:@"vc"];
+    [[self.navigationController topViewController] presentModalViewControllerWithNavigation:vc animated:NO];
+    [vc release];
+}
+
 - (void)showPasscodeLock {
     if ([[Keychain getStringForKey:@"passcode_lock_passcode_on"] isEqualToString:@"YES"]) {
         PasscodeViewController *vc = [[PasscodeViewController alloc] initWithNibName:@"PasscodeViewController" bundle:nil];
@@ -153,7 +159,7 @@
                             environmentName:HTNotifierAppStoreEnvironment];
                 
         [[GANTracker sharedTracker] startTrackerWithAccountID:[constants objectForKey:@"ANALYTICS_ACCOUNT_KEY"] dispatchPeriod:10 delegate:nil];
-        DispatchAnalytics();
+//        DispatchAnalytics();
 
     }
     
@@ -163,7 +169,7 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     
-    DispatchAnalytics();
+//    DispatchAnalytics();
 }
 
 
@@ -195,17 +201,7 @@
 }
 
 
-- (void)applicationWillTerminate:(UIApplication *)application {
-    
-    // TODO: remove this before releasing.  this is for debugging
-    /*
-    NSArray *accounts = [OpenStackAccount accounts];
-    for (OpenStackAccount *account in accounts) {
-        account.authToken = @"xxx";
-        [account persist];
-    }
-     */
-    
+- (void)applicationWillTerminate:(UIApplication *)application {    
     /*
      Called when the application is about to terminate.
      See also applicationDidEnterBackground:.
