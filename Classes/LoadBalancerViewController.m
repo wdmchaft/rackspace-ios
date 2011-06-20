@@ -9,7 +9,7 @@
 #import "LoadBalancerViewController.h"
 #import "LoadBalancer.h"
 #import <QuartzCore/QuartzCore.h>
-#import "NameAndStatusTitleView.h"
+#import "LBTitleView.h"
 #import "LoadBalancerProtocol.h"
 #import "Server.h"
 
@@ -38,18 +38,6 @@
     [super dealloc];
 }
 
-#pragma mark - Scrolling
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGPoint point = scrollView.contentOffset;
-    CGRect tr = self.titleView.frame;
-    CGRect ar = segmentView.frame;
-    if (previousScrollPoint.y - point.y < 0) {
-        self.titleView.frame = CGRectMake(tr.origin.x, (previousScrollPoint.y - point.y) / 3.0, tr.size.width, tr.size.height);
-        segmentView.frame = CGRectMake(ar.origin.x, 64 + ((previousScrollPoint.y - point.y) / 2.0), ar.size.width, ar.size.height);
-    }
-}
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
@@ -58,19 +46,19 @@
     previousScrollPoint = CGPointZero;
     self.detailsTableView.backgroundColor = [UIColor clearColor];
     
-    segmentView.backgroundColor = [UIColor colorWithRed:0.929 green:0.929 blue:0.929 alpha:1];    
-    segmentView.clipsToBounds = NO;
-    [segmentView.layer setShadowColor:[[UIColor blackColor] CGColor]];
-    [segmentView.layer setShadowRadius:2.0f];
-    [segmentView.layer setShadowOffset:CGSizeMake(1, 1)];
-    [segmentView.layer setShadowOpacity:0.8f];
+//    segmentView.backgroundColor = [UIColor colorWithRed:0.929 green:0.929 blue:0.929 alpha:1];    
+//    segmentView.clipsToBounds = NO;
+//    [segmentView.layer setShadowColor:[[UIColor blackColor] CGColor]];
+//    [segmentView.layer setShadowRadius:2.0f];
+//    [segmentView.layer setShadowOffset:CGSizeMake(1, 1)];
+//    [segmentView.layer setShadowOpacity:0.8f];
 
     if (!titleView) {    
         // make an offset for the table
         self.detailsTableView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 134.0)] autorelease];
         self.nodesTableView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 134.0)] autorelease];
     
-        titleView = [[NameAndStatusTitleView alloc] initWithEntity:self.loadBalancer];
+        titleView = [[LBTitleView alloc] initWithLoadBalancer:self.loadBalancer];
         [self.view addSubview:titleView];
         [titleView setNeedsDisplay];
     }    
@@ -79,7 +67,10 @@
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    UIBarButtonItem *configure = [[UIBarButtonItem alloc] initWithTitle:@"Configure" style:UIBarButtonItemStyleBordered target:self action:@selector(configButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = configure;
+    [configure release];
     
     //self.tableView.pagingEnabled
 }

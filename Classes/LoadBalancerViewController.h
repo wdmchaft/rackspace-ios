@@ -9,12 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "OpenStackViewController.h"
 
-@class LoadBalancer, NameAndStatusTitleView;
+@class LoadBalancer, LBTitleView;
 
 @interface LoadBalancerViewController : OpenStackViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, UIScrollViewDelegate> {
     LoadBalancer *loadBalancer;
-    IBOutlet UIView *segmentView;
-    NameAndStatusTitleView *titleView;
+    LBTitleView *titleView;
     CGPoint previousScrollPoint;
     NSInteger mode;
 
@@ -24,7 +23,7 @@
 }
 
 @property (nonatomic, retain) LoadBalancer *loadBalancer;
-@property (nonatomic, retain) NameAndStatusTitleView *titleView;
+@property (nonatomic, retain) LBTitleView *titleView;
 @property (nonatomic, retain) IBOutlet UIView *tableViewContainer;
 @property (nonatomic, retain) IBOutlet UITableView *detailsTableView;
 @property (nonatomic, retain) IBOutlet UITableView *nodesTableView;

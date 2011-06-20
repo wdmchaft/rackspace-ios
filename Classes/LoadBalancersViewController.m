@@ -92,7 +92,7 @@
     if ([loadBalancer.nodes count] == 1) {
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ to 1 node", loadBalancer.algorithm];
     } else {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%i: %@ to %i nodes", loadBalancer.identifier, loadBalancer.algorithm, [loadBalancer.nodes count]];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@: %@ to %i nodes", loadBalancer.status, loadBalancer.algorithm, [loadBalancer.nodes count]];
     }
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.imageView.image = [UIImage imageNamed:@"load-balancers-icon.png"];
