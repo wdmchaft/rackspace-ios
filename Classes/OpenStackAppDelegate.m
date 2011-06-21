@@ -157,10 +157,12 @@
         
         [HTNotifier startNotifierWithAPIKey:[constants objectForKey:@"HOPTOAD_ACCOUNT_KEY"]
                             environmentName:HTNotifierAppStoreEnvironment];
-                
         [[GANTracker sharedTracker] startTrackerWithAccountID:[constants objectForKey:@"ANALYTICS_ACCOUNT_KEY"] dispatchPeriod:10 delegate:nil];
 //        DispatchAnalytics();
 
+    } else {
+        [HTNotifier startNotifierWithAPIKey:@"HOPTOAD_ACCOUNT_KEY" environmentName:HTNotifierAppStoreEnvironment];
+        [[GANTracker sharedTracker] startTrackerWithAccountID:@"ANALYTICS_ACCOUNT_KEY" dispatchPeriod:10 delegate:nil];
     }
     
 #endif

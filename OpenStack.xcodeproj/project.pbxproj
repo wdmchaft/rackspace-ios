@@ -19,6 +19,8 @@
 		2710BC16136B54A9003C8CFF /* LBProtocolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2710BC11136B54A9003C8CFF /* LBProtocolViewController.m */; };
 		2710BC17136B54A9003C8CFF /* LBProtocolViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2710BC12136B54A9003C8CFF /* LBProtocolViewController.xib */; };
 		2710BC18136B54A9003C8CFF /* LBProtocolViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2710BC12136B54A9003C8CFF /* LBProtocolViewController.xib */; };
+		2712145F13B1492C0052CCC9 /* Constants.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2712145E13B1492C0052CCC9 /* Constants.plist */; };
+		2712146013B1492C0052CCC9 /* Constants.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2712145E13B1492C0052CCC9 /* Constants.plist */; };
 		271726F112555EC0003A1319 /* Provider.m in Sources */ = {isa = PBXBuildFile; fileRef = 271726EF12555EC0003A1319 /* Provider.m */; };
 		2717275A12565ED9003A1319 /* OpenStackAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 2717275812565ED9003A1319 /* OpenStackAccount.m */; };
 		2717282512567D61003A1319 /* Keychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 2717282312567D61003A1319 /* Keychain.m */; };
@@ -835,6 +837,7 @@
 		2710BC10136B54A9003C8CFF /* LBProtocolViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBProtocolViewController.h; sourceTree = "<group>"; };
 		2710BC11136B54A9003C8CFF /* LBProtocolViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBProtocolViewController.m; sourceTree = "<group>"; };
 		2710BC12136B54A9003C8CFF /* LBProtocolViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBProtocolViewController.xib; sourceTree = "<group>"; };
+		2712145E13B1492C0052CCC9 /* Constants.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Constants.plist; sourceTree = "<group>"; };
 		271726EE12555EC0003A1319 /* Provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Provider.h; sourceTree = "<group>"; };
 		271726EF12555EC0003A1319 /* Provider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Provider.m; sourceTree = "<group>"; };
 		2717275712565ED9003A1319 /* OpenStackAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenStackAccount.h; sourceTree = "<group>"; };
@@ -2621,6 +2624,7 @@
 		27FC363F12F32C200014FB4E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2712145E13B1492C0052CCC9 /* Constants.plist */,
 				27CFD87E1371D54500116BBD /* Load Balancers */,
 				27C69D2A13257474001F1370 /* Temp */,
 				2787C14012F0D273009EAD7C /* Files for Icon Loading */,
@@ -3041,6 +3045,7 @@
 				27CFD89B1371D9CD00116BBD /* grey-highlight@2x.png in Resources */,
 				2728B4FD13786CEE007DBD80 /* LBServersViewController.xib in Resources */,
 				7F8F372513859EDA0034710B /* HTNotifier.strings in Resources */,
+				2712145F13B1492C0052CCC9 /* Constants.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3257,6 +3262,7 @@
 				27CFD89C1371D9CD00116BBD /* grey-highlight@2x.png in Resources */,
 				2728B4FE13786CEE007DBD80 /* LBServersViewController.xib in Resources */,
 				7F8F372713859EDA0034710B /* HTNotifier.strings in Resources */,
+				2712146013B1492C0052CCC9 /* Constants.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3777,8 +3783,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "~/src/rackspace/openstack/OpenStack/Entitlements.plist";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Eric Johnson (5D9RVMU5AT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eric Johnson (5D9RVMU5AT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rackspace Hosting";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rackspace Hosting";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -3799,8 +3805,8 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "Rackspace Cloud";
-				PROVISIONING_PROFILE = "3002C9D8-0F61-4A89-AFE7-DDAB63C46998";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3002C9D8-0F61-4A89-AFE7-DDAB63C46998";
+				PROVISIONING_PROFILE = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
 				SDKROOT = iphoneos;
 				ZERO_LINK = NO;
 			};
