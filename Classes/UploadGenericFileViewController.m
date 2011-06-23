@@ -18,6 +18,7 @@
 #import "StorageObject.h"
 #import "OCMimeType.h"
 #import "RSTextFieldCell.h"
+#import "NSObject+Conveniences.h"
 
 #define kName 0
 #define kContentType 1

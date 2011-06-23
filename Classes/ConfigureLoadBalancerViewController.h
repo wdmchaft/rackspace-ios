@@ -10,7 +10,7 @@
 
 @class OpenStackAccount, LoadBalancer;
 
-@interface ConfigureLoadBalancerViewController : UITableViewController {
+@interface ConfigureLoadBalancerViewController : UITableViewController <UITextFieldDelegate> {
     OpenStackAccount *account;
     LoadBalancer *loadBalancer;
 @private

@@ -255,7 +255,6 @@
 		2726C64713B26D9F00BC7330 /* dot-green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2726C63813B26D9F00BC7330 /* dot-green@2x.png */; };
 		2726C64813B26D9F00BC7330 /* dot-green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2726C63813B26D9F00BC7330 /* dot-green@2x.png */; };
 		2726C64C13B28D1000BC7330 /* ConfigureLoadBalancerViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2726C64A13B28D1000BC7330 /* ConfigureLoadBalancerViewController.h */; };
-		2726C64D13B28D1000BC7330 /* ConfigureLoadBalancerViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2726C64A13B28D1000BC7330 /* ConfigureLoadBalancerViewController.h */; };
 		2726C64E13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2726C64B13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m */; };
 		2726C64F13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2726C64B13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m */; };
 		272833A61270C87C00F8CCDD /* OpenStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272833A41270C87C00F8CCDD /* OpenStackViewController.m */; };
@@ -338,7 +337,6 @@
 		273FF3A013313A5400437033 /* ServersOnHostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 273FF39B13313A5400437033 /* ServersOnHostViewController.xib */; };
 		273FF3A113313A5400437033 /* ServersOnHostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 273FF39B13313A5400437033 /* ServersOnHostViewController.xib */; };
 		2742A3EC13AFB24D00C10640 /* LBTitleView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2742A3EA13AFB24D00C10640 /* LBTitleView.h */; };
-		2742A3ED13AFB24D00C10640 /* LBTitleView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2742A3EA13AFB24D00C10640 /* LBTitleView.h */; };
 		2742A3EE13AFB24D00C10640 /* LBTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2742A3EB13AFB24D00C10640 /* LBTitleView.m */; };
 		2742A3EF13AFB24D00C10640 /* LBTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2742A3EB13AFB24D00C10640 /* LBTitleView.m */; };
 		2748C580126E90FD00A24941 /* PingIPAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748C57D126E90FD00A24941 /* PingIPAddressViewController.m */; };
@@ -4287,9 +4285,7 @@
 				7F8F374513859EDA0034710B /* NSStringAdditions.m in Sources */,
 				27265A201397EEEA000617C0 /* LBAlgorithmAnimationViewController.m in Sources */,
 				275856661399735500311115 /* LBLinkSharedVIPViewController.m in Sources */,
-				2742A3ED13AFB24D00C10640 /* LBTitleView.h in Sources */,
 				2742A3EF13AFB24D00C10640 /* LBTitleView.m in Sources */,
-				2726C64D13B28D1000BC7330 /* ConfigureLoadBalancerViewController.h in Sources */,
 				2726C64F13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -17,6 +17,7 @@
 #import "Container.h"
 #import "Folder.h"
 #import "FolderViewController.h"
+#import "NSObject+Conveniences.h"
 
 #define kName 0
 
