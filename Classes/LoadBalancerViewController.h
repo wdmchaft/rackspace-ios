@@ -9,27 +9,24 @@
 #import <UIKit/UIKit.h>
 #import "OpenStackViewController.h"
 
-@class LoadBalancer, LBTitleView;
+@class LoadBalancer, LBTitleView, OpenStackAccount;
 
 @interface LoadBalancerViewController : OpenStackViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, UIScrollViewDelegate> {
+    OpenStackAccount *account;
     LoadBalancer *loadBalancer;
     LBTitleView *titleView;
     CGPoint previousScrollPoint;
     NSInteger mode;
 
-    IBOutlet UIView *tableViewContainer;
-    IBOutlet UITableView *detailsTableView;
-    IBOutlet UITableView *nodesTableView;
+    IBOutlet UITableView *tableView;
 }
 
+@property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) LoadBalancer *loadBalancer;
 @property (nonatomic, retain) LBTitleView *titleView;
-@property (nonatomic, retain) IBOutlet UIView *tableViewContainer;
-@property (nonatomic, retain) IBOutlet UITableView *detailsTableView;
-@property (nonatomic, retain) IBOutlet UITableView *nodesTableView;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 
 -(id)initWithLoadBalancer:(LoadBalancer *)loadBalancer;
-- (IBAction)segmentedControlChanged:(UISegmentedControl *)segmentedControl;
 
 @end

@@ -1,30 +1,21 @@
 //
-//  AddLoadBalancerNameViewController.m
+//  ConfigureLoadBalancerViewController.m
 //  OpenStack
 //
-//  Created by Michael Mayo on 4/8/11.
+//  Created by Mike Mayo on 6/22/11.
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "AddLoadBalancerViewController.h"
-#import "OpenStackAccount.h"
-#import "UIViewController+Conveniences.h"
-#import "RSTextFieldCell.h"
-#import "UIColor+MoreColors.h"
-#import "AddLoadBalancerAlgorithmViewController.h"
+#import "ConfigureLoadBalancerViewController.h"
 #import "LoadBalancer.h"
 #import "LBProtocolViewController.h"
-#import "LBVirtualIPTypeViewController.h"
-#import "AddLoadBalancerRegionViewController.h"
-#import "LBAlgorithmViewController.h"
-#import "Server.h"
-#import "Flavor.h"
-#import "Image.h"
-#import "LoadBalancerNode.h"
+#import "OpenStackAccount.h"
+#import "RSTextFieldCell.h"
 #import "LBNodesViewController.h"
+#import "LBAlgorithmViewController.h"
+#import "AddLoadBalancerAlgorithmViewController.h"
 #import "LoadBalancerProtocol.h"
-#import "AccountManager.h"
-#import "APICallback.h"
+#import "UIViewController+Conveniences.h"
 
 #define kDetailsSection 0
 #define kNodesSection 1
@@ -35,21 +26,15 @@
 #define kRegion 3
 #define kAlgorithm 4
 
-@implementation AddLoadBalancerViewController
+@implementation ConfigureLoadBalancerViewController
 
 @synthesize account, loadBalancer;
 
-- (id)initWithAccount:(OpenStackAccount *)a {
-    self = [super initWithNibName:@"AddLoadBalancerNameViewController" bundle:nil];
+- (id)initWithAccount:(OpenStackAccount *)a loadBalancer:(LoadBalancer *)lb {
+    self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.account = a;
-        self.loadBalancer = [[LoadBalancer alloc] init];
-        self.loadBalancer.virtualIPType = @"Public";
-        self.loadBalancer.region = @"ORD";
-        self.loadBalancer.algorithm = @"RANDOM";
-        self.loadBalancer.protocol = [[LoadBalancerProtocol alloc] init];
-        self.loadBalancer.protocol.name = @"HTTP";
-        self.loadBalancer.protocol.port = 80;
+        self.loadBalancer = lb;
     }
     return self;
 }
@@ -65,18 +50,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"Add Load Balancer";
+    self.navigationItem.title = @"Configure";
     [self addSaveButton];
-    [self addCancelButton];
     
     algorithmNames = [[NSDictionary alloc] initWithObjectsAndKeys:
-                       @"Random",@"RANDOM", 
-                       @"Round Robin", @"ROUND_ROBIN", 
-                       @"Weighted Round Robin", @"WEIGHTED_ROUND_ROBIN", 
-                       @"Least Connections", @"LEAST_CONNECTIONS", 
-                       @"Weighted Least Connections", @"WEIGHTED_LEAST_CONNECTIONS", 
-                       nil];
+                      @"Random",@"RANDOM", 
+                      @"Round Robin", @"ROUND_ROBIN", 
+                      @"Weighted Round Robin", @"WEIGHTED_ROUND_ROBIN", 
+                      @"Least Connections", @"LEAST_CONNECTIONS", 
+                      @"Weighted Least Connections", @"WEIGHTED_LEAST_CONNECTIONS", 
+                      nil];
     
+
+    // Uncomment the following line to preserve selection between presentations.
+    // self.clearsSelectionOnViewWillAppear = NO;
+ 
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload {
@@ -85,9 +75,31 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     [self.tableView reloadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
@@ -113,6 +125,9 @@
         cell.textLabel.text = @"Name";
         cell.textField.delegate = self;
     }
+    
+    cell.textField.text = self.loadBalancer.name;
+    
     return cell;
 }
 
@@ -132,18 +147,26 @@
             case kProtocol:
                 cell.textLabel.text = @"Protocol";
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i", self.loadBalancer.protocol.name, self.loadBalancer.protocol.port];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.selectionStyle = UITableViewCellSelectionStyleBlue;
                 break;
             case kVirtualIPType:
                 cell.textLabel.text = @"Virtual IP Type";
                 cell.detailTextLabel.text = self.loadBalancer.virtualIPType;
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 break;
             case kRegion:
                 cell.textLabel.text = @"Region";
                 cell.detailTextLabel.text = self.loadBalancer.region;
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 break;
             case kAlgorithm:
                 cell.textLabel.text = @"Algorithm";
                 cell.detailTextLabel.text = [algorithmNames objectForKey:self.loadBalancer.algorithm];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.selectionStyle = UITableViewCellSelectionStyleBlue;
                 break;
             default:
                 break;
@@ -167,7 +190,7 @@
         } else {
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Nodes", [self.loadBalancer.nodes count] + [self.loadBalancer.cloudServerNodes count]];
         }
-
+        
         return cell;
     }
 }
@@ -189,15 +212,6 @@
         [vc release];        
     } else if (indexPath.row == kProtocol) {
         LBProtocolViewController *vc = [[LBProtocolViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
-        [self.navigationController pushViewController:vc animated:YES];
-        [vc release];
-    } else if (indexPath.row == kVirtualIPType) {
-        LBVirtualIPTypeViewController *vc = [[LBVirtualIPTypeViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
-        [self.navigationController pushViewController:vc animated:YES];
-        [vc release];
-    } else if (indexPath.row == kRegion) {
-        AddLoadBalancerRegionViewController *vc = [[AddLoadBalancerRegionViewController alloc] initWithAccount:self.account];
-        vc.loadBalancer = self.loadBalancer;
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
     } else if (indexPath.row == kAlgorithm) {
@@ -224,11 +238,11 @@
 - (void)saveButtonPressed:(id)sender {
     [self alert:@"Load Balancer JSON" message:[self.loadBalancer toJSON]];
     /*
-    [[self.account.manager createLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
-        [self alert:@"Woot!" message:[request responseString]];
-    } failure:^(OpenStackRequest *request) {
-        [self alert:[NSString stringWithFormat:@"Fail! %i", [request responseStatusCode]] message:[request responseString]];
-    }];
+     [[self.account.manager createLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
+     [self alert:@"Woot!" message:[request responseString]];
+     } failure:^(OpenStackRequest *request) {
+     [self alert:[NSString stringWithFormat:@"Fail! %i", [request responseStatusCode]] message:[request responseString]];
+     }];
      */
 }
 

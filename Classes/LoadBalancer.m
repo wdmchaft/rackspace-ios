@@ -20,7 +20,7 @@
             connectionLoggingEnabled, nodes, connectionThrottleMinConnections,
             connectionThrottleMaxConnections, connectionThrottleMaxConnectionRate,
             connectionThrottleRateInterval, clusterName, sessionPersistenceType, progress,
-            cloudServerNodes, virtualIPType, region;
+            cloudServerNodes, virtualIPType, region, usage;
 
 - (id)init {
     self = [super init];
@@ -49,6 +49,9 @@
 #pragma mark JSON
 
 + (LoadBalancer *)fromJSON:(NSDictionary *)dict {
+    
+    NSLog(@"lb json: %@", dict);
+    
     LoadBalancer *loadBalancer = [[[LoadBalancer alloc] initWithJSONDict:dict] autorelease];
 
     LoadBalancerProtocol *p = [[[LoadBalancerProtocol alloc] init] autorelease];
@@ -64,6 +67,7 @@
     for (NSDictionary *vipDict in virtualIpDicts) {
         VirtualIP *ip = [VirtualIP fromJSON:vipDict];
         [loadBalancer.virtualIPs addObject:ip];
+        loadBalancer.virtualIPType = ip.type;
     }
     
     loadBalancer.created = [loadBalancer dateForKey:@"time" inDict:[dict objectForKey:@"created"]];
@@ -161,6 +165,7 @@
     [cloudServerNodes release];
     [virtualIPType release];
     [region release];
+    [usage release];
     [super dealloc];
 }
 

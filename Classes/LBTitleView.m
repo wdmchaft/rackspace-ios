@@ -13,7 +13,7 @@
 
 @implementation LBTitleView
 
-@synthesize loadBalancer, nameLabel, connectedLabel, bwInLabel, bwOutLabel;
+@synthesize loadBalancer, statusDot, nameLabel, connectedLabel, bwInLabel, bwOutLabel;
 
 - (void)applyStyle {
     self.frame = CGRectMake(0, 0, 320, 74);
@@ -25,48 +25,45 @@
     [self.layer setShadowRadius:2.0f];
     [self.layer setShadowOffset:CGSizeMake(1, 1)];
     [self.layer setShadowOpacity:0.8f];    
-     
-    // gradient background
-    /*
-    CAGradientLayer *gradient = [CAGradientLayer layer];
-    gradient.frame = self.bounds;
-    gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor whiteColor] CGColor], (id)[[UIColor colorWithWhite:0.871 alpha:1] CGColor], nil];
-    [self.layer insertSublayer:gradient atIndex:0];   
-     */
+    
+    // status dot
+    self.statusDot.frame = CGRectMake(10, 18, 13, 13);
+    self.statusDot.image = [UIImage imageNamed:@"dot-green.png"];
+    [self addSubview:self.statusDot];
     
     // label styles
     self.nameLabel.backgroundColor = [UIColor clearColor];
     self.nameLabel.font = [UIFont systemFontOfSize:24];
     
-    self.connectedLabel.frame = CGRectMake(8, 48, 0, 0);
+    CGFloat third = self.frame.size.width / 3.0;
+    
+    self.connectedLabel.frame = CGRectMake(0, 48, third, 20);
     self.connectedLabel.font = [UIFont systemFontOfSize:14];
     self.connectedLabel.backgroundColor = [UIColor clearColor];
+    self.connectedLabel.textAlignment = UITextAlignmentCenter;
     self.connectedLabel.text = @"55 connected";
     self.connectedLabel.textColor = [UIColor darkGrayColor];
-    [self.connectedLabel sizeToFit];
     [self addSubview:self.connectedLabel];
     
-    self.bwInLabel.frame = CGRectMake(118, 48, 0, 0);
+    self.bwInLabel.frame = CGRectMake(third, 48, third, 20);
     self.bwInLabel.font = [UIFont systemFontOfSize:14];
     self.bwInLabel.backgroundColor = [UIColor clearColor];
-    self.bwInLabel.backgroundColor = [UIColor clearColor];
+    self.bwInLabel.textAlignment = UITextAlignmentCenter;
     self.bwInLabel.text = @"0.55 GB in";
     self.bwInLabel.textColor = [UIColor darkGrayColor];
-    [self.bwInLabel sizeToFit];
     [self addSubview:self.bwInLabel];
     
-    self.bwOutLabel.frame = CGRectMake(218, 48, 0, 0);
+    self.bwOutLabel.frame = CGRectMake(third * 2, 48, third, 20);
     self.bwOutLabel.font = [UIFont systemFontOfSize:14];
     self.bwOutLabel.backgroundColor = [UIColor clearColor];
-    self.bwOutLabel.backgroundColor = [UIColor clearColor];
+    self.bwOutLabel.textAlignment = UITextAlignmentCenter;
     self.bwOutLabel.text = @"0.55 GB out";
     self.bwOutLabel.textColor = [UIColor darkGrayColor];
-    [self.bwOutLabel sizeToFit];
     [self addSubview:self.bwOutLabel];
     
     // label positions
     self.nameLabel.frame = CGRectMake(32, 9, 0, 0);
-    self.nameLabel.text = @"web-https1"; // self.loadBalancer.name;
+    self.nameLabel.text = self.loadBalancer.name;
     [self.nameLabel sizeToFit];
     [self addSubview:self.nameLabel];
     
@@ -75,11 +72,11 @@
 - (id)init {
     self = [super init];
     if (self) {
+        self.statusDot = [[[UIImageView alloc] init] autorelease];
         self.nameLabel = [[[UILabel alloc] init] autorelease];
         self.connectedLabel = [[[UILabel alloc] init] autorelease];
         self.bwInLabel = [[[UILabel alloc] init] autorelease];
         self.bwOutLabel = [[[UILabel alloc] init] autorelease];
-        [self applyStyle];
     }
     return self;
 }
@@ -88,6 +85,7 @@
     self = [self init];
     if (self) {
         self.loadBalancer = lb;
+        [self applyStyle];
     }
     return self;
 }
@@ -131,10 +129,17 @@
     CGContextMoveToPoint(context, third * 2, 43.0);
 	CGContextAddLineToPoint(context, third * 2, rect.size.height);
     CGContextStrokePath(context);
+    
+    // size labels
+    self.connectedLabel.frame = CGRectMake(0, 48, third, 20);
+    self.bwInLabel.frame = CGRectMake(third, 48, third, 20);
+    self.bwOutLabel.frame = CGRectMake(third * 2, 48, third, 20);
+
 }
 
 - (void)dealloc {
     [loadBalancer release];
+    [statusDot release];
     [nameLabel release];
     [connectedLabel release];
     [bwInLabel release];

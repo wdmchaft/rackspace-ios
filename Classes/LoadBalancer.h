@@ -8,7 +8,7 @@
 
 #import "ComputeModel.h"
 
-@class LoadBalancerProtocol;
+@class LoadBalancerProtocol, LoadBalancerUsage;
 
 @interface LoadBalancer : ComputeModel <NSCoding> {
 
@@ -32,6 +32,7 @@
     NSInteger progress;
     NSString *region;
 
+    LoadBalancerUsage *usage;
 /*
 ORD Region:
 https://ord.loadbalancers.api.rackspacecloud.com/v1.0/420600/
@@ -59,7 +60,8 @@ https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/420600/
 @property (nonatomic, assign) NSUInteger connectionThrottleRateInterval;
 @property (nonatomic, retain) NSString *clusterName;
 @property (nonatomic, assign) NSInteger progress;
-@property (nonatomic, assign) NSString *region;
+@property (nonatomic, retain) NSString *region;
+@property (nonatomic, retain) LoadBalancerUsage *usage;
 
 + (LoadBalancer *)fromJSON:(NSDictionary *)dict;
 - (BOOL)shouldBePolled;

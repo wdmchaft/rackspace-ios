@@ -163,19 +163,21 @@
     return html;    
 }
 
-/*
-- (NSString *)flattenHTML:(NSString *)html {
-    NSScanner *theScanner;
-    NSString *text;
-    theScanner = [NSScanner scannerWithString:html];
-    while ([theScanner isAtEnd] == NO) {
-        //remove html tag
-        [theScanner scanUpToString:@"<" intoString:NULL];
-        [theScanner scanString:@">" intoString:&text];
-        html = [html stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"<%@>", text] withString:@""];
++ (NSString *)humanizedBytes:(unsigned long long)bytes {    
+	NSString *result;	
+	if (bytes >= 1024000000) {
+		result = [NSString stringWithFormat:@"%.2f GB", bytes / 1024000000.0];
+	} else if (bytes >= 1024000) {
+		result = [NSString stringWithFormat:@"%.2f MB", bytes / 1024000.0];
+	} else if (bytes >= 1024) {
+		result = [NSString stringWithFormat:@"%.2f KB", bytes / 1024.0];
+    } else if (bytes == 1) {
+        result = @"1 byte";
+	} else {
+		result = [NSString stringWithFormat:@"%llu bytes", bytes];
     }
-    return html;
+	return result;
 }
-*/
+
 @end
 

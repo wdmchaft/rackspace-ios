@@ -314,6 +314,12 @@ static NSMutableDictionary *timers = nil;
     }
 }
 
+- (NSString *)loadBalancerRegionForEndpoint:(NSString *)endpoint {
+    NSString *component = [[endpoint componentsSeparatedByString:@"."] objectAtIndex:0];
+    component = [[component componentsSeparatedByString:@"//"] objectAtIndex:1];
+    return [component uppercaseString];
+}
+
 - (NSArray *)loadBalancerURLs {
     NSString *accountNumber = [self accountNumber];
     

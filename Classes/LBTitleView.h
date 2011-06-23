@@ -12,6 +12,7 @@
 
 @interface LBTitleView : UIView {
     LoadBalancer *loadBalancer;
+    UIImageView *statusDot;
     UILabel *nameLabel;
     UILabel *connectedLabel;
     UILabel *bwInLabel;
@@ -19,6 +20,7 @@
 }
 
 @property (nonatomic, retain) LoadBalancer *loadBalancer;
+@property (nonatomic, retain) UIImageView *statusDot;
 @property (nonatomic, retain) UILabel *nameLabel;
 @property (nonatomic, retain) UILabel *connectedLabel;
 @property (nonatomic, retain) UILabel *bwInLabel;

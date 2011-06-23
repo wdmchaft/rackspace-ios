@@ -12,13 +12,21 @@
 #import "LBTitleView.h"
 #import "LoadBalancerProtocol.h"
 #import "Server.h"
+#import "ConfigureLoadBalancerViewController.h"
+#import "OpenStackAccount.h"
+#import "AccountManager.h"
+#import "APICallback.h"
+#import "LoadBalancerUsage.h"
+#import "NSObject+Conveniences.h"
+#import "VirtualIP.h"
+#import "UIViewController+Conveniences.h"
 
 #define kDetails 0
 #define kNodes 1
 
 @implementation LoadBalancerViewController
 
-@synthesize loadBalancer, tableViewContainer, detailsTableView, nodesTableView, titleView;
+@synthesize account, loadBalancer, tableView, titleView;
 
 -(id)initWithLoadBalancer:(LoadBalancer *)lb {
     self = [self initWithNibName:@"LoadBalancerViewController" bundle:nil];
@@ -30,10 +38,9 @@
 }
 
 - (void)dealloc {
+    [account release];
     [loadBalancer release];
-    [tableViewContainer release];
-    [detailsTableView release];
-    [nodesTableView release];
+    [tableView release];
     [titleView release];
     [super dealloc];
 }
@@ -44,20 +51,8 @@
     [super viewDidLoad];
     self.navigationItem.title = @"Load Balancer";
     previousScrollPoint = CGPointZero;
-    self.detailsTableView.backgroundColor = [UIColor clearColor];
     
-//    segmentView.backgroundColor = [UIColor colorWithRed:0.929 green:0.929 blue:0.929 alpha:1];    
-//    segmentView.clipsToBounds = NO;
-//    [segmentView.layer setShadowColor:[[UIColor blackColor] CGColor]];
-//    [segmentView.layer setShadowRadius:2.0f];
-//    [segmentView.layer setShadowOffset:CGSizeMake(1, 1)];
-//    [segmentView.layer setShadowOpacity:0.8f];
-
-    if (!titleView) {    
-        // make an offset for the table
-        self.detailsTableView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 134.0)] autorelease];
-        self.nodesTableView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 134.0)] autorelease];
-    
+    if (!titleView) {        
         titleView = [[LBTitleView alloc] initWithLoadBalancer:self.loadBalancer];
         [self.view addSubview:titleView];
         [titleView setNeedsDisplay];
@@ -71,39 +66,42 @@
     UIBarButtonItem *configure = [[UIBarButtonItem alloc] initWithTitle:@"Configure" style:UIBarButtonItemStyleBordered target:self action:@selector(configButtonPressed:)];
     self.navigationItem.rightBarButtonItem = configure;
     [configure release];
-    
-    //self.tableView.pagingEnabled
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.tableView = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+    
+    [[self.account.manager getLoadBalancerUsage:self.loadBalancer endpoint:endpoint] success:^(OpenStackRequest *request) {
+        self.titleView.connectedLabel.text = [NSString stringWithFormat:@"%.0f connected", self.loadBalancer.usage.averageNumConnections];
+        self.titleView.bwInLabel.text = [NSString stringWithFormat:@"%@ in", [LoadBalancerUsage humanizedBytes:self.loadBalancer.usage.incomingTransfer]];
+        self.titleView.bwOutLabel.text = [NSString stringWithFormat:@"%@ out", [LoadBalancerUsage humanizedBytes:self.loadBalancer.usage.outgoingTransfer]];
+    } failure:^(OpenStackRequest *request) {
+        self.titleView.connectedLabel.text = @"";
+        self.titleView.bwInLabel.text = @"";
+        self.titleView.bwOutLabel.text = @"";
+    }];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];    
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
@@ -115,19 +113,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView == self.detailsTableView) {
-        return 10;
-    } else {
-        return [self.loadBalancer.virtualIPs count];
-    }
-//    switch (mode) {
-//        case kDetails:
-//            return 10;
-//        case kNodes:
-//            return [self.loadBalancer.virtualIPs count];
-//        default:
-//            return 0;
-//    }
+    return [self.loadBalancer.virtualIPs count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {    
@@ -140,97 +126,15 @@
         cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     }
     
-    if (aTableView == self.detailsTableView) {
-        switch (indexPath.row) {
-            case 0:
-                cell.textLabel.text = @"Name";
-                cell.detailTextLabel.text = self.loadBalancer.name;
-                break;            
-            case 1:
-                cell.textLabel.text = @"Protocol";
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ on Port %i", self.loadBalancer.protocol.name, self.loadBalancer.protocol.port];
-                break;            
-            case 2:
-                cell.textLabel.text = @"Port";
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", self.loadBalancer.protocol.port];
-                break;            
-            case 3:
-                cell.textLabel.text = @"Cluster Name";
-                cell.detailTextLabel.text = self.loadBalancer.clusterName;
-                break;
-            case 4:
-                cell.textLabel.text = @"Status";
-                cell.detailTextLabel.text = self.loadBalancer.status;
-                break;            
-            case 5:
-                cell.textLabel.text = @"Session Persistence";
-                cell.detailTextLabel.text = self.loadBalancer.sessionPersistenceType;
-                break;            
-            case 6:
-                cell.textLabel.text = @"Virtual IPs";
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", [self.loadBalancer.virtualIPs count]];
-                break;
-            case 7:
-                cell.textLabel.text = @"Algorithm";
-                cell.detailTextLabel.text = self.loadBalancer.algorithm;
-                break;
-            case 8:
-                cell.textLabel.text = @"Nodes";
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", [self.loadBalancer.nodes count]];
-                break;
-            default:
-                break;
-        }
-    } else {
-        cell.textLabel.text = @"Virtual IP";
-    }
+    VirtualIP *ip = [self.loadBalancer.virtualIPs objectAtIndex:indexPath.row];
+    cell.textLabel.text = ip.address;
         
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // Navigation logic may go here. Create and push another view controller.
     /*
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
@@ -242,44 +146,12 @@
     
 }
 
-#pragma mark - Segmented Control
+#pragma mark - Button Handlers
 
-- (IBAction)segmentedControlChanged:(UISegmentedControl *)segmentedControl {
-    [UIView animateWithDuration:0.35 animations:^{
-        CGRect r = self.tableViewContainer.frame;
-        if (segmentedControl.selectedSegmentIndex == kNodes) {
-            r.origin.x -= 320;
-        } else {
-            r.origin.x += 320;
-        }
-        self.tableViewContainer.frame = r;
-    }];
-     
-    /*
-    NSInteger previousMode = mode;
-    mode = segmentedControl.selectedSegmentIndex;
-    
-    NSInteger previousNumberOfRows = 10;
-    NSInteger newNumberOfRows = 1;
-    
-    NSMutableArray *deleteIndexPaths = [[NSMutableArray alloc] initWithCapacity:9];
-    for (int i = newNumberOfRows; i < previousNumberOfRows; i++) {
-        [deleteIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-    }
-    NSMutableArray *insertIndexPaths = [[NSMutableArray alloc] initWithCapacity:1];
-    for (int i = 0; i < newNumberOfRows; i++) {
-        [insertIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-    }
-    if (segmentedControl.selectedSegmentIndex == 0) {
-        [self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationRight];
-        [self.tableView reloadRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationRight];
-    } else {
-        [self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
-        [self.tableView reloadRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
-    }
-    [deleteIndexPaths release];
-     [insertIndexPaths release];
-     */
+- (void)configButtonPressed:(id)sender {
+    ConfigureLoadBalancerViewController *vc = [[ConfigureLoadBalancerViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
+    [self.navigationController pushViewController:vc animated:YES];
+    [vc release];
 }
 
 @end

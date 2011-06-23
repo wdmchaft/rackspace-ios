@@ -11,6 +11,7 @@
 #import "JSON.h"
 #import "LoadBalancer.h"
 #import "LoadBalancerProtocol.h"
+#import "LoadBalancerUsage.h"
 
 
 @implementation LoadBalancerRequest
@@ -90,5 +91,20 @@
     return objects;
 }
 
++ (LoadBalancerRequest *)getLoadBalancerUsageRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/usage/current", loadBalancer.identifier];
+    return [LoadBalancerRequest lbRequest:account method:@"GET" endpoint:endpoint path:path];
+}
+
+- (LoadBalancerUsage *)usage {
+    SBJSON *parser = [[SBJSON alloc] init];
+    NSArray *jsonObjects = [[parser objectWithString:[self responseString]] objectForKey:@"loadBalancerUsageRecords"];
+    NSMutableArray *objects = [[[NSMutableArray alloc] initWithCapacity:[jsonObjects count]] autorelease];
+    for (NSDictionary *dict in jsonObjects) {
+        [objects addObject:[LoadBalancerUsage fromJSON:dict]];
+    }
+    [parser release];
+    return [objects objectAtIndex:0];
+}
  
 @end

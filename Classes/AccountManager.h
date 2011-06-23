@@ -72,5 +72,6 @@
 - (APICallback *)getLoadBalancers:(NSString *)endpoint;
 - (APICallback *)getLoadBalancerProtocols:(NSString *)endpoint;
 - (APICallback *)createLoadBalancer:(LoadBalancer *)loadBalancer;
+- (APICallback *)getLoadBalancerUsage:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 
 @end

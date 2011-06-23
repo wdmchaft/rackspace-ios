@@ -10,6 +10,7 @@
 #import "Folder.h"
 #import "StorageObject.h"
 #import "NSObject+NSCoding.h"
+#import "NSObject+Conveniences.h"
 
 
 @implementation Container
@@ -102,22 +103,6 @@
 
 #pragma mark -
 #pragma mark Display
-
-+(NSString *)humanizedBytes:(unsigned long long)bytes {    
-	NSString *result;	
-	if (bytes >= 1024000000) {
-		result = [NSString stringWithFormat:@"%.2f GiB", bytes / 1024000000.0];
-	} else if (bytes >= 1024000) {
-		result = [NSString stringWithFormat:@"%.2f MiB", bytes / 1024000.0];
-	} else if (bytes >= 1024) {
-		result = [NSString stringWithFormat:@"%.2f KiB", bytes / 1024.0];
-    } else if (bytes == 1) {
-        result = @"1 byte";
-	} else {
-		result = [NSString stringWithFormat:@"%llu bytes", bytes];
-    }
-	return result;
-}
 
 -(NSString *)humanizedBytes {
     return [Container humanizedBytes:self.bytes];

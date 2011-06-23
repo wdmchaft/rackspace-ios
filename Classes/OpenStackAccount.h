@@ -84,6 +84,7 @@
 - (NSArray *)loadBalancerURLs;
 
 - (NSString *)loadBalancerEndpointForRegion:(NSString *)region;
+- (NSString *)loadBalancerRegionForEndpoint:(NSString *)endpoint;
 - (NSString *)accountNumber;
 
 - (NSArray *)sortedServers;

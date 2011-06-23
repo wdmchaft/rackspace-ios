@@ -147,6 +147,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     LoadBalancer *loadBalancer = [self.account.sortedLoadBalancers objectAtIndex:indexPath.row];
     LoadBalancerViewController *vc = [[LoadBalancerViewController alloc] initWithLoadBalancer:loadBalancer];
+    vc.account = self.account;
     [self.navigationController pushViewController:vc animated:YES];
     [vc release];
 }

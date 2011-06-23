@@ -55,7 +55,6 @@
 @property (nonatomic, assign) BOOL hasEverBeenCDNEnabled;
 
 + (Container *)fromJSON:(NSDictionary *)dict;
-+ (NSString *)humanizedBytes:(unsigned long long)bytes;
 - (NSString *)humanizedBytes;
 - (NSString *)humanizedCount;
 - (NSString *)humanizedSize;
