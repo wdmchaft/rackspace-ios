@@ -19,8 +19,6 @@
 		2710BC16136B54A9003C8CFF /* LBProtocolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2710BC11136B54A9003C8CFF /* LBProtocolViewController.m */; };
 		2710BC17136B54A9003C8CFF /* LBProtocolViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2710BC12136B54A9003C8CFF /* LBProtocolViewController.xib */; };
 		2710BC18136B54A9003C8CFF /* LBProtocolViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2710BC12136B54A9003C8CFF /* LBProtocolViewController.xib */; };
-		2712145F13B1492C0052CCC9 /* Constants.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2712145E13B1492C0052CCC9 /* Constants.plist */; };
-		2712146013B1492C0052CCC9 /* Constants.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2712145E13B1492C0052CCC9 /* Constants.plist */; };
 		271726F112555EC0003A1319 /* Provider.m in Sources */ = {isa = PBXBuildFile; fileRef = 271726EF12555EC0003A1319 /* Provider.m */; };
 		2717275A12565ED9003A1319 /* OpenStackAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 2717275812565ED9003A1319 /* OpenStackAccount.m */; };
 		2717282512567D61003A1319 /* Keychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 2717282312567D61003A1319 /* Keychain.m */; };
@@ -118,6 +116,8 @@
 		273FF39F13313A5400437033 /* ServersOnHostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 273FF39A13313A5300437033 /* ServersOnHostViewController.m */; };
 		273FF3A013313A5400437033 /* ServersOnHostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 273FF39B13313A5400437033 /* ServersOnHostViewController.xib */; };
 		273FF3A113313A5400437033 /* ServersOnHostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 273FF39B13313A5400437033 /* ServersOnHostViewController.xib */; };
+		2740D30B13B50B2100D635AD /* Constants.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2740D30A13B50B2100D635AD /* Constants.plist */; };
+		2740D30C13B50B2100D635AD /* Constants.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2740D30A13B50B2100D635AD /* Constants.plist */; };
 		2748C580126E90FD00A24941 /* PingIPAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748C57D126E90FD00A24941 /* PingIPAddressViewController.m */; };
 		2748C581126E90FD00A24941 /* PingIPAddressViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748C57E126E90FD00A24941 /* PingIPAddressViewController.xib */; };
 		2748C583126E90FD00A24941 /* PingIPAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748C57D126E90FD00A24941 /* PingIPAddressViewController.m */; };
@@ -837,7 +837,6 @@
 		2710BC10136B54A9003C8CFF /* LBProtocolViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBProtocolViewController.h; sourceTree = "<group>"; };
 		2710BC11136B54A9003C8CFF /* LBProtocolViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBProtocolViewController.m; sourceTree = "<group>"; };
 		2710BC12136B54A9003C8CFF /* LBProtocolViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBProtocolViewController.xib; sourceTree = "<group>"; };
-		2712145E13B1492C0052CCC9 /* Constants.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Constants.plist; sourceTree = "<group>"; };
 		271726EE12555EC0003A1319 /* Provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Provider.h; sourceTree = "<group>"; };
 		271726EF12555EC0003A1319 /* Provider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Provider.m; sourceTree = "<group>"; };
 		2717275712565ED9003A1319 /* OpenStackAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenStackAccount.h; sourceTree = "<group>"; };
@@ -922,6 +921,7 @@
 		273FF39913313A5300437033 /* ServersOnHostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServersOnHostViewController.h; sourceTree = "<group>"; };
 		273FF39A13313A5300437033 /* ServersOnHostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServersOnHostViewController.m; sourceTree = "<group>"; };
 		273FF39B13313A5400437033 /* ServersOnHostViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ServersOnHostViewController.xib; sourceTree = "<group>"; };
+		2740D30A13B50B2100D635AD /* Constants.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Constants.plist; sourceTree = "<group>"; };
 		2748C57C126E90FD00A24941 /* PingIPAddressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PingIPAddressViewController.h; sourceTree = "<group>"; };
 		2748C57D126E90FD00A24941 /* PingIPAddressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PingIPAddressViewController.m; sourceTree = "<group>"; };
 		2748C57E126E90FD00A24941 /* PingIPAddressViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PingIPAddressViewController.xib; sourceTree = "<group>"; };
@@ -2624,7 +2624,7 @@
 		27FC363F12F32C200014FB4E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				2712145E13B1492C0052CCC9 /* Constants.plist */,
+				2740D30A13B50B2100D635AD /* Constants.plist */,
 				27CFD87E1371D54500116BBD /* Load Balancers */,
 				27C69D2A13257474001F1370 /* Temp */,
 				2787C14012F0D273009EAD7C /* Files for Icon Loading */,
@@ -3045,7 +3045,7 @@
 				27CFD89B1371D9CD00116BBD /* grey-highlight@2x.png in Resources */,
 				2728B4FD13786CEE007DBD80 /* LBServersViewController.xib in Resources */,
 				7F8F372513859EDA0034710B /* HTNotifier.strings in Resources */,
-				2712145F13B1492C0052CCC9 /* Constants.plist in Resources */,
+				2740D30B13B50B2100D635AD /* Constants.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3262,7 +3262,7 @@
 				27CFD89C1371D9CD00116BBD /* grey-highlight@2x.png in Resources */,
 				2728B4FE13786CEE007DBD80 /* LBServersViewController.xib in Resources */,
 				7F8F372713859EDA0034710B /* HTNotifier.strings in Resources */,
-				2712146013B1492C0052CCC9 /* Constants.plist in Resources */,
+				2740D30C13B50B2100D635AD /* Constants.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
