@@ -967,6 +967,10 @@
 		27D5E229130F032400404EC2 /* LoadBalancersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27D5E223130F032400404EC2 /* LoadBalancersViewController.m */; };
 		27D5E22A130F032400404EC2 /* LoadBalancersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27D5E224130F032400404EC2 /* LoadBalancersViewController.xib */; };
 		27D91858125D4B280099A584 /* openstack_providers.json in Resources */ = {isa = PBXBuildFile; fileRef = 27828B1A125A827700004D33 /* openstack_providers.json */; };
+		27DADC1413B94D6C00F9E906 /* LBNodeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27DADC1213B94D6B00F9E906 /* LBNodeViewController.h */; };
+		27DADC1513B94D6C00F9E906 /* LBNodeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27DADC1213B94D6B00F9E906 /* LBNodeViewController.h */; };
+		27DADC1613B94D6C00F9E906 /* LBNodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DADC1313B94D6B00F9E906 /* LBNodeViewController.m */; };
+		27DADC1713B94D6C00F9E906 /* LBNodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DADC1313B94D6B00F9E906 /* LBNodeViewController.m */; };
 		27E6B5D812D9211C00EA623F /* MediaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E6B5D512D9211C00EA623F /* MediaViewController.m */; };
 		27E6B5D912D9211C00EA623F /* MediaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27E6B5D612D9211C00EA623F /* MediaViewController.xib */; };
 		27E6B5DB12D9211C00EA623F /* MediaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E6B5D512D9211C00EA623F /* MediaViewController.m */; };
@@ -1624,6 +1628,8 @@
 		27D5E222130F032400404EC2 /* LoadBalancersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadBalancersViewController.h; sourceTree = "<group>"; };
 		27D5E223130F032400404EC2 /* LoadBalancersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadBalancersViewController.m; sourceTree = "<group>"; };
 		27D5E224130F032400404EC2 /* LoadBalancersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadBalancersViewController.xib; sourceTree = "<group>"; };
+		27DADC1213B94D6B00F9E906 /* LBNodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = LBNodeViewController.h; sourceTree = "<group>"; };
+		27DADC1313B94D6B00F9E906 /* LBNodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBNodeViewController.m; sourceTree = "<group>"; };
 		27E6B5D412D9211C00EA623F /* MediaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaViewController.h; sourceTree = "<group>"; };
 		27E6B5D512D9211C00EA623F /* MediaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaViewController.m; sourceTree = "<group>"; };
 		27E6B5D612D9211C00EA623F /* MediaViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediaViewController.xib; sourceTree = "<group>"; };
@@ -2025,6 +2031,8 @@
 				2781F99C133D24050085E1EA /* LoadBalancerViewController.xib */,
 				2726C64A13B28D1000BC7330 /* ConfigureLoadBalancerViewController.h */,
 				2726C64B13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m */,
+				27DADC1213B94D6B00F9E906 /* LBNodeViewController.h */,
+				27DADC1313B94D6B00F9E906 /* LBNodeViewController.m */,
 			);
 			name = "Load Balancing";
 			sourceTree = "<group>";
@@ -4132,6 +4140,8 @@
 				2742A3EE13AFB24D00C10640 /* LBTitleView.m in Sources */,
 				2726C64C13B28D1000BC7330 /* ConfigureLoadBalancerViewController.h in Sources */,
 				2726C64E13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m in Sources */,
+				27DADC1413B94D6C00F9E906 /* LBNodeViewController.h in Sources */,
+				27DADC1613B94D6C00F9E906 /* LBNodeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4287,6 +4297,8 @@
 				275856661399735500311115 /* LBLinkSharedVIPViewController.m in Sources */,
 				2742A3EF13AFB24D00C10640 /* LBTitleView.m in Sources */,
 				2726C64F13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m in Sources */,
+				27DADC1513B94D6C00F9E906 /* LBNodeViewController.h in Sources */,
+				27DADC1713B94D6C00F9E906 /* LBNodeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
