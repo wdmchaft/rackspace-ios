@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface LoadBalancerProtocol : NSObject {
+@interface LoadBalancerProtocol : NSObject <NSCoding> {
     NSString *name;
     NSInteger port;
 }

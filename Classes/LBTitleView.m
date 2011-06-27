@@ -38,26 +38,29 @@
     CGFloat third = self.frame.size.width / 3.0;
     
     self.connectedLabel.frame = CGRectMake(0, 48, third, 20);
+    self.connectedLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.connectedLabel.font = [UIFont systemFontOfSize:14];
     self.connectedLabel.backgroundColor = [UIColor clearColor];
     self.connectedLabel.textAlignment = UITextAlignmentCenter;
-    self.connectedLabel.text = @"55 connected";
+    self.connectedLabel.text = @"";
     self.connectedLabel.textColor = [UIColor darkGrayColor];
     [self addSubview:self.connectedLabel];
     
     self.bwInLabel.frame = CGRectMake(third, 48, third, 20);
+    self.bwInLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.bwInLabel.font = [UIFont systemFontOfSize:14];
     self.bwInLabel.backgroundColor = [UIColor clearColor];
     self.bwInLabel.textAlignment = UITextAlignmentCenter;
-    self.bwInLabel.text = @"0.55 GB in";
+    self.bwInLabel.text = @"";
     self.bwInLabel.textColor = [UIColor darkGrayColor];
     [self addSubview:self.bwInLabel];
     
     self.bwOutLabel.frame = CGRectMake(third * 2, 48, third, 20);
+    self.bwOutLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.bwOutLabel.font = [UIFont systemFontOfSize:14];
     self.bwOutLabel.backgroundColor = [UIColor clearColor];
     self.bwOutLabel.textAlignment = UITextAlignmentCenter;
-    self.bwOutLabel.text = @"0.55 GB out";
+    self.bwOutLabel.text = @"";
     self.bwOutLabel.textColor = [UIColor darkGrayColor];
     [self addSubview:self.bwOutLabel];
     

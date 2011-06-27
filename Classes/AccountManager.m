@@ -700,6 +700,33 @@
     }];
 }
 
+- (APICallback *)getLoadBalancerDetails:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancerDetailsRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+
+        LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer];
+        loadBalancer.nodes = newLB.nodes;
+        
+//        if (!self.account.loadBalancers) {
+//            self.account.loadBalancers = [[NSMutableDictionary alloc] initWithCapacity:2];
+//        }
+//        
+//        NSLog(@"%@", self.account.loadBalancers);
+//        NSLog(@"%@", [(LoadBalancerRequest *)request loadBalancers]);
+//        NSLog(@"%@", endpoint);
+//        NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers];
+//        
+//        for (NSString *identifier in lbs) {
+//            LoadBalancer *lb = [lbs objectForKey:identifier];
+//            lb.region = [self.account loadBalancerRegionForEndpoint:endpoint];
+//            NSLog(@"lb.region = %@", lb.region);
+//        }
+//        
+//        [self.account.loadBalancers setObject:lbs forKey:endpoint];
+        [self.account persist];
+    }];
+}
+
 - (APICallback *)getLoadBalancerProtocols:(NSString *)endpoint {
     __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancerProtocols:self.account endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {

@@ -31,8 +31,7 @@
     return self;
 }
 
-#pragma mark -
-#pragma mark Serialization
+#pragma mark - Serialization
 
 - (void)encodeWithCoder: (NSCoder *)coder {
     [self autoEncodeWithCoder:coder];    

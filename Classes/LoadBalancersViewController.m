@@ -16,6 +16,9 @@
 #import "AddLoadBalancerViewController.h"
 #import "APICallback.h"
 #import "UIViewController+Conveniences.h"
+#import "LoadBalancerProtocol.h"
+#import "OpenStackAppDelegate.h"
+#import "RootViewController.h"
 
 
 @implementation LoadBalancersViewController
@@ -86,17 +89,16 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    // Configure the cell...
     LoadBalancer *loadBalancer = [self.account.sortedLoadBalancers objectAtIndex:indexPath.row];
     cell.textLabel.text = loadBalancer.name;
-    if ([loadBalancer.nodes count] == 1) {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ to 1 node", loadBalancer.algorithm];
-    } else {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@: %@ to %i nodes", loadBalancer.status, loadBalancer.algorithm, [loadBalancer.nodes count]];
-    }
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i - %@", loadBalancer.protocol.name, loadBalancer.protocol.port, loadBalancer.algorithm];
     cell.imageView.image = [UIImage imageNamed:@"load-balancers-icon.png"];
     
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
     return cell;
 }
 
@@ -109,46 +111,24 @@
 }
 */
 
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     LoadBalancer *loadBalancer = [self.account.sortedLoadBalancers objectAtIndex:indexPath.row];
     LoadBalancerViewController *vc = [[LoadBalancerViewController alloc] initWithLoadBalancer:loadBalancer];
     vc.account = self.account;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self presentPrimaryViewController:vc];
+//        if (loaded) {
+            OpenStackAppDelegate *app = [[UIApplication sharedApplication] delegate];
+            if (app.rootViewController.popoverController != nil) {
+                [app.rootViewController.popoverController dismissPopoverAnimated:YES];
+            }
+//        }
+    } else {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
     [vc release];
 }
 

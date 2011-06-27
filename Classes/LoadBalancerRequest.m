@@ -40,6 +40,11 @@
     return [LoadBalancerRequest lbRequest:account method:@"GET" endpoint:endpoint path:@"/loadbalancers"];
 }
 
++ (LoadBalancerRequest *)getLoadBalancerDetailsRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i", loadBalancer.identifier];
+    return [LoadBalancerRequest lbRequest:account method:@"GET" endpoint:endpoint path:path];
+}
+
 + (LoadBalancerRequest *)createLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
 	NSString *body = [loadBalancer toJSON];
     NSLog(@"create load balancer: %@", body);
@@ -74,6 +79,14 @@
     }
     [parser release];
     return objects;
+}
+
+- (LoadBalancer *)loadBalancer {
+    SBJSON *parser = [[SBJSON alloc] init];
+    NSDictionary *json = [[parser objectWithString:[self responseString]] objectForKey:@"loadBalancer"];
+    LoadBalancer *loadBalancer = [LoadBalancer fromJSON:json];
+    [parser release];
+    return loadBalancer;
 }
 
 + (LoadBalancerRequest *)getLoadBalancerProtocols:(OpenStackAccount *)account endpoint:(NSString *)endpoint {

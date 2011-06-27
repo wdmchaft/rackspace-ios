@@ -8,6 +8,7 @@
 
 #import "LoadBalancerViewController.h"
 #import "LoadBalancer.h"
+#import "LoadBalancerNode.h"
 #import <QuartzCore/QuartzCore.h>
 #import "LBTitleView.h"
 #import "LoadBalancerProtocol.h"
@@ -78,6 +79,12 @@
     
     NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
     
+    [[self.account.manager getLoadBalancerDetails:self.loadBalancer endpoint:endpoint] success:^(OpenStackRequest *request) {
+        [self.tableView reloadData];
+    } failure:^(OpenStackRequest *request) {
+        [self alert:@"There was a problem loading information for this load balancer." request:request];
+    }];
+    
     [[self.account.manager getLoadBalancerUsage:self.loadBalancer endpoint:endpoint] success:^(OpenStackRequest *request) {
         self.titleView.connectedLabel.text = [NSString stringWithFormat:@"%.0f connected", self.loadBalancer.usage.averageNumConnections];
         self.titleView.bwInLabel.text = [NSString stringWithFormat:@"%@ in", [LoadBalancerUsage humanizedBytes:self.loadBalancer.usage.incomingTransfer]];
@@ -102,8 +109,7 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
@@ -113,7 +119,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.loadBalancer.virtualIPs count];
+    return [self.loadBalancer.nodes count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {    
@@ -125,9 +131,9 @@
         cell.textLabel.backgroundColor = [UIColor clearColor];
         cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     }
-    
-    VirtualIP *ip = [self.loadBalancer.virtualIPs objectAtIndex:indexPath.row];
-    cell.textLabel.text = ip.address;
+
+    LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
+    cell.textLabel.text = node.address;
         
     return cell;
 }

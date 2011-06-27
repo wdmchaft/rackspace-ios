@@ -319,12 +319,7 @@
     } else if (indexPath.row == loadBalancingRow) {
         LoadBalancersViewController *vc = [[LoadBalancersViewController alloc] initWithNibName:@"LoadBalancersViewController" bundle:nil];
         vc.account = account;
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            [self.navigationController presentPrimaryViewController:vc];
-            shouldHidePopover = YES;
-        } else {
-            [self.navigationController pushViewController:vc animated:YES];
-        }
+        [self.navigationController pushViewController:vc animated:YES];
         [vc release];
     }
     
