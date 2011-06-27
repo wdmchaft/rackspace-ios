@@ -9,6 +9,7 @@
 #import "LBNodeViewController.h"
 #import "LoadBalancerNode.h"
 #import "UIViewController+Conveniences.h"
+#import "RSTextFieldCell.h"
 
 #define kConditionSection 0
 #define kEnabled 0
@@ -48,7 +49,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"Node";
+    self.navigationItem.title = @"Node Config";
     [self addSaveButton];
 }
 
@@ -132,6 +133,11 @@
                     break;
                 default:
                     break;
+            }
+            if ([node.condition isEqualToString:[cell.textLabel.text uppercaseString]]) {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            } else {
+                cell.accessoryType = UITableViewCellAccessoryNone;
             }
             break;
         case kAddressSection:
