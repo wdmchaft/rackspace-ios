@@ -8,6 +8,7 @@
 
 #import "LBNodeViewController.h"
 #import "LoadBalancerNode.h"
+#import "UIViewController+Conveniences.h"
 
 #define kConditionSection 0
 #define kEnabled 0
@@ -45,16 +46,10 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Node";
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self addSaveButton];
 }
 
 - (void)viewDidUnload
@@ -92,7 +87,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -120,10 +115,40 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    // Configure the cell...
+    switch (indexPath.section) {
+        case kConditionSection:
+            switch (indexPath.row) {
+                case kEnabled:
+                    cell.textLabel.text = @"Enabled";
+                    break;
+                case kDraining:
+                    cell.textLabel.text = @"Draining";
+                    break;
+                case kDisabled:
+                    cell.textLabel.text = @"Disabled";
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case kAddressSection:
+            switch (indexPath.row) {
+                case kIP:
+                    cell.textLabel.text = @"IP";
+                    break;
+                case kPort:
+                    cell.textLabel.text = @"Port";
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
     
     return cell;
 }
