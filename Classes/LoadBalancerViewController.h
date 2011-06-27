@@ -19,6 +19,13 @@
     NSInteger mode;
 
     IBOutlet UITableView *tableView;
+    
+    @private
+    NSMutableDictionary *nodes;
+    NSInteger totalSections;
+    NSInteger enabledSection;
+    NSInteger disabledSection;
+    NSInteger drainingSection;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;

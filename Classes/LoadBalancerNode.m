@@ -38,6 +38,7 @@
     node.address = [dict objectForKey:@"address"];
     node.condition = [dict objectForKey:@"condition"];
     node.status = [dict objectForKey:@"status"];
+    node.port = [dict objectForKey:@"port"];
     return node;
 }
 

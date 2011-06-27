@@ -25,6 +25,10 @@
 #define kDetails 0
 #define kNodes 1
 
+#define kEnabled @"ENABLED"
+#define kDisabled @"DISABLED"
+#define kDraining @"DRAINING"
+
 @implementation LoadBalancerViewController
 
 @synthesize account, loadBalancer, tableView, titleView;
@@ -34,6 +38,7 @@
     if (self) {
         self.loadBalancer = lb;
         mode = kDetails;
+        nodes = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -43,6 +48,7 @@
     [loadBalancer release];
     [tableView release];
     [titleView release];
+    [nodes release];
     [super dealloc];
 }
 
@@ -80,6 +86,33 @@
     NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
     
     [[self.account.manager getLoadBalancerDetails:self.loadBalancer endpoint:endpoint] success:^(OpenStackRequest *request) {
+        
+        // break up nodes by condition into ENABLED, DISABLED, and DRAINING
+        [nodes setObject:[NSMutableArray array] forKey:kEnabled];
+        [nodes setObject:[NSMutableArray array] forKey:kDisabled];
+        [nodes setObject:[NSMutableArray array] forKey:kDraining];
+        
+        for (LoadBalancerNode *node in loadBalancer.nodes) {
+            if ([node.condition isEqualToString:kEnabled]) {
+                [[nodes objectForKey:kEnabled] addObject:node];
+            } else if ([node.condition isEqualToString:kDisabled]) {
+                [[nodes objectForKey:kDisabled] addObject:node];
+            } else if ([node.condition isEqualToString:kDraining]) {
+                [[nodes objectForKey:kDraining] addObject:node];
+            }                
+        }
+        
+        totalSections = 0;
+        if ([[nodes objectForKey:kEnabled] count] > 0) {
+            enabledSection = totalSections++;
+        }
+        if ([[nodes objectForKey:kDisabled] count] > 0) {
+            disabledSection = totalSections++;
+        }
+        if ([[nodes objectForKey:kDraining] count] > 0) {
+            drainingSection = totalSections++;
+        }
+        
         [self.tableView reloadData];
     } failure:^(OpenStackRequest *request) {
         [self alert:@"There was a problem loading information for this load balancer." request:request];
@@ -115,11 +148,23 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return totalSections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.loadBalancer.nodes count];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == enabledSection) {
+        return @"Enabled Nodes";
+    } else if (section == disabledSection) {
+        return @"Disabled Nodes";
+    } else if (section == drainingSection) {
+        return @"Draining Nodes";
+    } else {
+        return @"";
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {    
@@ -130,10 +175,11 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
         cell.textLabel.backgroundColor = [UIColor clearColor];
         cell.detailTextLabel.backgroundColor = [UIColor clearColor];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
     LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
-    cell.textLabel.text = node.address;
+    cell.textLabel.text = [NSString stringWithFormat:@"%@:%@", node.address, node.port];
         
     return cell;
 }

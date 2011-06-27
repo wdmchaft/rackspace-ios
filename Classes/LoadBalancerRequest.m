@@ -117,7 +117,11 @@
         [objects addObject:[LoadBalancerUsage fromJSON:dict]];
     }
     [parser release];
-    return [objects objectAtIndex:0];
+    if ([objects count] > 0) {
+        return [objects objectAtIndex:0];
+    } else {
+        return [[[LoadBalancerUsage alloc] init] autorelease];
+    }
 }
  
 @end

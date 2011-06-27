@@ -112,6 +112,7 @@
         cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
         cell.textLabel.text = @"Name";
         cell.textField.delegate = self;
+        nameTextField = cell.textField;
     }
     return cell;
 }
@@ -221,15 +222,33 @@
 
 #pragma mark - Button Handlers
 
-- (void)saveButtonPressed:(id)sender {
-    [self alert:@"Load Balancer JSON" message:[self.loadBalancer toJSON]];
-    /*
+- (void)saveLoadBalancer {
+    // TODO: show "saving" spinner and refresh list when dismissing
     [[self.account.manager createLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
         [self alert:@"Woot!" message:[request responseString]];
+        [self dismissModalViewControllerAnimated:YES];
     } failure:^(OpenStackRequest *request) {
-        [self alert:[NSString stringWithFormat:@"Fail! %i", [request responseStatusCode]] message:[request responseString]];
+        [self alert:@"There was a problem creating the load balancer." request:request];
     }];
-     */
+}
+
+- (void)saveButtonPressed:(id)sender {
+    if (self.loadBalancer.name && ![@"" isEqualToString:self.loadBalancer.name]) {        
+        if (self.loadBalancer.nodes && [self.loadBalancer.nodes count] > 0) {
+            [self saveLoadBalancer];
+        } else {
+            if (self.loadBalancer.cloudServerNodes && [self.loadBalancer.cloudServerNodes count] > 0) {
+                [self saveLoadBalancer];
+            } else {            
+                [self alert:nil message:@"Please add at least one node."];
+            }
+        }
+    } else {
+        [self alert:nil message:@"Please enter a name."];
+        [nameTextField becomeFirstResponder];
+    }
+    
+    
 }
 
 @end
