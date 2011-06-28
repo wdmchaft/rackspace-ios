@@ -110,6 +110,9 @@
     CGContextDrawLinearGradient(context, gradient, CGPointMake(0, 0), CGPointMake(0, 74), 0);
     CGContextRestoreGState(context);
 
+    CGColorSpaceRelease(colorspace);
+    CGGradientRelease(gradient);
+    
     UIColor *lineColor = [UIColor colorWithWhite:0.784 alpha:1];
 
     // draw etched lines
