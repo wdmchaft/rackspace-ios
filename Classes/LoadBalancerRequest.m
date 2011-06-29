@@ -12,6 +12,7 @@
 #import "LoadBalancer.h"
 #import "LoadBalancerProtocol.h"
 #import "LoadBalancerUsage.h"
+#import "LoadBalancerNode.h"
 
 
 @implementation LoadBalancerRequest
@@ -124,4 +125,17 @@
     }
 }
  
++ (LoadBalancerRequest *)updateLoadBalancerNodeRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer node:(LoadBalancerNode *)node endpoint:(NSString *)endpoint {
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/nodes/%@", loadBalancer.identifier, node.identifier];
+	NSData *data = [[node toJSON] dataUsingEncoding:NSUTF8StringEncoding];
+    LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
+	[request setPostBody:[NSMutableData dataWithData:data]];
+    return request;
+}
+
++ (LoadBalancerRequest *)deleteLoadBalancerNodeRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer node:(LoadBalancerNode *)node endpoint:(NSString *)endpoint {
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/nodes/%@", loadBalancer.identifier, node.identifier];
+    return [LoadBalancerRequest lbRequest:account method:@"DELETE" endpoint:endpoint path:path];
+}
+
 @end

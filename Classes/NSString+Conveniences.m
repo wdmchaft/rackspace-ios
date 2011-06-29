@@ -15,4 +15,12 @@
     return [self hasPrefix:@"http://"] || [self hasPrefix:@"https://"];
 }
 
+- (NSString *)replace:(NSString *)s with:(NSString *)r {
+    return [self stringByReplacingOccurrencesOfString:s withString:r];
+}
+
+- (NSString *)replace:(NSString *)s withInt:(NSInteger)i {
+    return [self replace:s with:[NSString stringWithFormat:@"%i", i]];
+}
+
 @end

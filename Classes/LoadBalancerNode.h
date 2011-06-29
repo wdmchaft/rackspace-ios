@@ -15,6 +15,7 @@
     NSString *port;
     NSString *condition;
     NSString *status;
+    NSInteger weight;
 }
 
 @property (nonatomic, retain) NSString *identifier;
@@ -22,7 +23,9 @@
 @property (nonatomic, retain) NSString *port;
 @property (nonatomic, retain) NSString *condition;
 @property (nonatomic, retain) NSString *status;
+@property (nonatomic, assign) NSInteger weight;
 
 + (LoadBalancerNode *)fromJSON:(NSDictionary *)dict;
+- (NSString *)toJSON;
 
 @end

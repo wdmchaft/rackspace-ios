@@ -15,6 +15,7 @@
     IBOutlet UITableView *tableView;
     @private
     BOOL lbsLoaded;
+    NSDictionary *algorithmNames;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;

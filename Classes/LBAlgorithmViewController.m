@@ -41,7 +41,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Algorithm";
-    self.tableView.backgroundColor = [UIColor whiteColor];
     descriptions = [[NSDictionary alloc] initWithObjectsAndKeys:
                         @"Directs traffic to a randomly selected node.", @"Random",
                         @"Directs traffic in a circular pattern to each node of a load balancer in succession.", @"Round Robin",

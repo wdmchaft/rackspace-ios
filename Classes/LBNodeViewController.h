@@ -10,7 +10,7 @@
 
 @class LoadBalancerNode;
 
-@interface LBNodeViewController : UITableViewController {
+@interface LBNodeViewController : UITableViewController <UITextFieldDelegate> {
     LoadBalancerNode *node;
 }
 

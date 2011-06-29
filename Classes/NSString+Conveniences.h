@@ -12,5 +12,7 @@
 @interface NSString (Conveniences)
 
 - (BOOL)isURL;
+- (NSString *)replace:(NSString *)s with:(NSString *)r;
+- (NSString *)replace:(NSString *)s withInt:(NSInteger )i;
 
 @end

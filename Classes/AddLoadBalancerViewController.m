@@ -70,7 +70,7 @@
     [self addCancelButton];
     
     algorithmNames = [[NSDictionary alloc] initWithObjectsAndKeys:
-                       @"Random",@"RANDOM", 
+                       @"Random", @"RANDOM", 
                        @"Round Robin", @"ROUND_ROBIN", 
                        @"Weighted Round Robin", @"WEIGHTED_ROUND_ROBIN", 
                        @"Least Connections", @"LEAST_CONNECTIONS", 

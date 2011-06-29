@@ -65,7 +65,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Virtual IP Type";
-    self.tableView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)viewDidUnload

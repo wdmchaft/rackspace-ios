@@ -8,14 +8,14 @@
 
 #import "LoadBalancerNode.h"
 #import "NSObject+NSCoding.h"
+#import "NSString+Conveniences.h"
 
 
 @implementation LoadBalancerNode
 
-@synthesize identifier, address, port, condition, status;
+@synthesize identifier, address, port, condition, status, weight;
 
-#pragma mark -
-#pragma mark Serialization
+#pragma mark - Serialization
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [self autoEncodeWithCoder:coder];
@@ -29,8 +29,7 @@
     return self;
 }
 
-#pragma mark -
-#pragma mark JSON
+#pragma mark - JSON
 
 + (LoadBalancerNode *)fromJSON:(NSDictionary *)dict {
     LoadBalancerNode *node = [[[LoadBalancerNode alloc] init] autorelease];
@@ -39,11 +38,22 @@
     node.condition = [dict objectForKey:@"condition"];
     node.status = [dict objectForKey:@"status"];
     node.port = [dict objectForKey:@"port"];
+    node.weight = [[dict objectForKey:@"weight"] intValue];
     return node;
 }
 
-#pragma mark -
-#pragma mark Memory Management
+- (NSString *)toJSON {
+    NSString *json = 
+        @"{\"node\": {"
+         "  \"condition\": \"<condition>\","
+         "  \"weight\": <weight>}"
+         "}";
+    json = [json replace:@"<condition>" with:self.condition];
+    json = [json replace:@"<weight>" withInt:self.weight];
+    return json;
+}
+
+#pragma mark - Memory Management
 
 - (void)dealloc {
     [identifier release];

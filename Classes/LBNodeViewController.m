@@ -10,15 +10,14 @@
 #import "LoadBalancerNode.h"
 #import "UIViewController+Conveniences.h"
 #import "RSTextFieldCell.h"
+#import "UIColor+MoreColors.h"
 
 #define kConditionSection 0
 #define kEnabled 0
 #define kDraining 1
 #define kDisabled 2
 
-#define kAddressSection 1
-#define kIP 0
-#define kPort 1
+#define kRemoveNode 1
 
 @implementation LBNodeViewController
 
@@ -41,8 +40,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"Node Config";
-    [self addSaveButton];
+    self.navigationItem.title = self.node.address;
+    
+    [self alert:nil message:[self.node toJSON]];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -56,76 +56,89 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    switch (section) {
-        case kConditionSection:
-            return 3;
-        case kAddressSection:
-            return 2;
-        default:
-            return 0;
+    if (section == kConditionSection) {
+        return 3;
+    } else {
+        return 1;
     }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-    switch (section) {
-        case kConditionSection:
-            return @"When a node is set to a Draining condition, it will be disabled after it is finished servicing its current connections.";
-        default:
-            return @"";
+    if (section == kConditionSection) {
+        return @"Draining nodes are disabled after all current connections are completed.";
+    } else {
+        return @"";
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+- (UITableViewCell *)removeNodeCell {
+    static NSString *CellIdentifier = @"RemoveNodeCell";    
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell.textLabel.textAlignment = UITextAlignmentCenter;
+        cell.textLabel.textColor = [UIColor value1DetailTextLabelColor];
+        cell.textLabel.text = @"Remove Node";
     }
-    
-    switch (indexPath.section) {
-        case kConditionSection:
-            switch (indexPath.row) {
-                case kEnabled:
-                    cell.textLabel.text = @"Enabled";
-                    break;
-                case kDraining:
-                    cell.textLabel.text = @"Draining";
-                    break;
-                case kDisabled:
-                    cell.textLabel.text = @"Disabled";
-                    break;
-                default:
-                    break;
-            }
-            if ([node.condition isEqualToString:[cell.textLabel.text uppercaseString]]) {
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            } else {
-                cell.accessoryType = UITableViewCellAccessoryNone;
-            }
-            break;
-        case kAddressSection:
-            switch (indexPath.row) {
-                case kIP:
-                    cell.textLabel.text = @"IP";
-                    break;
-                case kPort:
-                    cell.textLabel.text = @"Port";
-                    break;
-                default:
-                    break;
-            }
-            break;
-        default:
-            break;
-    }
-    
     return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == kRemoveNode) {
+        return [self removeNodeCell];
+    } else {
+        static NSString *CellIdentifier = @"Cell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        }
+        
+        switch (indexPath.row) {
+            case kEnabled:
+                cell.textLabel.text = @"Enabled";
+                break;
+            case kDraining:
+                cell.textLabel.text = @"Draining";
+                break;
+            case kDisabled:
+                cell.textLabel.text = @"Disabled";
+                break;
+            default:
+                break;
+        }
+        if ([node.condition isEqualToString:[cell.textLabel.text uppercaseString]]) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        }
+        
+        return cell;
+    }
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == kConditionSection) {
+        switch (indexPath.row) {
+            case kEnabled:
+                self.node.condition = @"ENABLED";
+                break;
+            case kDraining:
+                self.node.condition = @"DRAINING";
+                break;
+            case kDisabled:
+                self.node.condition = @"DISABLED";
+                break;
+            default:
+                break;
+        }
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
+    } else {
+        [self alert:nil message:@"remove node"];
+    }
 }
 
 @end

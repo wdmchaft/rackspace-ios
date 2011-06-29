@@ -8,7 +8,7 @@
 
 #import "OpenStackRequest.h"
 
-@class LoadBalancerUsage;
+@class LoadBalancerUsage, LoadBalancerNode;
 
 @interface LoadBalancerRequest : OpenStackRequest {
 
@@ -27,5 +27,11 @@
 
 + (LoadBalancerRequest *)getLoadBalancerUsageRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 - (LoadBalancerUsage *)usage;
+
++ (LoadBalancerRequest *)updateLoadBalancerNodeRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer node:(LoadBalancerNode *)node endpoint:(NSString *)endpoint;
+
+// add nodes
+
++ (LoadBalancerRequest *)deleteLoadBalancerNodeRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer node:(LoadBalancerNode *)node endpoint:(NSString *)endpoint;
 
 @end
