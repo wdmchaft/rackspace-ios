@@ -10,12 +10,15 @@
 #import "LoadBalancer.h"
 #import "LBProtocolViewController.h"
 #import "OpenStackAccount.h"
+#import "AccountManager.h"
 #import "RSTextFieldCell.h"
 #import "LBNodesViewController.h"
 #import "LBAlgorithmViewController.h"
 #import "AddLoadBalancerAlgorithmViewController.h"
 #import "LoadBalancerProtocol.h"
 #import "UIViewController+Conveniences.h"
+#import "OpenStackRequest.h"
+#import "APICallback.h"
 
 #define kDetailsSection 0
 #define kNodesSection 1
@@ -236,14 +239,10 @@
 #pragma mark - Button Handlers
 
 - (void)saveButtonPressed:(id)sender {
-    [self alert:@"Load Balancer JSON" message:[self.loadBalancer toJSON]];
-    /*
-     [[self.account.manager createLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
-     [self alert:@"Woot!" message:[request responseString]];
-     } failure:^(OpenStackRequest *request) {
-     [self alert:[NSString stringWithFormat:@"Fail! %i", [request responseStatusCode]] message:[request responseString]];
-     }];
-     */
+    [[self.account.manager updateLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
+    } failure:^(OpenStackRequest *request) {
+        [self alert:@"There was a problem updating this load balancer." request:request];
+    }];
 }
 
 @end

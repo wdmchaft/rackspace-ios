@@ -12,6 +12,7 @@
 #import "NSObject+NSCoding.h"
 #import "LoadBalancerProtocol.h"
 #import "Server.h"
+#import "NSString+Conveniences.h"
 
 
 @implementation LoadBalancer
@@ -90,6 +91,22 @@
     loadBalancer.sessionPersistenceType = [[dict objectForKey:@"sessionPersistence"] objectForKey:@"persistenceType"];
     loadBalancer.clusterName = [[dict objectForKey:@"cluster"] objectForKey:@"name"];
     return loadBalancer;
+}
+
+- (NSString *)toUpdateJSON {
+    NSString *json
+        = @"{ \"loadBalancer\": { "
+           "        \"name\": \"<name>\","
+           "        \"algorithm\": \"<algorithm>\","
+           "        \"protocol\": \"<protocol>\","
+           "        \"port\": \"<port>\""
+           "  }}";
+    ;
+    json = [json replace:@"<name>" with:self.name];
+    json = [json replace:@"<algorithm>" with:self.algorithm];
+    json = [json replace:@"<protocol>" with:self.protocol.name];
+    json = [json replace:@"<port>" withInt:self.protocol.port];
+    return json;
 }
 
 - (NSString *)toJSON {

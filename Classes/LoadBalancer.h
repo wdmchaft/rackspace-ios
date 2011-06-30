@@ -66,5 +66,6 @@ https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/420600/
 + (LoadBalancer *)fromJSON:(NSDictionary *)dict;
 - (BOOL)shouldBePolled;
 - (NSString *)toJSON;
+- (NSString *)toUpdateJSON;
 
 @end

@@ -56,9 +56,10 @@
 }
 
 + (LoadBalancerRequest *)updateLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
-	NSString *body = [loadBalancer toJSON];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i", loadBalancer.identifier];
+	NSString *body = [loadBalancer toUpdateJSON];
     NSLog(@"update load balancer: %@", body);
-    LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:@"/loadbalancers"];
+    LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
