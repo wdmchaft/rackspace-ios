@@ -8,14 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@class LoadBalancerNode;
+@class LoadBalancer, LoadBalancerNode, OpenStackAccount;
 
-@interface LBNodeViewController : UITableViewController <UITextFieldDelegate> {
+@interface LBNodeViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate> {
+    OpenStackAccount *account;
+    LoadBalancer *loadBalancer;
     LoadBalancerNode *node;
+    @private
+    NSArray *spinners;
 }
 
+@property (nonatomic, retain) OpenStackAccount *account;
+@property (nonatomic, retain) LoadBalancer *loadBalancer;
 @property (nonatomic, retain) LoadBalancerNode *node;
 
-- (id)initWithNode:(LoadBalancerNode *)node;
+- (id)initWithNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer account:(OpenStackAccount *)account;
 
 @end

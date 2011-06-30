@@ -189,7 +189,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
-    LBNodeViewController *vc = [[LBNodeViewController alloc] initWithNode:node];
+    LBNodeViewController *vc = [[LBNodeViewController alloc] initWithNode:node loadBalancer:self.loadBalancer account:self.account];
     [self.navigationController pushViewController:vc animated:YES];
     [vc release];
 }

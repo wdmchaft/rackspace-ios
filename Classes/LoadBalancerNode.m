@@ -49,7 +49,7 @@
          "  \"weight\": <weight>}"
          "}";
     json = [json replace:@"<condition>" with:self.condition];
-    json = [json replace:@"<weight>" withInt:self.weight];
+    json = [json replace:@"<weight>" withInt:MAX(1, self.weight)];
     return json;
 }
 

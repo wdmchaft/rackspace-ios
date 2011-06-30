@@ -8,9 +8,13 @@
 
 #import "LBNodeViewController.h"
 #import "LoadBalancerNode.h"
+#import "LoadBalancer.h"
 #import "UIViewController+Conveniences.h"
 #import "RSTextFieldCell.h"
 #import "UIColor+MoreColors.h"
+#import "OpenStackAccount.h"
+#import "AccountManager.h"
+#import "APICallback.h"
 
 #define kConditionSection 0
 #define kEnabled 0
@@ -21,18 +25,23 @@
 
 @implementation LBNodeViewController
 
-@synthesize node;
+@synthesize node, loadBalancer, account;
 
-- (id)initWithNode:(LoadBalancerNode *)n {
+- (id)initWithNode:(LoadBalancerNode *)n loadBalancer:(LoadBalancer *)lb account:(OpenStackAccount *)a {
     self = [self initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.node = n;
+        self.loadBalancer = lb;
+        self.account = a;
     }
     return self;
 }
 
 - (void)dealloc {
     [node release];
+    [loadBalancer release];
+    [account release];
+    [spinners release];
     [super dealloc];
 }
 
@@ -42,7 +51,15 @@
     [super viewDidLoad];
     self.navigationItem.title = self.node.address;
     
-    [self alert:nil message:[self.node toJSON]];
+    NSMutableArray *s = [[NSMutableArray alloc] initWithCapacity:3];
+    for (int i = 0; i < 3; i++) {
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        spinner.hidesWhenStopped = YES;
+        [s addObject:spinner];
+        [spinner release];
+    }
+    spinners = [[NSArray alloc] initWithArray:s];
+    [s release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -91,7 +108,7 @@
         
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
-            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];            
         }
         
         switch (indexPath.row) {
@@ -110,7 +127,7 @@
         if ([node.condition isEqualToString:[cell.textLabel.text uppercaseString]]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         } else {
-            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.accessoryView = [spinners objectAtIndex:indexPath.row];
         }
         
         return cell;
@@ -120,7 +137,11 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
     if (indexPath.section == kConditionSection) {
+        
+        NSString *oldCondition = [NSString stringWithString:self.node.condition];
+        
         switch (indexPath.row) {
             case kEnabled:
                 self.node.condition = @"ENABLED";
@@ -134,11 +155,43 @@
             default:
                 break;
         }
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-        [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
+
+        // make the API call
+        NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+        [[spinners objectAtIndex:indexPath.row] startAnimating];
+        APICallback *callback = [self.account.manager updateLBNode:self.node loadBalancer:self.loadBalancer endpoint:endpoint];
+        
+        [callback success:^(OpenStackRequest *request) {
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
+        } failure:^(OpenStackRequest *request) {
+            self.node.condition = oldCondition;
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
+            [self alert:@"There was a problem changing the condition of this node." request:request];
+        }];        
     } else {
-        [self alert:nil message:@"remove node"];
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to remove this node from the load balancer?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
+        sheet.delegate = self;
+        [sheet showInView:self.view];
+        [sheet release];
     }
+}
+
+#pragma mark - Action Sheet Delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+        APICallback *callback = [self.account.manager deleteLBNode:self.node loadBalancer:self.loadBalancer endpoint:endpoint];
+        [callback success:^(OpenStackRequest *request) {
+            [self.navigationController popViewControllerAnimated:YES];
+        } failure:^(OpenStackRequest *request) {
+            [self alert:@"There was a problem removing this node." request:request];
+        }];
+    }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:kRemoveNode];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

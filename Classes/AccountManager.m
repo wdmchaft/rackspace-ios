@@ -766,6 +766,18 @@
     }];
 }
 
+- (APICallback *)updateLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    __block LoadBalancerRequest *request = [LoadBalancerRequest updateLoadBalancerNodeRequest:self.account loadBalancer:loadBalancer node:node endpoint:endpoint];
+    return [self callbackWithRequest:request];
+}
+
+- (APICallback *)deleteLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    __block LoadBalancerRequest *request = [LoadBalancerRequest deleteLoadBalancerNodeRequest:self.account loadBalancer:loadBalancer node:node endpoint:endpoint];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        [loadBalancer.nodes removeObject:node];
+    }];
+}
+
 - (APICallback *)authenticate {
     __block OpenStackRequest *request = [OpenStackRequest authenticationRequest:self.account];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
