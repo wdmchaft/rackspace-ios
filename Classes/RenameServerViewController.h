@@ -10,7 +10,7 @@
 
 @class ServerViewController;
 
-@interface RenameServerViewController : ServerActionViewController <UITableViewDelegate, UITableViewDataSource> {
+@interface RenameServerViewController : ServerActionViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
 	UITextField *textField;
 }
 

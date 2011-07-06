@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface LoadBalancerNode : NSObject {
+@interface LoadBalancerNode : NSObject <NSCopying> {
     NSString *identifier;
     NSString *address;
     NSString *port;

@@ -15,20 +15,18 @@
 
 @implementation RenameServerViewController
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-#pragma mark -
-#pragma mark View lifecycle
+#pragma mark - View lifecycle
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	[textField becomeFirstResponder];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -49,13 +47,13 @@
         cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
         cell.modalPresentationStyle = UIModalPresentationFormSheet;
 		textField = cell.textField;
+        textField.delegate = self;
     }    
     cell.textLabel.text = @"Name";
     return cell;
 }
 
-#pragma mark -
-#pragma mark Button Handlers
+#pragma mark - Button Handlers
 
 -(void)saveButtonPressed:(id)sender {
 	if ([textField.text isEqualToString:@""]) {
@@ -67,11 +65,11 @@
 	}
 }
 
-#pragma mark -
-#pragma mark Memory management
+#pragma mark - Text Field Delegate
 
-- (void)dealloc {
-    [super dealloc];
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self saveButtonPressed:nil];
+    return NO;
 }
 
 @end

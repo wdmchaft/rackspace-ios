@@ -15,7 +15,7 @@
 
 @synthesize identifier, address, port, condition, status, weight;
 
-#pragma mark - Serialization
+#pragma mark - Serialization and Copying
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [self autoEncodeWithCoder:coder];
@@ -29,6 +29,17 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    LoadBalancerNode *copy = [[LoadBalancerNode allocWithZone:zone] init];
+    copy.identifier = self.identifier;
+    copy.address = self.address;
+    copy.port = self.port;
+    copy.condition = self.condition;
+    copy.status = self.status;
+    copy.weight = self.weight;
+    return copy;
+}
+
 #pragma mark - JSON
 
 + (LoadBalancerNode *)fromJSON:(NSDictionary *)dict {
@@ -37,7 +48,7 @@
     node.address = [dict objectForKey:@"address"];
     node.condition = [dict objectForKey:@"condition"];
     node.status = [dict objectForKey:@"status"];
-    node.port = [dict objectForKey:@"port"];
+    node.port = [NSString stringWithFormat:@"%i", [[dict objectForKey:@"port"] intValue]];
     node.weight = [[dict objectForKey:@"weight"] intValue];
     return node;
 }
@@ -45,9 +56,13 @@
 - (NSString *)toJSON {
     NSString *json = 
         @"{\"node\": {"
+         "  \"address\": \"<address>\","
+         "  \"port\": \"<port>\","
          "  \"condition\": \"<condition>\","
          "  \"weight\": <weight>}"
          "}";
+    json = [json replace:@"<address>" with:self.address];
+    json = [json replace:@"<port>" with:self.port];
     json = [json replace:@"<condition>" with:self.condition];
     json = [json replace:@"<weight>" withInt:MAX(1, self.weight)];
     return json;

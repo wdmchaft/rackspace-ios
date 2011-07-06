@@ -45,8 +45,17 @@
     return self;
 }
 
-#pragma mark -
-#pragma mark JSON
+#pragma mark - Nodes
+
+//- (NSMutableArray *)nodes {
+//    return nodes;
+//}
+//
+//- (NSMutableArray *)cloudServerNodes {
+//    return cloudServerNodes;
+//}
+
+#pragma mark - JSON
 
 + (LoadBalancer *)fromJSON:(NSDictionary *)dict {
     

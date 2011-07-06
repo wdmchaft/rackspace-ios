@@ -13,6 +13,7 @@
 #import "LoadBalancerProtocol.h"
 #import "LoadBalancerUsage.h"
 #import "LoadBalancerNode.h"
+#import "NSString+Conveniences.h"
 
 
 @implementation LoadBalancerRequest
@@ -126,6 +127,24 @@
     }
 }
  
++ (LoadBalancerRequest *)addLoadBalancerNodesRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer nodes:(NSArray *)nodes endpoint:(NSString *)endpoint {
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/nodes", loadBalancer.identifier];
+    NSString *body = @"{ \"nodes\": [ <nodes> ] }";
+    NSString *nodesJSON = @"";
+    for (int i = 0; i < [nodes count]; i++) {
+        LoadBalancerNode *node = [nodes objectAtIndex:i];
+        nodesJSON = [nodesJSON stringByAppendingString:[node toJSON]];
+        if (i < [nodes count] - 1) {
+            nodesJSON = [nodesJSON stringByAppendingString:@","];
+        }
+    }
+    body = [body replace:@"<nodes>" with:nodesJSON];
+	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
+    LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"POST" endpoint:endpoint path:path];
+	[request setPostBody:[NSMutableData dataWithData:data]];
+    return request;
+}
+
 + (LoadBalancerRequest *)updateLoadBalancerNodeRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer node:(LoadBalancerNode *)node endpoint:(NSString *)endpoint {
     NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/nodes/%@", loadBalancer.identifier, node.identifier];
 	NSData *data = [[node toJSON] dataUsingEncoding:NSUTF8StringEncoding];

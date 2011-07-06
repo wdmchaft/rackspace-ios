@@ -184,6 +184,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kNodesSection) {
         LBNodesViewController *vc = [[LBNodesViewController alloc] initWithNibName:@"LBNodesViewController" bundle:nil];
+        vc.isNewLoadBalancer = YES;
         vc.account = self.account;
         vc.loadBalancer = self.loadBalancer;
         [self.navigationController pushViewController:vc animated:YES];

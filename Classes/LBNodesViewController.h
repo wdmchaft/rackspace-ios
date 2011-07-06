@@ -13,11 +13,14 @@
 @interface LBNodesViewController : UITableViewController <UITextFieldDelegate> {
     OpenStackAccount *account;
     LoadBalancer *loadBalancer;
+    BOOL isNewLoadBalancer;
     @private
     NSMutableArray *textFields;
+    NSArray *previousNodes;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) LoadBalancer *loadBalancer;
+@property (nonatomic, assign) BOOL isNewLoadBalancer;
 
 @end

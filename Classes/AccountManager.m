@@ -748,14 +748,6 @@
     
     __block LoadBalancerRequest *request = [LoadBalancerRequest createLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
-//        if (!self.account.loadBalancers) {
-//            self.account.loadBalancers = [[NSMutableDictionary alloc] initWithCapacity:2];
-//        }
-//        [self.account.loadBalancers setObject:[(LoadBalancerRequest *)request loadBalancers] forKey:endpoint];
-//        [self.account persist];            
-//        for (LoadBalancer *lb in self.account.sortedLoadBalancers) {
-//            NSLog(@"Load Balancer at %@: %@", endpoint, lb.name);
-//        }
     }];
 }
 
@@ -766,10 +758,27 @@
     return [self callbackWithRequest:request];
 }
 
+- (APICallback *)deleteLoadBalancer:(LoadBalancer *)loadBalancer {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_DELETED);
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:loadBalancer.region];
+    __block LoadBalancerRequest *request = [LoadBalancerRequest updateLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
+    return [self callbackWithRequest:request];
+}
+
 - (APICallback *)getLoadBalancerUsage:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
     __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancerUsageRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
         loadBalancer.usage = [(LoadBalancerRequest *)request usage];
+    }];
+}
+
+- (APICallback *)addLBNodes:(NSArray *)nodes loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    __block LoadBalancerRequest *request = [LoadBalancerRequest addLoadBalancerNodesRequest:self.account loadBalancer:loadBalancer nodes:nodes endpoint:endpoint];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        for (LoadBalancerNode *node in nodes) {
+            [loadBalancer.nodes addObject:node];
+        }
+        [self.account persist];
     }];
 }
 

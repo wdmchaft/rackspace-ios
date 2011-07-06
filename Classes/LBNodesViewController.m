@@ -18,13 +18,15 @@
 #import "UIViewController+Conveniences.h"
 #import "LBServersViewController.h"
 #import "LoadBalancerProtocol.h"
+#import "ActivityIndicatorView.h"
+#import "APICallback.h"
 
 #define kNodes 0
 #define kCloudServers 1
 
 @implementation LBNodesViewController
 
-@synthesize account, loadBalancer;
+@synthesize account, loadBalancer, isNewLoadBalancer;
 
 - (void)dealloc {
     [account release];
@@ -38,6 +40,18 @@
     [super viewDidLoad];
     self.navigationItem.title = @"Nodes";
     textFields = [[NSMutableArray alloc] init];
+    if (!isNewLoadBalancer) {
+        NSMutableArray *nodes = [[NSMutableArray alloc] initWithCapacity:[self.loadBalancer.nodes count]];
+        for (LoadBalancerNode *node in self.loadBalancer.nodes) {
+            LoadBalancerNode *copiedNode = [node copy];
+            [nodes addObject:copiedNode];
+            [copiedNode release];
+        }
+        previousNodes = [[NSArray alloc] initWithArray:nodes];
+        [nodes release];
+        
+        [self addSaveButton];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -90,12 +104,6 @@
         [textFields addObject:cell.textField];
     }
 
-//    if ([textFields count] <= indexPath.row) {
-//        [cell.textField becomeFirstResponder];
-//        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//        [self addDoneButton];
-//    }
-        
     if (indexPath.row < [self.loadBalancer.nodes count]) {
         LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
         cell.textField.text = node.address;
@@ -164,7 +172,9 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[textFields count] - 1 inSection:kNodes];
     [[textFields lastObject] becomeFirstResponder];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    [self addDoneButton];
+    if (isNewLoadBalancer) {
+        [self addDoneButton];
+    }
 }
 
 - (void)addIPRow {
@@ -191,7 +201,9 @@
 #pragma mark - Text field delegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    [self addDoneButton];
+    if (isNewLoadBalancer) {
+        [self addDoneButton];
+    }
     return YES;
 }
 
@@ -206,11 +218,82 @@
     return YES;
 }
 
+#pragma mark - Button Handlers
+
 - (void)doneButtonPressed:(id)sender {
     for (UITextField *textField in textFields) {
         [textField resignFirstResponder];
     }
     self.navigationItem.rightBarButtonItem = nil;
+}
+
+- (void)saveButtonPressed:(id)sender {
+    // we need to compare the previousNodoes list to the current nodes list so we
+    // can know which nodes to add and which ones to delete
+    NSMutableArray *nodesToAdd = [[NSMutableArray alloc] init];
+    NSMutableArray *nodesToDelete = [[NSMutableArray alloc] init];
+
+    for (LoadBalancerNode *node in previousNodes) {
+        if (![self.loadBalancer.nodes containsObject:node]) {
+            [nodesToDelete addObject:node];
+            NSLog(@"going to delete node: %@", node.address);
+        }
+    }
+    
+    for (LoadBalancerNode *node in self.loadBalancer.nodes) {
+        if (![previousNodes containsObject:node]) {
+            [nodesToAdd addObject:node];
+            NSLog(@"going to add node: %@", node.address);
+        }
+    }
+    
+    // make the API calls
+    ActivityIndicatorView *spinner = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Saving..." withProgress:YES] text:@"Saving..." withProgress:YES];
+    [spinner addToView:self.view];
+    
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];    
+    NSInteger totalAPICalls = [nodesToDelete count] + ([nodesToAdd count] > 0 ? 1 : 0);
+    __block NSInteger currentAPICalls = 0;
+
+    ASIBasicBlock spinnerBlock = ^{
+        currentAPICalls++;
+        if (currentAPICalls == totalAPICalls) {
+            [spinner removeFromSuperviewAndRelease];
+        }
+    };
+    
+    ASIBasicBlock deleteBlock = ^{
+        for (LoadBalancerNode *node in nodesToDelete) {
+            APICallback *callback = [self.account.manager deleteLBNode:node loadBalancer:self.loadBalancer endpoint:endpoint];
+            [callback success:^(OpenStackRequest *request) {
+                spinnerBlock();
+            } failure:^(OpenStackRequest *request) {
+                spinnerBlock();
+                [self alert:@"There was a problem deleting a node." request:request];
+            }];
+        }
+    };
+    
+    if ([nodesToAdd count] > 0) {
+        // we want to add before doing any deletes to avoid attempting an invalid delete
+        APICallback *callback = [self.account.manager addLBNodes:nodesToAdd loadBalancer:self.loadBalancer endpoint:endpoint];
+        [callback success:^(OpenStackRequest *request) {
+            spinnerBlock();
+            
+            // before you delete, you need to poll the LB until it hits active status
+            
+            deleteBlock();
+        } failure:^(OpenStackRequest *request) {
+            [self alert:@"There was a problem adding nodes." request:request];
+            [spinner removeFromSuperviewAndRelease];
+        }];
+    } else {
+        deleteBlock();
+    }
+    
+    
+    [nodesToAdd release];
+    [nodesToDelete release];
 }
 
 @end

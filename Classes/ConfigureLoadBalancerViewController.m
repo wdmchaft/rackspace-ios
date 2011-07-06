@@ -19,9 +19,11 @@
 #import "UIViewController+Conveniences.h"
 #import "OpenStackRequest.h"
 #import "APICallback.h"
+#import "UIColor+MoreColors.h"
 
 #define kDetailsSection 0
 #define kNodesSection 1
+#define kDeleteSection 2
 
 #define kName 0
 #define kProtocol 1
@@ -108,7 +110,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -134,9 +136,24 @@
     return cell;
 }
 
+- (UITableViewCell *)deleteCell:(UITableView *)tableView {
+    static NSString *CellIdentifier = @"DeleteCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell.textLabel.text = @"Delete Load Balancer";
+        cell.textLabel.textAlignment = UITextAlignmentCenter;
+        cell.textLabel.textColor = [UIColor value1DetailTextLabelColor];
+    }
+    return cell;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kDetailsSection && indexPath.row == kName) {
         return [self nameCell:tableView];
+    } else if (indexPath.section == kDeleteSection) {
+        return [self deleteCell:tableView];
     } else if (indexPath.section == kDetailsSection) {
         static NSString *CellIdentifier = @"Cell";
         
@@ -209,10 +226,13 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kNodesSection) {
         LBNodesViewController *vc = [[LBNodesViewController alloc] initWithNibName:@"LBNodesViewController" bundle:nil];
+        vc.isNewLoadBalancer = NO;
         vc.account = self.account;
         vc.loadBalancer = self.loadBalancer;
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];        
+    } else if (indexPath.section == kDeleteSection) {
+        [self alert:@"" message:@"delete not yet implemented"];
     } else if (indexPath.row == kProtocol) {
         LBProtocolViewController *vc = [[LBProtocolViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
         [self.navigationController pushViewController:vc animated:YES];
