@@ -71,6 +71,16 @@
     return [LoadBalancerRequest lbRequest:account method:@"DELETE" endpoint:endpoint path:path];
 }
 
++ (LoadBalancerRequest *)updateConnectionLoggingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer {
+    NSString *endpoint = [account loadBalancerEndpointForRegion:loadBalancer.region];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/connectionlogging", loadBalancer.identifier];
+	NSString *body = [NSString stringWithFormat:@"{ \"connectionLogging\": { \"enabled\": \"%@\" } }", loadBalancer.connectionLoggingEnabled ? @"true": @"false"];
+    LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
+	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
+	[request setPostBody:[NSMutableData dataWithData:data]];
+	return request;
+}
+
 - (NSMutableDictionary *)loadBalancers {
     SBJSON *parser = [[SBJSON alloc] init];
     NSArray *jsonObjects = [[parser objectWithString:[self responseString]] objectForKey:@"loadBalancers"];

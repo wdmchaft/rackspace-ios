@@ -273,6 +273,14 @@
 		2728B4FC13786CEE007DBD80 /* LBServersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2728B4F713786CEE007DBD80 /* LBServersViewController.m */; };
 		2728B4FD13786CEE007DBD80 /* LBServersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2728B4F813786CEE007DBD80 /* LBServersViewController.xib */; };
 		2728B4FE13786CEE007DBD80 /* LBServersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2728B4F813786CEE007DBD80 /* LBServersViewController.xib */; };
+		27295C0A13C6560F00A32F20 /* blue-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C0813C6560F00A32F20 /* blue-camera.png */; };
+		27295C0B13C6560F00A32F20 /* blue-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C0813C6560F00A32F20 /* blue-camera.png */; };
+		27295C0C13C6560F00A32F20 /* blue-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C0913C6560F00A32F20 /* blue-camera@2x.png */; };
+		27295C0D13C6560F00A32F20 /* blue-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C0913C6560F00A32F20 /* blue-camera@2x.png */; };
+		27295C1113C6563200A32F20 /* dark-grey-highlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C0F13C6563100A32F20 /* dark-grey-highlight@2x.png */; };
+		27295C1213C6563200A32F20 /* dark-grey-highlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C0F13C6563100A32F20 /* dark-grey-highlight@2x.png */; };
+		27295C1313C6563200A32F20 /* dark-grey-highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C1013C6563100A32F20 /* dark-grey-highlight.png */; };
+		27295C1413C6563200A32F20 /* dark-grey-highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C1013C6563100A32F20 /* dark-grey-highlight.png */; };
 		27300F0F12775D580082E457 /* UIColor+MoreColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F0D12775D580082E457 /* UIColor+MoreColors.m */; };
 		27300F1112775D580082E457 /* UIColor+MoreColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F0D12775D580082E457 /* UIColor+MoreColors.m */; };
 		27300F3512775FE70082E457 /* SimpleImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F3212775FE70082E457 /* SimpleImagePickerViewController.m */; };
@@ -1129,6 +1137,10 @@
 		2728B4F613786CEE007DBD80 /* LBServersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBServersViewController.h; sourceTree = "<group>"; };
 		2728B4F713786CEE007DBD80 /* LBServersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBServersViewController.m; sourceTree = "<group>"; };
 		2728B4F813786CEE007DBD80 /* LBServersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LBServersViewController.xib; sourceTree = "<group>"; };
+		27295C0813C6560F00A32F20 /* blue-camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-camera.png"; sourceTree = "<group>"; };
+		27295C0913C6560F00A32F20 /* blue-camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-camera@2x.png"; sourceTree = "<group>"; };
+		27295C0F13C6563100A32F20 /* dark-grey-highlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dark-grey-highlight@2x.png"; sourceTree = "<group>"; };
+		27295C1013C6563100A32F20 /* dark-grey-highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dark-grey-highlight.png"; sourceTree = "<group>"; };
 		27300F0C12775D580082E457 /* UIColor+MoreColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+MoreColors.h"; sourceTree = "<group>"; };
 		27300F0D12775D580082E457 /* UIColor+MoreColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MoreColors.m"; sourceTree = "<group>"; };
 		27300F3112775FE70082E457 /* SimpleImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleImagePickerViewController.h; sourceTree = "<group>"; };
@@ -3000,12 +3012,16 @@
 				2726C63813B26D9F00BC7330 /* dot-green@2x.png */,
 				27CFD8971371D9CD00116BBD /* grey-highlight.png */,
 				27CFD8981371D9CD00116BBD /* grey-highlight@2x.png */,
+				27295C0F13C6563100A32F20 /* dark-grey-highlight@2x.png */,
+				27295C1013C6563100A32F20 /* dark-grey-highlight.png */,
 				27CFD8911371D79600116BBD /* purple-highlight@2x.png */,
 				27CFD8921371D79600116BBD /* purple-highlight.png */,
 				27CFD87F1371D55A00116BBD /* purple-highlight-noborder.png */,
 				27CFD8801371D55A00116BBD /* green-add-button.png */,
 				27CFD8811371D55A00116BBD /* green-add-button@2x.png */,
 				27CFD8821371D55A00116BBD /* purple-highlight-noborder@2x.png */,
+				27295C0813C6560F00A32F20 /* blue-camera.png */,
+				27295C0913C6560F00A32F20 /* blue-camera@2x.png */,
 				27CFD8831371D55A00116BBD /* purple-camera.png */,
 				27CFD8841371D55A00116BBD /* purple-camera@2x.png */,
 			);
@@ -3630,6 +3646,10 @@
 				2726C64313B26D9F00BC7330 /* dot-orange@2x.png in Resources */,
 				2726C64513B26D9F00BC7330 /* dot-blue@2x.png in Resources */,
 				2726C64713B26D9F00BC7330 /* dot-green@2x.png in Resources */,
+				27295C0A13C6560F00A32F20 /* blue-camera.png in Resources */,
+				27295C0C13C6560F00A32F20 /* blue-camera@2x.png in Resources */,
+				27295C1113C6563200A32F20 /* dark-grey-highlight@2x.png in Resources */,
+				27295C1313C6563200A32F20 /* dark-grey-highlight.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3955,6 +3975,10 @@
 				2726C64413B26D9F00BC7330 /* dot-orange@2x.png in Resources */,
 				2726C64613B26D9F00BC7330 /* dot-blue@2x.png in Resources */,
 				2726C64813B26D9F00BC7330 /* dot-green@2x.png in Resources */,
+				27295C0B13C6560F00A32F20 /* blue-camera.png in Resources */,
+				27295C0D13C6560F00A32F20 /* blue-camera@2x.png in Resources */,
+				27295C1213C6563200A32F20 /* dark-grey-highlight@2x.png in Resources */,
+				27295C1413C6563200A32F20 /* dark-grey-highlight.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

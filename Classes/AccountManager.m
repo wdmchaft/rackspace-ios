@@ -706,6 +706,7 @@
 
         LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer];
         loadBalancer.nodes = newLB.nodes;
+        loadBalancer.connectionLoggingEnabled = newLB.connectionLoggingEnabled;
         
 //        if (!self.account.loadBalancers) {
 //            self.account.loadBalancers = [[NSMutableDictionary alloc] initWithCapacity:2];
@@ -763,6 +764,14 @@
     NSString *endpoint = [self.account loadBalancerEndpointForRegion:loadBalancer.region];
     __block LoadBalancerRequest *request = [LoadBalancerRequest updateLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
     return [self callbackWithRequest:request];
+}
+
+- (APICallback *)updateLoadBalancerConnectionLogging:(LoadBalancer *)loadBalancer {
+    __block LoadBalancerRequest *request = [LoadBalancerRequest updateConnectionLoggingRequest:self.account loadBalancer:loadBalancer];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+    } failure:^(OpenStackRequest *request) {
+        loadBalancer.connectionLoggingEnabled = !loadBalancer.connectionLoggingEnabled;
+    }];
 }
 
 - (APICallback *)getLoadBalancerUsage:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {

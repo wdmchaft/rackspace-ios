@@ -24,6 +24,8 @@
 + (LoadBalancerRequest *)updateLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 + (LoadBalancerRequest *)deleteLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 
++ (LoadBalancerRequest *)updateConnectionLoggingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer;
+
 + (LoadBalancerRequest *)getLoadBalancerProtocols:(OpenStackAccount *)account endpoint:(NSString *)endpoint;
 - (NSMutableArray *)protocols;
 

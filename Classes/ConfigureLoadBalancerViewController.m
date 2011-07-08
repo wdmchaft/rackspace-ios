@@ -23,7 +23,8 @@
 
 #define kDetailsSection 0
 #define kNodesSection 1
-#define kDeleteSection 2
+#define kConnectionLoggingSection 2
+#define kDeleteSection 3
 
 #define kName 0
 #define kProtocol 1
@@ -74,43 +75,23 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.tableView reloadData];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -136,6 +117,28 @@
     return cell;
 }
 
+- (UITableViewCell *)connectionLoggingCell:(UITableView *)tableView {
+    static NSString *CellIdentifier = @"ConnectionLoggingCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell.textLabel.text = @"Connection Logging";
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UISwitch *clSwitch = [[UISwitch alloc] init];
+        clSwitch.on = self.loadBalancer.connectionLoggingEnabled;
+        [clSwitch addTarget:self action:@selector(connectionLoggingSwitchChanged:) forControlEvents:UIControlEventValueChanged];
+        cell.accessoryView = clSwitch;
+        [clSwitch release];
+    }
+    
+    NSLog(@"self.loadBalancer.connectionLoggingEnabled = %i", self.loadBalancer.connectionLoggingEnabled);
+    ((UISwitch *)cell.accessoryView).on = self.loadBalancer.connectionLoggingEnabled;
+    
+    return cell;
+}
+
 - (UITableViewCell *)deleteCell:(UITableView *)tableView {
     static NSString *CellIdentifier = @"DeleteCell";
     
@@ -152,6 +155,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kDetailsSection && indexPath.row == kName) {
         return [self nameCell:tableView];
+    } else if (indexPath.section == kConnectionLoggingSection) {
+        return [self connectionLoggingCell:tableView];
     } else if (indexPath.section == kDeleteSection) {
         return [self deleteCell:tableView];
     } else if (indexPath.section == kDetailsSection) {
@@ -232,7 +237,9 @@
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];        
     } else if (indexPath.section == kDeleteSection) {
-        [self alert:@"" message:@"delete not yet implemented"];
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to delete this load balancer?  This operation cannot be undone." delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete Load Balancer" otherButtonTitles:nil];
+        [sheet showInView:self.view];
+        [sheet release];
     } else if (indexPath.row == kProtocol) {
         LBProtocolViewController *vc = [[LBProtocolViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
         [self.navigationController pushViewController:vc animated:YES];
@@ -242,6 +249,22 @@
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
     }
+}
+
+#pragma mark - Action Sheet Delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [[self.account.manager deleteLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
+            NSLog(@"delete response %i: %@", request.responseStatusCode, [request responseString]);
+            [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController popViewControllerAnimated:YES];
+        } failure:^(OpenStackRequest *request) {
+            [self alert:@"There was a problem deleting the load balancer." request:request];
+        }];
+    }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:kDeleteSection];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - Text field delegate
@@ -262,6 +285,16 @@
     [[self.account.manager updateLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
     } failure:^(OpenStackRequest *request) {
         [self alert:@"There was a problem updating this load balancer." request:request];
+    }];
+}
+
+#pragma mark - Connection Logging Switch
+
+- (void)connectionLoggingSwitchChanged:(UISwitch *)sender {
+    self.loadBalancer.connectionLoggingEnabled = sender.on;
+    [[self.account.manager updateLoadBalancerConnectionLogging:self.loadBalancer] success:^(OpenStackRequest *request) { 
+    } failure:^(OpenStackRequest *request) {
+        [self alert:@"There was a problem updating the load balancer." request:request];
     }];
 }
 

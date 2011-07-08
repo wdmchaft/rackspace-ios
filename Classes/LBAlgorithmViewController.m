@@ -102,7 +102,7 @@
     
     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     cell.backgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"grey-highlight.png"]] autorelease];
-    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"purple-highlight.png"]] autorelease];
+    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dark-grey-highlight.png"]] autorelease];
     
     switch (indexPath.section) {
         case kRandom:
@@ -148,7 +148,7 @@
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake(0, 0, 22, 22);
-        [button setImage:[UIImage imageNamed:@"purple-camera.png"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"blue-camera.png"] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(cameraButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         cell.accessoryView = button;
          

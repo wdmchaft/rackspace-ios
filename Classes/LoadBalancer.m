@@ -84,7 +84,11 @@
 
     // TODO: loadBalancer.maxConcurrentConnections = 
     
-    loadBalancer.connectionLoggingEnabled = [[[dict objectForKey:@"connectionLogging"] objectForKey:@"enabled"] boolValue];
+    NSLog(@"[dict objectForKey:@\"connectionLogging\"] = %@", [dict objectForKey:@"connectionLogging"]);
+    if ([dict objectForKey:@"connectionLogging"]) {
+        loadBalancer.connectionLoggingEnabled = [[[dict objectForKey:@"connectionLogging"] objectForKey:@"enabled"] boolValue];
+        NSLog(@"setting loadBalancer.connectionLoggingEnabled = %i", loadBalancer.connectionLoggingEnabled);
+    }
 
     NSArray *nodeDicts = [dict objectForKey:@"nodes"];
     loadBalancer.nodes = [[NSMutableArray alloc] initWithCapacity:[nodeDicts count]];
