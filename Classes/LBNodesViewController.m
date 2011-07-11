@@ -74,6 +74,10 @@
     self.navigationItem.rightBarButtonItem = nil;    
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -121,6 +125,7 @@
     }
     
     // Configure the cell...
+    cell.accessoryType = UITableViewCellAccessoryNone;
     if (indexPath.section == kNodes) {
         if (indexPath.row == [self.loadBalancer.nodes count]) {
             cell.textLabel.text = @"Add IP Addresses";
@@ -132,6 +137,11 @@
         if (indexPath.row == [self.loadBalancer.cloudServerNodes count]) {
             cell.textLabel.text = @"Add Cloud Servers";
             cell.imageView.image = [UIImage imageNamed:@"green-add-button.png"];
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            } else {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
         } else {
             Server *server = [self.loadBalancer.cloudServerNodes objectAtIndex:indexPath.row];
             cell.textLabel.text = server.name;
@@ -193,7 +203,11 @@
         [self addIPRow];
     } else if (indexPath.section == kCloudServers) {
         LBServersViewController *vc = [[LBServersViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
-        [self presentModalViewControllerWithNavigation:vc];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            [self presentModalViewControllerWithNavigation:vc];
+        }
         [vc release];
     }
 }

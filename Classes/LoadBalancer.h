@@ -8,7 +8,7 @@
 
 #import "ComputeModel.h"
 
-@class LoadBalancerProtocol, LoadBalancerUsage;
+@class LoadBalancerProtocol, LoadBalancerUsage, LoadBalancerConnectionThrottle;
 
 @interface LoadBalancer : ComputeModel <NSCoding> {
 
@@ -24,22 +24,12 @@
     NSMutableArray *nodes;
     NSMutableArray *cloudServerNodes;
     NSString *sessionPersistenceType;    
-    NSUInteger connectionThrottleMinConnections;
-    NSUInteger connectionThrottleMaxConnections;
-    NSUInteger connectionThrottleMaxConnectionRate;
-    NSUInteger connectionThrottleRateInterval;
+    LoadBalancerConnectionThrottle *connectionThrottle;
     NSString *clusterName;
     NSInteger progress;
     NSString *region;
 
     LoadBalancerUsage *usage;
-/*
-ORD Region:
-https://ord.loadbalancers.api.rackspacecloud.com/v1.0/420600/
-
-DFW Region:
-https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/420600/
-*/
 }
 
 @property (nonatomic, retain) LoadBalancerProtocol *protocol;
@@ -53,11 +43,8 @@ https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/420600/
 @property (nonatomic, assign) BOOL connectionLoggingEnabled;
 @property (nonatomic, retain) NSMutableArray *nodes;
 @property (nonatomic, retain) NSMutableArray *cloudServerNodes;
-@property (nonatomic, retain) NSString *sessionPersistenceType;    
-@property (nonatomic, assign) NSUInteger connectionThrottleMinConnections;
-@property (nonatomic, assign) NSUInteger connectionThrottleMaxConnections;
-@property (nonatomic, assign) NSUInteger connectionThrottleMaxConnectionRate;
-@property (nonatomic, assign) NSUInteger connectionThrottleRateInterval;
+@property (nonatomic, retain) NSString *sessionPersistenceType;  
+@property (nonatomic, retain) LoadBalancerConnectionThrottle *connectionThrottle;
 @property (nonatomic, retain) NSString *clusterName;
 @property (nonatomic, assign) NSInteger progress;
 @property (nonatomic, retain) NSString *region;

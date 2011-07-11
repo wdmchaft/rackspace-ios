@@ -152,13 +152,18 @@
     
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Constants" ofType:@"plist"];
     
-    if([[NSFileManager defaultManager] fileExistsAtPath:path]){
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]){
         
         NSDictionary *constants = [NSDictionary dictionaryWithContentsOfFile:path];
         
         [HTNotifier startNotifierWithAPIKey:[constants objectForKey:@"HOPTOAD_ACCOUNT_KEY"]
                             environmentName:HTNotifierAppStoreEnvironment];
         [[GANTracker sharedTracker] startTrackerWithAccountID:[constants objectForKey:@"ANALYTICS_ACCOUNT_KEY"] dispatchPeriod:10 delegate:nil];
+        
+        // track the app version
+        NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+        [[GANTracker sharedTracker] setCustomVariableAtIndex:1 name:@"app_version" value:version withError:nil];
+        
 //        DispatchAnalytics();
 
     } else {

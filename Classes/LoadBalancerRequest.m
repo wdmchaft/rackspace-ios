@@ -11,6 +11,7 @@
 #import "JSON.h"
 #import "LoadBalancer.h"
 #import "LoadBalancerProtocol.h"
+#import "LoadBalancerConnectionThrottle.h"
 #import "LoadBalancerUsage.h"
 #import "LoadBalancerNode.h"
 #import "NSString+Conveniences.h"
@@ -79,6 +80,28 @@
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
+}
+
++ (LoadBalancerRequest *)getConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer {
+    NSString *endpoint = [account loadBalancerEndpointForRegion:loadBalancer.region];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/connectionthrottle", loadBalancer.identifier];
+    return [LoadBalancerRequest lbRequest:account method:@"GET" endpoint:endpoint path:path];
+}
+
++ (LoadBalancerRequest *)updateConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer {
+    NSString *endpoint = [account loadBalancerEndpointForRegion:loadBalancer.region];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/connectionthrottle", loadBalancer.identifier];
+    NSString *body = [loadBalancer.connectionThrottle toJSON];
+    LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
+	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
+	[request setPostBody:[NSMutableData dataWithData:data]];
+    return request;
+}
+
++ (LoadBalancerRequest *)disableConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer {
+    NSString *endpoint = [account loadBalancerEndpointForRegion:loadBalancer.region];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/connectionthrottle", loadBalancer.identifier];
+    return [LoadBalancerRequest lbRequest:account method:@"DELETE" endpoint:endpoint path:path];
 }
 
 - (NSMutableDictionary *)loadBalancers {

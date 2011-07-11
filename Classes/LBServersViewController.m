@@ -23,7 +23,12 @@
 @synthesize account, loadBalancer;
 
 - (id)initWithAccount:(OpenStackAccount *)a loadBalancer:(LoadBalancer *)lb {
-    self = [super initWithNibName:@"LBServersViewController" bundle:nil];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self = [super initWithStyle:UITableViewStyleGrouped];
+    } else {
+        self = [super initWithStyle:UITableViewStylePlain];
+//        self = [super initWithNibName:@"LBServersViewController" bundle:nil];
+    }
     if (self) {
         self.account = a;
         self.loadBalancer = lb;
@@ -42,7 +47,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Cloud Servers";
-    [self addDoneButton];
+    
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+        [self addDoneButton];
+    }
     
     if ([self.account.servers count] == 0) {
         // we may not have loaded the servers yet, so load them now
@@ -60,6 +68,10 @@
         }];
         
     }
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source

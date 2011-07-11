@@ -26,6 +26,11 @@
 
 + (LoadBalancerRequest *)updateConnectionLoggingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer;
 
++ (LoadBalancerRequest *)getConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer;
++ (LoadBalancerRequest *)updateConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer;
++ (LoadBalancerRequest *)disableConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer;
+
+
 + (LoadBalancerRequest *)getLoadBalancerProtocols:(OpenStackAccount *)account endpoint:(NSString *)endpoint;
 - (NSMutableArray *)protocols;
 

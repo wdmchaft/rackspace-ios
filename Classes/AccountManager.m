@@ -767,11 +767,24 @@
 }
 
 - (APICallback *)updateLoadBalancerConnectionLogging:(LoadBalancer *)loadBalancer {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_UPDATED_LB_CONNECTION_LOGGING);
     __block LoadBalancerRequest *request = [LoadBalancerRequest updateConnectionLoggingRequest:self.account loadBalancer:loadBalancer];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
     } failure:^(OpenStackRequest *request) {
         loadBalancer.connectionLoggingEnabled = !loadBalancer.connectionLoggingEnabled;
     }];
+}
+
+- (APICallback *)getLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
+    
+}
+
+- (APICallback *)updateLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
+    
+}
+
+- (APICallback *)deleteLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
+    
 }
 
 - (APICallback *)getLoadBalancerUsage:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
@@ -782,6 +795,7 @@
 }
 
 - (APICallback *)addLBNodes:(NSArray *)nodes loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_ADDED_LB_NODES);
     __block LoadBalancerRequest *request = [LoadBalancerRequest addLoadBalancerNodesRequest:self.account loadBalancer:loadBalancer nodes:nodes endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
         for (LoadBalancerNode *node in nodes) {
@@ -792,11 +806,13 @@
 }
 
 - (APICallback *)updateLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_UPDATED_LB_NODE);
     __block LoadBalancerRequest *request = [LoadBalancerRequest updateLoadBalancerNodeRequest:self.account loadBalancer:loadBalancer node:node endpoint:endpoint];
     return [self callbackWithRequest:request];
 }
 
 - (APICallback *)deleteLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_DELETED_LB_NODE);
     __block LoadBalancerRequest *request = [LoadBalancerRequest deleteLoadBalancerNodeRequest:self.account loadBalancer:loadBalancer node:node endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
         [loadBalancer.nodes removeObject:node];

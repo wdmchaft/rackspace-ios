@@ -190,7 +190,13 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
     LBNodeViewController *vc = [[LBNodeViewController alloc] initWithNode:node loadBalancer:self.loadBalancer account:self.account];
-    [self.navigationController pushViewController:vc animated:YES];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        vc.lbViewController = self;
+        vc.lbIndexPath = indexPath;
+        [self presentModalViewControllerWithNavigation:vc];
+    } else {
+        [self.navigationController pushViewController:vc animated:YES];
+    }    
     [vc release];
 }
 
@@ -198,7 +204,12 @@
 
 - (void)configButtonPressed:(id)sender {
     ConfigureLoadBalancerViewController *vc = [[ConfigureLoadBalancerViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
-    [self.navigationController pushViewController:vc animated:YES];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self presentModalViewControllerWithNavigation:vc];
+    } else {
+        [self.navigationController pushViewController:vc animated:YES];
+    }    
     [vc release];
 }
 

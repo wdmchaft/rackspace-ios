@@ -59,6 +59,10 @@
     self.navigationItem.title = @"Configure";
     [self addSaveButton];
     
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self addCancelButton];
+    }
+    
     algorithmNames = [[NSDictionary alloc] initWithObjectsAndKeys:
                       @"Random",@"RANDOM", 
                       @"Round Robin", @"ROUND_ROBIN", 
@@ -286,6 +290,10 @@
     } failure:^(OpenStackRequest *request) {
         [self alert:@"There was a problem updating this load balancer." request:request];
     }];
+}
+
+- (void)cancelButtonPressed:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - Connection Logging Switch

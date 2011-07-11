@@ -27,6 +27,14 @@
 #define EVENT_RENAMED @"renamed"
 #define EVENT_PASSWORD_CHANGED @"password_changed"
 
+// load balancer specific events
+#define EVENT_UPDATED_LB_CONNECTION_LOGGING @"updated_lb_connection_logging"
+#define EVENT_ADDED_LB_NODES @"added_lb_nodes"
+#define EVENT_UPDATED_LB_NODE @"updated_lb_node"
+#define EVENT_DELETED_LB_NODE @"deleted_lb_node"
+#define EVENT_UPDATED_LB_CONNECTION_THROTTLING @"updated_lb_connection_throttling"
+#define EVENT_DISABLED_LB_CONNECTION_THROTTLING @"disabled_lb_connection_throttling"
+
 void TrackEvent(NSString *category, NSString *action);
 void TrackViewController(UIViewController *vc);
 void DispatchAnalytics();

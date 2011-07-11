@@ -64,7 +64,7 @@
 - (void)writeObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
 - (void)writeObjectMetadata:(Container *)container object:(StorageObject *)object;
 - (void)deleteObject:(Container *)container object:(StorageObject *)object;
-
+  
 - (void)updateCDNContainer:(Container *)container;
 
 // load balancing
@@ -76,6 +76,12 @@
 - (APICallback *)updateLoadBalancer:(LoadBalancer *)loadBalancer;
 - (APICallback *)deleteLoadBalancer:(LoadBalancer *)loadBalancer;
 - (APICallback *)updateLoadBalancerConnectionLogging:(LoadBalancer *)loadBalancer;
+
+- (APICallback *)getLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer;
+- (APICallback *)updateLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer;
+- (APICallback *)deleteLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer;
+
+
 - (APICallback *)getLoadBalancerUsage:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 - (APICallback *)addLBNodes:(NSArray *)nodes loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 - (APICallback *)updateLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;

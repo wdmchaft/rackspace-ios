@@ -15,6 +15,7 @@
 #import "OpenStackAccount.h"
 #import "AccountManager.h"
 #import "APICallback.h"
+#import "LoadBalancerViewController.h"
 
 #define kConditionSection 0
 #define kEnabled 0
@@ -25,7 +26,7 @@
 
 @implementation LBNodeViewController
 
-@synthesize node, loadBalancer, account;
+@synthesize node, loadBalancer, account, lbViewController, lbIndexPath;
 
 - (id)initWithNode:(LoadBalancerNode *)n loadBalancer:(LoadBalancer *)lb account:(OpenStackAccount *)a {
     self = [self initWithStyle:UITableViewStyleGrouped];
@@ -42,6 +43,7 @@
     [loadBalancer release];
     [account release];
     [spinners release];
+    [lbIndexPath release];
     [super dealloc];
 }
 
@@ -60,6 +62,10 @@
     }
     spinners = [[NSArray alloc] initWithArray:s];
     [s release];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self addDoneButton];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -192,6 +198,13 @@
     }
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:kRemoveNode];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - Button Handlers
+
+- (void)doneButtonPressed:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
+    [self.lbViewController.tableView deselectRowAtIndexPath:self.lbIndexPath animated:YES];
 }
 
 @end

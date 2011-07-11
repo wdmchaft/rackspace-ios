@@ -11,6 +11,7 @@
 #import "LoadBalancerNode.h"
 #import "NSObject+NSCoding.h"
 #import "LoadBalancerProtocol.h"
+#import "LoadBalancerConnectionThrottle.h"
 #import "Server.h"
 #import "NSString+Conveniences.h"
 
@@ -18,18 +19,36 @@
 @implementation LoadBalancer
 
 @synthesize protocol, algorithm, status, virtualIPs, created, updated, maxConcurrentConnections,
-            connectionLoggingEnabled, nodes, connectionThrottleMinConnections,
-            connectionThrottleMaxConnections, connectionThrottleMaxConnectionRate,
-            connectionThrottleRateInterval, clusterName, sessionPersistenceType, progress,
+            connectionLoggingEnabled, nodes, connectionThrottle, clusterName, sessionPersistenceType, progress,
             cloudServerNodes, virtualIPType, region, usage;
+
+#pragma mark - Constructors and Memory Management
 
 - (id)init {
     self = [super init];
     if (self) {
-        self.nodes = [[NSMutableArray alloc] init];
-        self.cloudServerNodes = [[NSMutableArray alloc] init];
+        self.nodes = [[[NSMutableArray alloc] init] autorelease];
+        self.cloudServerNodes = [[[NSMutableArray alloc] init] autorelease];
     }
     return self;
+}
+
+- (void)dealloc {
+    [protocol release];
+    [algorithm release];
+    [status release];
+    [virtualIPs release];
+    [created release];
+    [updated release];
+    [nodes release];
+    [sessionPersistenceType release];
+    [clusterName release];
+    [cloudServerNodes release];
+    [virtualIPType release];
+    [region release];
+    [usage release];
+    [connectionThrottle release];
+    [super dealloc];
 }
 
 #pragma mark - Serialization
@@ -45,21 +64,9 @@
     return self;
 }
 
-#pragma mark - Nodes
-
-//- (NSMutableArray *)nodes {
-//    return nodes;
-//}
-//
-//- (NSMutableArray *)cloudServerNodes {
-//    return cloudServerNodes;
-//}
-
 #pragma mark - JSON
 
 + (LoadBalancer *)fromJSON:(NSDictionary *)dict {
-    
-    NSLog(@"lb json: %@", dict);
     
     LoadBalancer *loadBalancer = [[[LoadBalancer alloc] initWithJSONDict:dict] autorelease];
 
@@ -82,12 +89,8 @@
     loadBalancer.created = [loadBalancer dateForKey:@"time" inDict:[dict objectForKey:@"created"]];
     loadBalancer.updated = [loadBalancer dateForKey:@"time" inDict:[dict objectForKey:@"updated"]];
 
-    // TODO: loadBalancer.maxConcurrentConnections = 
-    
-    NSLog(@"[dict objectForKey:@\"connectionLogging\"] = %@", [dict objectForKey:@"connectionLogging"]);
     if ([dict objectForKey:@"connectionLogging"]) {
         loadBalancer.connectionLoggingEnabled = [[[dict objectForKey:@"connectionLogging"] objectForKey:@"enabled"] boolValue];
-        NSLog(@"setting loadBalancer.connectionLoggingEnabled = %i", loadBalancer.connectionLoggingEnabled);
     }
 
     NSArray *nodeDicts = [dict objectForKey:@"nodes"];
@@ -96,11 +99,11 @@
         LoadBalancerNode *node = [LoadBalancerNode fromJSON:nodeDict];
         [loadBalancer.nodes addObject:node];
     }
+
+    if ([dict objectForKey:@"connectionThrottle"]) {
+        loadBalancer.connectionThrottle = [LoadBalancerConnectionThrottle fromJSON:[dict objectForKey:@"connectionThrottle"]];
+    }
     
-    loadBalancer.connectionThrottleMinConnections = [loadBalancer intForKey:@"minConnections" inDict:[dict objectForKey:@"connectionThrottle"]];
-    loadBalancer.connectionThrottleMaxConnections = [loadBalancer intForKey:@"maxConnections" inDict:[dict objectForKey:@"connectionThrottle"]];
-    loadBalancer.connectionThrottleMaxConnectionRate = [loadBalancer intForKey:@"maxConnectionRate" inDict:[dict objectForKey:@"connectionThrottle"]];
-    loadBalancer.connectionThrottleRateInterval = [loadBalancer intForKey:@"rateInterval" inDict:[dict objectForKey:@"connectionThrottle"]];    
     loadBalancer.sessionPersistenceType = [[dict objectForKey:@"sessionPersistence"] objectForKey:@"persistenceType"];
     loadBalancer.clusterName = [[dict objectForKey:@"cluster"] objectForKey:@"name"];
     return loadBalancer;
@@ -176,26 +179,6 @@
 
 - (BOOL)shouldBePolled {
     return ![self.status isEqualToString:@"ACTIVE"];
-}
-
-#pragma mark -
-#pragma mark Memory Management
-
-- (void)dealloc {
-    [protocol release];
-    [algorithm release];
-    [status release];
-    [virtualIPs release];
-    [created release];
-    [updated release];
-    [nodes release];
-    [sessionPersistenceType release];
-    [clusterName release];
-    [cloudServerNodes release];
-    [virtualIPType release];
-    [region release];
-    [usage release];
-    [super dealloc];
 }
 
 @end
