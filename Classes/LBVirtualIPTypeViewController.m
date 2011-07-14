@@ -141,7 +141,6 @@
     if (indexPath.row == 0) {
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         cell.backgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"grey-highlight.png"]] autorelease];
-        cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dark-grey-highlight.png"]] autorelease];
     } else {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }

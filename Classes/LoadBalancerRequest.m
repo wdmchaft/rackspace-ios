@@ -104,6 +104,14 @@
     return [LoadBalancerRequest lbRequest:account method:@"DELETE" endpoint:endpoint path:path];
 }
 
+- (LoadBalancerConnectionThrottle *)connectionThrottle {
+    SBJSON *parser = [[SBJSON alloc] init];
+    NSDictionary *jsonObject = [[parser objectWithString:[self responseString]] objectForKey:@"connectionThrottle"];
+    LoadBalancerConnectionThrottle *throttle = [LoadBalancerConnectionThrottle fromJSON:jsonObject];
+    [parser release];
+    return throttle;
+}
+
 - (NSMutableDictionary *)loadBalancers {
     SBJSON *parser = [[SBJSON alloc] init];
     NSArray *jsonObjects = [[parser objectWithString:[self responseString]] objectForKey:@"loadBalancers"];

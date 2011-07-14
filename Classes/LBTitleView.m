@@ -34,6 +34,7 @@
     // label styles
     self.nameLabel.backgroundColor = [UIColor clearColor];
     self.nameLabel.font = [UIFont systemFontOfSize:24];
+    self.nameLabel.adjustsFontSizeToFitWidth = YES;
     
     CGFloat third = self.frame.size.width / 3.0;
     
@@ -68,6 +69,7 @@
     self.nameLabel.frame = CGRectMake(32, 9, 0, 0);
     self.nameLabel.text = self.loadBalancer.name;
     [self.nameLabel sizeToFit];
+    self.nameLabel.frame = CGRectMake(32, 9, MIN(self.frame.size.width - 40, self.nameLabel.frame.size.width), self.nameLabel.frame.size.height);
     [self addSubview:self.nameLabel];
     
 }

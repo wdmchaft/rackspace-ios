@@ -776,15 +776,24 @@
 }
 
 - (APICallback *)getLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
-    
+    __block LoadBalancerRequest *request = [LoadBalancerRequest getConnectionThrottlingRequest:self.account loadBalancer:loadBalancer];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        loadBalancer.connectionThrottle = [(LoadBalancerRequest *)request connectionThrottle];
+    }];
 }
 
 - (APICallback *)updateLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
-    
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_UPDATED_LB_CONNECTION_THROTTLING);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest updateConnectionThrottlingRequest:self.account loadBalancer:loadBalancer];
+    return [self callbackWithRequest:request];
 }
 
 - (APICallback *)deleteLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
-    
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_DISABLED_LB_CONNECTION_THROTTLING);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest disableConnectionThrottlingRequest:self.account loadBalancer:loadBalancer];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        loadBalancer.connectionThrottle = nil;
+    }];
 }
 
 - (APICallback *)getLoadBalancerUsage:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {

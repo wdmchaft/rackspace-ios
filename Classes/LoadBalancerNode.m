@@ -68,6 +68,12 @@
     return json;
 }
 
+#pragma mark - Comparison
+
+- (NSComparisonResult)compare:(LoadBalancerNode *)aNode {
+    return [aNode.address caseInsensitiveCompare:self.address];
+}
+
 #pragma mark - Memory Management
 
 - (void)dealloc {

@@ -147,7 +147,6 @@
 }
 
 - (void) setupDependencies{
-    
 #if TARGET_OS_EMBEDDED
     
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Constants" ofType:@"plist"];
@@ -164,7 +163,7 @@
         NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
         [[GANTracker sharedTracker] setCustomVariableAtIndex:1 name:@"app_version" value:version withError:nil];
         
-//        DispatchAnalytics();
+        DispatchAnalytics();
 
     } else {
         [HTNotifier startNotifierWithAPIKey:@"HOPTOAD_ACCOUNT_KEY" environmentName:HTNotifierAppStoreEnvironment];

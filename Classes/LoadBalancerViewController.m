@@ -86,8 +86,12 @@
     
     NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
     
+    [self showToolbarActivityMessage:@"Loading nodes..."];
+    
     [[self.account.manager getLoadBalancerDetails:self.loadBalancer endpoint:endpoint] success:^(OpenStackRequest *request) {
-        
+
+        [self hideToolbarActivityMessage];
+
         // break up nodes by condition into ENABLED, DISABLED, and DRAINING
         [nodes setObject:[NSMutableArray array] forKey:kEnabled];
         [nodes setObject:[NSMutableArray array] forKey:kDisabled];
@@ -103,6 +107,14 @@
             }                
         }
         
+        // sort each node group alphabetically
+        NSArray *sortedEnabled = [[nodes objectForKey:kEnabled] sortedArrayUsingSelector:@selector(compare:)];
+        NSArray *sortedDisabled = [[nodes objectForKey:kDisabled] sortedArrayUsingSelector:@selector(compare:)];
+        NSArray *sortedDraining = [[nodes objectForKey:kDraining] sortedArrayUsingSelector:@selector(compare:)];
+        [nodes setObject:[NSMutableArray arrayWithArray:sortedEnabled] forKey:kEnabled];
+        [nodes setObject:[NSMutableArray arrayWithArray:sortedDisabled] forKey:kDisabled];
+        [nodes setObject:[NSMutableArray arrayWithArray:sortedDraining] forKey:kDraining];
+        
         totalSections = 0;
         if ([[nodes objectForKey:kEnabled] count] > 0) {
             enabledSection = totalSections++;
@@ -116,6 +128,7 @@
         
         [self.tableView reloadData];
     } failure:^(OpenStackRequest *request) {
+        [self hideToolbarActivityMessage];
         [self alert:@"There was a problem loading information for this load balancer." request:request];
     }];
     
