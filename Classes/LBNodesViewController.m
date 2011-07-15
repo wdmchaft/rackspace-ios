@@ -127,7 +127,7 @@
         // tag it so we'll know which node we're editing
         cell.textField.tag = indexPath.row;
         
-        cell.textField.returnKeyType = UIReturnKeyNext;
+        cell.textField.returnKeyType = UIReturnKeyDone;
         cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         [textFields addObject:cell.textField];
         
