@@ -42,7 +42,7 @@
 		// we're getting started, so go ahead and alloc the array
 		self.feedItems = [[NSMutableArray alloc] initWithCapacity:1];
 	} else if ([elementName isEqualToString:@"item"]) {
-		self.feedItem = [[FeedItem alloc] init];
+		self.feedItem = [[[FeedItem alloc] init] autorelease];
 		parsingItem = YES;
 	}
 }

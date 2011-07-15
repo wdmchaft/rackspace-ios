@@ -47,7 +47,7 @@
     
     // default is HTTP on port 80
     if (!self.loadBalancer.protocol) {
-        self.loadBalancer.protocol = [[LoadBalancerProtocol alloc] init];
+        self.loadBalancer.protocol = [[[LoadBalancerProtocol alloc] init] autorelease];
         self.loadBalancer.protocol.name = @"HTTP";
         self.loadBalancer.protocol.port = 80;
     }

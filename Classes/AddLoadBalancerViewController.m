@@ -43,11 +43,11 @@
     self = [super initWithNibName:@"AddLoadBalancerNameViewController" bundle:nil];
     if (self) {
         self.account = a;
-        self.loadBalancer = [[LoadBalancer alloc] init];
+        self.loadBalancer = [[[LoadBalancer alloc] init] autorelease];
         self.loadBalancer.virtualIPType = @"Public";
         self.loadBalancer.region = @"ORD";
         self.loadBalancer.algorithm = @"RANDOM";
-        self.loadBalancer.protocol = [[LoadBalancerProtocol alloc] init];
+        self.loadBalancer.protocol = [[[LoadBalancerProtocol alloc] init] autorelease];
         self.loadBalancer.protocol.name = @"HTTP";
         self.loadBalancer.protocol.port = 80;
     }

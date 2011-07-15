@@ -681,7 +681,7 @@
     __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancersRequest:self.account endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
         if (!self.account.loadBalancers) {
-            self.account.loadBalancers = [[NSMutableDictionary alloc] initWithCapacity:2];
+            self.account.loadBalancers = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
         }
         
         NSLog(@"%@", self.account.loadBalancers);

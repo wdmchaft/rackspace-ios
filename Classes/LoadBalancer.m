@@ -79,7 +79,7 @@
     loadBalancer.status = [dict objectForKey:@"status"];
     
     NSArray *virtualIpDicts = [dict objectForKey:@"virtualIps"];
-    loadBalancer.virtualIPs = [[NSMutableArray alloc] initWithCapacity:[virtualIpDicts count]];
+    loadBalancer.virtualIPs = [[[NSMutableArray alloc] initWithCapacity:[virtualIpDicts count]] autorelease];
     for (NSDictionary *vipDict in virtualIpDicts) {
         VirtualIP *ip = [VirtualIP fromJSON:vipDict];
         [loadBalancer.virtualIPs addObject:ip];
@@ -94,7 +94,7 @@
     }
 
     NSArray *nodeDicts = [dict objectForKey:@"nodes"];
-    loadBalancer.nodes = [[NSMutableArray alloc] initWithCapacity:[nodeDicts count]];
+    loadBalancer.nodes = [[[NSMutableArray alloc] initWithCapacity:[nodeDicts count]] autorelease];
     for (NSDictionary *nodeDict in nodeDicts) {
         LoadBalancerNode *node = [LoadBalancerNode fromJSON:nodeDict];
         [loadBalancer.nodes addObject:node];

@@ -55,6 +55,7 @@
     
     [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
     [indexPaths release];
+    [nodesToRemove release];
 }
 
 #pragma mark - View lifecycle
@@ -92,7 +93,7 @@
         }
     }
     if ([finalNodes count] > 0) {
-        self.loadBalancer.nodes = [[NSMutableArray alloc] initWithArray:finalNodes];
+        self.loadBalancer.nodes = [[[NSMutableArray alloc] initWithArray:finalNodes] autorelease];
     }
     [finalNodes release];
     self.navigationItem.rightBarButtonItem = nil;    
