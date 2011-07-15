@@ -34,6 +34,29 @@
     [super dealloc];
 }
 
+#pragma mark - Utilities
+
+- (void)deleteEmptyIPRows {
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    NSMutableArray *nodesToRemove = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < [self.loadBalancer.nodes count]; i++) {
+        LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:i];
+        if (!node.address || [node.address isEqualToString:@""]) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:kNodes];
+            [indexPaths addObject:indexPath];
+            [nodesToRemove addObject:node];
+        }
+    }
+    
+    for (LoadBalancerNode *node in nodesToRemove) {
+        [self.loadBalancer.nodes removeObject:node];
+    }
+    
+    [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+    [indexPaths release];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
@@ -48,15 +71,16 @@
             [copiedNode release];
         }
         previousNodes = [[NSArray alloc] initWithArray:nodes];
-        [nodes release];
-        
-        [self addSaveButton];
+        [nodes release];        
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
+    if (!isNewLoadBalancer) {
+        [self addSaveButton];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -106,6 +130,8 @@
         cell.textField.returnKeyType = UIReturnKeyNext;
         cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         [textFields addObject:cell.textField];
+        
+        cell.imageView.image = [UIImage imageNamed:@"red-delete-button.png"];        
     }
 
     if (indexPath.row < [self.loadBalancer.nodes count]) {
@@ -128,14 +154,19 @@
     cell.accessoryType = UITableViewCellAccessoryNone;
     if (indexPath.section == kNodes) {
         if (indexPath.row == [self.loadBalancer.nodes count]) {
-            cell.textLabel.text = @"Add IP Addresses";
+            cell.textLabel.text = @"Add IP Address";
+            cell.detailTextLabel.text = @"";
             cell.imageView.image = [UIImage imageNamed:@"green-add-button.png"];
         } else {
             return [self tableView:tableView ipCellForRowAtIndexPath:indexPath];
         }
     } else if (indexPath.section == kCloudServers) {
         if (indexPath.row == [self.loadBalancer.cloudServerNodes count]) {
-            cell.textLabel.text = @"Add Cloud Servers";
+            if ([self.loadBalancer.cloudServerNodes count] == 0) {
+                cell.textLabel.text = @"Add Cloud Servers";
+            } else {
+                cell.textLabel.text = @"Add/Remove Cloud Servers";
+            }
             cell.imageView.image = [UIImage imageNamed:@"green-add-button.png"];
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -182,25 +213,34 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[textFields count] - 1 inSection:kNodes];
     [[textFields lastObject] becomeFirstResponder];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    if (isNewLoadBalancer) {
-        [self addDoneButton];
-    }
+//    if (isNewLoadBalancer) {
+//        [self addDoneButton];
+//    }
 }
 
 - (void)addIPRow {
+    [self deleteEmptyIPRows];
     LoadBalancerNode *node = [[[LoadBalancerNode alloc] init] autorelease];
     node.condition = @"ENABLED";
     node.port = [NSString stringWithFormat:@"%i", self.loadBalancer.protocol.port];
     [self.loadBalancer.nodes addObject:node];
     NSArray *indexPath = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self.loadBalancer.nodes count] - 1 inSection:kNodes]];
-    [self.tableView insertRowsAtIndexPaths:indexPath withRowAnimation:UITableViewScrollPositionBottom];
+    [self.tableView insertRowsAtIndexPaths:indexPath withRowAnimation:UITableViewRowAnimationBottom];
     [NSTimer scheduledTimerWithTimeInterval:0.35 target:self selector:@selector(focusOnLastTextField) userInfo:nil repeats:NO];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kNodes) {
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-        [self addIPRow];
+        if (indexPath.row == [self.loadBalancer.nodes count]) {
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            [self addIPRow];
+        } else {
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            NSArray *indexPaths = [NSArray arrayWithObject:indexPath];
+            LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
+            [self.loadBalancer.nodes removeObject:node];
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+        }
     } else if (indexPath.section == kCloudServers) {
         LBServersViewController *vc = [[LBServersViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -215,14 +255,19 @@
 #pragma mark - Text field delegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if (isNewLoadBalancer) {
-        [self addDoneButton];
-    }
+//    if (isNewLoadBalancer) {
+//        [self addDoneButton];
+//    }
     return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self addIPRow];    
+    [textField resignFirstResponder]; 
+    
+    if ([textField.text isEqualToString:@""]) {
+        [self deleteEmptyIPRows];        
+    }
+    
     return NO;
 }
 
@@ -234,12 +279,12 @@
 
 #pragma mark - Button Handlers
 
-- (void)doneButtonPressed:(id)sender {
-    for (UITextField *textField in textFields) {
-        [textField resignFirstResponder];
-    }
-    self.navigationItem.rightBarButtonItem = nil;
-}
+//- (void)doneButtonPressed:(id)sender {
+//    for (UITextField *textField in textFields) {
+//        [textField resignFirstResponder];
+//    }
+//    self.navigationItem.rightBarButtonItem = nil;
+//}
 
 - (void)saveButtonPressed:(id)sender {
     // we need to compare the previousNodoes list to the current nodes list so we

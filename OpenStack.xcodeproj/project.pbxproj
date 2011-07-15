@@ -903,6 +903,10 @@
 		27C15CE013A7DE7A00A1BB9F /* APILogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 2786948F1263971200CE3435 /* APILogEntry.m */; };
 		27C15CE113A7DE7E00A1BB9F /* APILogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 278694571263956700CE3435 /* APILogger.m */; };
 		27C15CE213A7DEC400A1BB9F /* NSObject+NSCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 270878F013282104006D4EE3 /* NSObject+NSCoding.m */; };
+		27C38BC013D0D48500CC7222 /* red-delete-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C38BBE13D0D48400CC7222 /* red-delete-button@2x.png */; };
+		27C38BC113D0D48500CC7222 /* red-delete-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C38BBE13D0D48400CC7222 /* red-delete-button@2x.png */; };
+		27C38BC213D0D48500CC7222 /* red-delete-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C38BBF13D0D48500CC7222 /* red-delete-button.png */; };
+		27C38BC313D0D48500CC7222 /* red-delete-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C38BBF13D0D48500CC7222 /* red-delete-button.png */; };
 		27C3B28212723B3600804B72 /* ResizeServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C3B27F12723B3600804B72 /* ResizeServerViewController.m */; };
 		27C3B28312723B3600804B72 /* ResizeServerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27C3B28012723B3600804B72 /* ResizeServerViewController.xib */; };
 		27C3B28512723B3600804B72 /* ResizeServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C3B27F12723B3600804B72 /* ResizeServerViewController.m */; };
@@ -1497,6 +1501,8 @@
 		27C0517612B0134F00CB21C7 /* AddContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContainerViewController.m; sourceTree = "<group>"; };
 		27C0517712B0134F00CB21C7 /* AddContainerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddContainerViewController.xib; sourceTree = "<group>"; };
 		27C15CC413A7D81D00A1BB9F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		27C38BBE13D0D48400CC7222 /* red-delete-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-delete-button@2x.png"; sourceTree = "<group>"; };
+		27C38BBF13D0D48500CC7222 /* red-delete-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-delete-button.png"; sourceTree = "<group>"; };
 		27C3B27E12723B3600804B72 /* ResizeServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResizeServerViewController.h; sourceTree = "<group>"; };
 		27C3B27F12723B3600804B72 /* ResizeServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResizeServerViewController.m; sourceTree = "<group>"; };
 		27C3B28012723B3600804B72 /* ResizeServerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ResizeServerViewController.xib; sourceTree = "<group>"; };
@@ -3006,6 +3012,8 @@
 		27CFD87E1371D54500116BBD /* Load Balancers */ = {
 			isa = PBXGroup;
 			children = (
+				27C38BBE13D0D48400CC7222 /* red-delete-button@2x.png */,
+				27C38BBF13D0D48500CC7222 /* red-delete-button.png */,
 				2726C63113B26D9F00BC7330 /* dot-red.png */,
 				2726C63213B26D9F00BC7330 /* dot-orange.png */,
 				2726C63313B26D9F00BC7330 /* dot-green.png */,
@@ -3654,6 +3662,8 @@
 				27295C0C13C6560F00A32F20 /* blue-camera@2x.png in Resources */,
 				27295C1113C6563200A32F20 /* dark-grey-highlight@2x.png in Resources */,
 				27295C1313C6563200A32F20 /* dark-grey-highlight.png in Resources */,
+				27C38BC013D0D48500CC7222 /* red-delete-button@2x.png in Resources */,
+				27C38BC213D0D48500CC7222 /* red-delete-button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3983,6 +3993,8 @@
 				27295C0D13C6560F00A32F20 /* blue-camera@2x.png in Resources */,
 				27295C1213C6563200A32F20 /* dark-grey-highlight@2x.png in Resources */,
 				27295C1413C6563200A32F20 /* dark-grey-highlight.png in Resources */,
+				27C38BC113D0D48500CC7222 /* red-delete-button@2x.png in Resources */,
+				27C38BC313D0D48500CC7222 /* red-delete-button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,11 +20,15 @@
 #import "OpenStackRequest.h"
 #import "APICallback.h"
 #import "UIColor+MoreColors.h"
+#import "VirtualIP.h"
+#import "Analytics.h"
+#import "PingIPAddressViewController.h"
 
 #define kDetailsSection 0
-#define kNodesSection 1
-#define kConnectionLoggingSection 2
-#define kDeleteSection 3
+#define kVirtualIPsSection 1
+#define kNodesSection 2
+#define kConnectionLoggingSection 3
+#define kDeleteSection 4
 
 #define kName 0
 #define kProtocol 1
@@ -49,6 +53,8 @@
     [account release];
     [loadBalancer release];
     [algorithmNames release];
+    [deleteActionSheet release];
+    [ipActionSheet release];
     [super dealloc];
 }
 
@@ -71,12 +77,8 @@
                       @"Weighted Least Connections", @"WEIGHTED_LEAST_CONNECTIONS", 
                       nil];
     
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    ipActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Ping IP Address", @"Copy to Pasteboard", @"Open in Safari", nil];
+    deleteActionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to delete this load balancer?  This operation cannot be undone." delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete Load Balancer" otherButtonTitles:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -95,12 +97,14 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 4;
+    return 5;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kDetailsSection) {
         return 5;
+    } else if (section == kVirtualIPsSection) {
+        return [self.loadBalancer.virtualIPs count];
     } else {
         return 1;
     }
@@ -203,6 +207,20 @@
         
         
         return cell;
+    } else if (indexPath.section == kVirtualIPsSection) {
+        static NSString *CellIdentifier = @"VIPCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        
+        VirtualIP *vip = [self.loadBalancer.virtualIPs objectAtIndex:indexPath.row];        
+        cell.textLabel.text = [vip.type capitalizedString];
+        cell.detailTextLabel.text = vip.address;
+        
+        return cell;
     } else {
         static NSString *CellIdentifier = @"NodeCell";
         
@@ -233,7 +251,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == kNodesSection) {
+    if (indexPath.section == kVirtualIPsSection) {
+        VirtualIP *vip = [self.loadBalancer.virtualIPs objectAtIndex:indexPath.row];
+        selectedVirtualIP = vip;
+        selectedVIPIndexPath = indexPath;        
+        ipActionSheet.title = vip.address;
+        [ipActionSheet showInView:self.view];
+    } else if (indexPath.section == kNodesSection) {
         LBNodesViewController *vc = [[LBNodesViewController alloc] initWithNibName:@"LBNodesViewController" bundle:nil];
         vc.isNewLoadBalancer = NO;
         vc.account = self.account;
@@ -241,9 +265,7 @@
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];        
     } else if (indexPath.section == kDeleteSection) {
-        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to delete this load balancer?  This operation cannot be undone." delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete Load Balancer" otherButtonTitles:nil];
-        [sheet showInView:self.view];
-        [sheet release];
+        [deleteActionSheet showInView:self.view];
     } else if (indexPath.row == kProtocol) {
         LBProtocolViewController *vc = [[LBProtocolViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
         [self.navigationController pushViewController:vc animated:YES];
@@ -258,17 +280,40 @@
 #pragma mark - Action Sheet Delegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0) {
-        [[self.account.manager deleteLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
-            NSLog(@"delete response %i: %@", request.responseStatusCode, [request responseString]);
-            [self.navigationController popViewControllerAnimated:YES];
-            [self.navigationController popViewControllerAnimated:YES];
-        } failure:^(OpenStackRequest *request) {
-            [self alert:@"There was a problem deleting the load balancer." request:request];
-        }];
+    if (actionSheet == deleteActionSheet) {
+        if (buttonIndex == 0) {
+            [[self.account.manager deleteLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
+                NSLog(@"delete response %i: %@", request.responseStatusCode, [request responseString]);
+                [self.navigationController popViewControllerAnimated:YES];
+                [self.navigationController popViewControllerAnimated:YES];
+            } failure:^(OpenStackRequest *request) {
+                [self alert:@"There was a problem deleting the load balancer." request:request];
+            }];
+        }
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:kDeleteSection];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    } else if (actionSheet == ipActionSheet) {
+        if (buttonIndex == 0) { // ping
+            TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_PINGED);            
+            PingIPAddressViewController *vc = [[PingIPAddressViewController alloc] initWithNibName:@"PingIPAddressViewController" bundle:nil ipAddress:selectedVirtualIP.address];
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                vc.modalPresentationStyle = UIModalPresentationPageSheet;
+            }                
+            [self.navigationController presentModalViewController:vc animated:YES];
+            [vc release];
+        } else if (buttonIndex == 1) { // copy to pasteboard
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            [pasteboard setString:selectedVirtualIP.address];
+            [self.tableView deselectRowAtIndexPath:selectedVIPIndexPath animated:YES];
+        } else if (buttonIndex == 2) { // open in safari
+            UIApplication *application = [UIApplication sharedApplication];
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", selectedVirtualIP.address]];
+            if ([application canOpenURL:url]) {
+                [application openURL:url];
+            }
+        }
+        [self.tableView deselectRowAtIndexPath:selectedVIPIndexPath animated:YES];
     }
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:kDeleteSection];
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - Text field delegate
