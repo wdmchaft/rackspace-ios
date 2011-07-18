@@ -25,16 +25,18 @@
 #import "PingIPAddressViewController.h"
 
 #define kDetailsSection 0
-#define kVirtualIPsSection 1
-#define kNodesSection 2
-#define kConnectionLoggingSection 3
-#define kDeleteSection 4
+#define kRegionSection 1
+#define kVirtualIPsSection 2
+#define kNodesSection 3
+#define kConnectionLoggingSection 4
+#define kDeleteSection 5
 
 #define kName 0
 #define kProtocol 1
-#define kVirtualIPType 2
-#define kRegion 3
-#define kAlgorithm 4
+#define kAlgorithm 2
+
+#define kVirtualIPType 0
+#define kRegion 1
 
 @implementation ConfigureLoadBalancerViewController
 
@@ -97,12 +99,14 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 5;
+    return 6;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kDetailsSection) {
-        return 5;
+        return 3;
+    } else if (section == kRegionSection) {
+        return 2;
     } else if (section == kVirtualIPsSection) {
         return [self.loadBalancer.virtualIPs count];
     } else {
@@ -183,18 +187,6 @@
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 cell.selectionStyle = UITableViewCellSelectionStyleBlue;
                 break;
-            case kVirtualIPType:
-                cell.textLabel.text = @"Virtual IP Type";
-                cell.detailTextLabel.text = self.loadBalancer.virtualIPType;
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                break;
-            case kRegion:
-                cell.textLabel.text = @"Region";
-                cell.detailTextLabel.text = self.loadBalancer.region;
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                break;
             case kAlgorithm:
                 cell.textLabel.text = @"Algorithm";
                 cell.detailTextLabel.text = [algorithmNames objectForKey:self.loadBalancer.algorithm];
@@ -207,6 +199,31 @@
         
         
         return cell;
+    } else if (indexPath.section == kRegionSection) {
+        static NSString *CellIdentifier = @"RegionCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        
+        switch (indexPath.row) {
+            case kVirtualIPType:
+                cell.textLabel.text = @"Virtual IP Type";
+                cell.detailTextLabel.text = self.loadBalancer.virtualIPType;
+                break;
+            case kRegion:
+                cell.textLabel.text = @"Region";
+                cell.detailTextLabel.text = self.loadBalancer.region;
+                break;
+            default:
+                break;
+        }
+        
+        return cell;
+        
     } else if (indexPath.section == kVirtualIPsSection) {
         static NSString *CellIdentifier = @"VIPCell";
         
@@ -243,12 +260,6 @@
 }
 
 #pragma mark - Table view delegate
-
-- (void)nextButtonPressed:(id)sender {
-    AddLoadBalancerAlgorithmViewController *vc = [[AddLoadBalancerAlgorithmViewController alloc] initWithAccount:self.account];
-    [self.navigationController pushViewController:vc animated:YES];
-    [vc release];
-}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kVirtualIPsSection) {
