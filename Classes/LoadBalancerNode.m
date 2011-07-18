@@ -68,6 +68,17 @@
     return json;
 }
 
+- (NSString *)toConditionUpdateJSON {
+    NSString *json = 
+        @"{\"node\": {"
+        "  \"condition\": \"<condition>\","
+        "  \"weight\": <weight>}"
+        "}";
+    json = [json replace:@"<condition>" with:self.condition];
+    json = [json replace:@"<weight>" withInt:MAX(1, self.weight)];
+    return json;
+}
+
 #pragma mark - Comparison
 
 - (NSComparisonResult)compare:(LoadBalancerNode *)aNode {

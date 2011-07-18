@@ -27,5 +27,6 @@
 
 + (LoadBalancerNode *)fromJSON:(NSDictionary *)dict;
 - (NSString *)toJSON;
+- (NSString *)toConditionUpdateJSON;
 
 @end

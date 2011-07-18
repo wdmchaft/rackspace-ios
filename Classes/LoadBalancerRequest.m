@@ -188,7 +188,7 @@
 
 + (LoadBalancerRequest *)updateLoadBalancerNodeRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer node:(LoadBalancerNode *)node endpoint:(NSString *)endpoint {
     NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/nodes/%@", loadBalancer.identifier, node.identifier];
-	NSData *data = [[node toJSON] dataUsingEncoding:NSUTF8StringEncoding];
+	NSData *data = [[node toConditionUpdateJSON] dataUsingEncoding:NSUTF8StringEncoding];
     LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
 	[request setPostBody:[NSMutableData dataWithData:data]];
     return request;

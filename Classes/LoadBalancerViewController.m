@@ -34,6 +34,8 @@
 
 @synthesize account, loadBalancer, tableView, titleView;
 
+#pragma mark - Constructors and Memory Management
+
 -(id)initWithLoadBalancer:(LoadBalancer *)lb {
     self = [self initWithNibName:@"LoadBalancerViewController" bundle:nil];
     if (self) {
@@ -51,6 +53,20 @@
     [titleView release];
     [nodes release];
     [super dealloc];
+}
+
+#pragma mark - Utilities
+
+- (LoadBalancerNode *)nodeForIndexPath:(NSIndexPath *)indexPath {
+    LoadBalancerNode *node = nil;    
+    if (indexPath.section == enabledSection) {
+        node = [[nodes objectForKey:kEnabled] objectAtIndex:indexPath.row];
+    } else if (indexPath.section == drainingSection) {
+        node = [[nodes objectForKey:kDraining] objectAtIndex:indexPath.row];
+    } else if (indexPath.section == disabledSection) {
+        node = [[nodes objectForKey:kDisabled] objectAtIndex:indexPath.row];
+    }
+    return node;
 }
 
 #pragma mark - View lifecycle
@@ -166,7 +182,15 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.loadBalancer.nodes count];
+    if (section == enabledSection) {
+        return [[nodes objectForKey:kEnabled] count];
+    } else if (section == drainingSection) {
+        return [[nodes objectForKey:kDraining] count];
+    } else if (section == disabledSection) {
+        return [[nodes objectForKey:kDisabled] count];
+    } else {
+        return 0;
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -192,7 +216,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
-    LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
+    LoadBalancerNode *node = [self nodeForIndexPath:indexPath];
     cell.textLabel.text = [NSString stringWithFormat:@"%@:%@", node.address, node.port];
         
     return cell;
@@ -201,7 +225,7 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
+    LoadBalancerNode *node = [self nodeForIndexPath:indexPath];
     LBNodeViewController *vc = [[LBNodeViewController alloc] initWithNode:node loadBalancer:self.loadBalancer account:self.account];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         vc.lbViewController = self;
