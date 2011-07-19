@@ -68,7 +68,7 @@
 }
 
 + (LoadBalancerRequest *)deleteLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i", loadBalancer.identifier];
     return [LoadBalancerRequest lbRequest:account method:@"DELETE" endpoint:endpoint path:path];
 }
 

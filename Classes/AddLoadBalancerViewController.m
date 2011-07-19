@@ -230,7 +230,6 @@
 - (void)saveLoadBalancer {
     // TODO: show "saving" spinner and refresh list when dismissing
     [[self.account.manager createLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
-        [self alert:@"Woot!" message:[request responseString]];
         [self dismissModalViewControllerAnimated:YES];
     } failure:^(OpenStackRequest *request) {
         [self alert:@"There was a problem creating the load balancer." request:request];

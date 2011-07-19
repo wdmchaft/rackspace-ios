@@ -33,7 +33,8 @@
     MFMailComposeViewController *vc = [[MFMailComposeViewController alloc] init];
     vc.mailComposeDelegate = self;		
     //[vc setSubject:[NSString stringWithFormat:@"OpenStack Log Entry: %@ %@", logEntry.requestMethod, logEntry.url]];            
-    [vc setSubject:[NSString stringWithFormat:@"OpenStack Log Entry: %@ %@", requestMethod, url]];
+//    [vc setSubject:[NSString stringWithFormat:@"OpenStack Log Entry: %@ %@", requestMethod, url]];
+    [vc setSubject:[NSString stringWithFormat:@"Rackspace API Call: %@ %@", requestMethod, url]];
     //[vc setMessageBody:[NSString stringWithFormat:@"%@\n\n%@", [logEntry requestDescription], [logEntry responseDescription]] isHTML:NO];    
     [vc setMessageBody:[NSString stringWithFormat:@"%@\n\n%@", requestDescription, responseDescription] isHTML:NO];    
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {

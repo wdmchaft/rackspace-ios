@@ -72,9 +72,9 @@ static NSMutableDictionary *timers = nil;
             lbs = nil;
             [self persist];
         } else {
-            NSLog(@"lbs for %@: %@", endpoint, lbs);
             for (NSString *key in lbs) {
-                [allLoadBalancers addObject:[lbs objectForKey:key]];
+                LoadBalancer *lb = [lbs objectForKey:key];
+                [allLoadBalancers addObject:lb];
             }
         }
         

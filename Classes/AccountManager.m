@@ -762,7 +762,8 @@
 - (APICallback *)deleteLoadBalancer:(LoadBalancer *)loadBalancer {
     TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_DELETED);
     NSString *endpoint = [self.account loadBalancerEndpointForRegion:loadBalancer.region];
-    __block LoadBalancerRequest *request = [LoadBalancerRequest updateLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
+    NSLog(@"endpoint: %@", endpoint);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest deleteLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
     return [self callbackWithRequest:request];
 }
 

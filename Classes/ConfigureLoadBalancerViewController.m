@@ -294,9 +294,8 @@
     if (actionSheet == deleteActionSheet) {
         if (buttonIndex == 0) {
             [[self.account.manager deleteLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
-                NSLog(@"delete response %i: %@", request.responseStatusCode, [request responseString]);
-                [self.navigationController popViewControllerAnimated:YES];
-                [self.navigationController popViewControllerAnimated:YES];
+                [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
+                [self alert:nil message:@"Load balancer successfully deleted."];
             } failure:^(OpenStackRequest *request) {
                 [self alert:@"There was a problem deleting the load balancer." request:request];
             }];
