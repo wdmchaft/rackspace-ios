@@ -143,17 +143,6 @@
 //        json = [json stringByAppendingString:@"\"virtualIps\": [ { \"type\": \"PUBLIC\" } ], "];
     }
     
-    /*
-    json = [json stringByAppendingString:@"\"virtualIps\": ["];
-    for (int i = 0; i < [self.virtualIPs count]; i++) {
-        VirtualIP *vip = [self.virtualIPs objectAtIndex:i];
-        json = [json stringByAppendingString:@"{"];
-        json = [json stringByAppendingString:[NSString stringWithFormat:@"\"type\": \"%@\"", vip.type]];
-        json = [json stringByAppendingString:i == [self.virtualIPs count] - 1 ? @"}" : @"}, "];
-    }
-    json = [json stringByAppendingString:@"]"];
-     */
-    
     json = [json stringByAppendingString:@"\"nodes\": ["];
     for (int i = 0; i < [self.nodes count]; i++) {
         LoadBalancerNode *node = [self.nodes objectAtIndex:i];
@@ -161,7 +150,16 @@
         json = [json stringByAppendingString:[NSString stringWithFormat:@"\"address\": \"%@\",", node.address]];
         json = [json stringByAppendingString:[NSString stringWithFormat:@"\"port\": \"%@\",", node.port]];
         json = [json stringByAppendingString:[NSString stringWithFormat:@"\"condition\": \"%@\"", node.condition]];
-        json = [json stringByAppendingString:i == [self.nodes count] - 1 ? @"}" : @"}, "];
+        
+        if (i == [self.nodes count] - 1) {
+            if ([self.cloudServerNodes count] > 0) {
+                json = [json stringByAppendingString:@"}, "];
+            } else {
+                json = [json stringByAppendingString:@"}"];
+            }
+        } else {
+            json = [json stringByAppendingString:@"}, "];
+        }
     }
     for (int i = 0; i < [self.cloudServerNodes count]; i++) {
         Server *server = [self.cloudServerNodes objectAtIndex:i];

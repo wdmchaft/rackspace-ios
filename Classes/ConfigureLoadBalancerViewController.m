@@ -277,14 +277,16 @@
         [vc release];        
     } else if (indexPath.section == kDeleteSection) {
         [deleteActionSheet showInView:self.view];
-    } else if (indexPath.row == kProtocol) {
-        LBProtocolViewController *vc = [[LBProtocolViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
-        [self.navigationController pushViewController:vc animated:YES];
-        [vc release];
-    } else if (indexPath.row == kAlgorithm) {
-        LBAlgorithmViewController *vc = [[LBAlgorithmViewController alloc] initWithLoadBalancer:self.loadBalancer];
-        [self.navigationController pushViewController:vc animated:YES];
-        [vc release];
+    } else if (indexPath.section == kDetailsSection) {
+        if (indexPath.row == kProtocol) {
+            LBProtocolViewController *vc = [[LBProtocolViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
+        } else if (indexPath.row == kAlgorithm) {
+            LBAlgorithmViewController *vc = [[LBAlgorithmViewController alloc] initWithLoadBalancer:self.loadBalancer];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
+        }
     }
 }
 

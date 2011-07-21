@@ -24,6 +24,7 @@
     NSMutableDictionary *images;
     NSDictionary *flavors;
     NSMutableDictionary *servers;
+    NSMutableDictionary *serversByPublicIP;
     NSURL *serversURL;
     NSURL *filesURL;
     NSURL *cdnURL;
@@ -63,6 +64,7 @@
 @property (nonatomic, retain) NSMutableDictionary *images;
 @property (nonatomic, retain) NSDictionary *flavors;
 @property (nonatomic, retain) NSMutableDictionary *servers;
+@property (nonatomic, retain) NSMutableDictionary *serversByPublicIP;
 @property (nonatomic, retain) NSURL *serversURL;
 @property (nonatomic, retain) NSURL *filesURL;
 @property (nonatomic, retain) NSURL *cdnURL;

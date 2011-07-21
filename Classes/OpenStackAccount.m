@@ -28,7 +28,7 @@ static NSMutableDictionary *timers = nil;
 @synthesize uuid, provider, username, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
             lastUsedFlavorId, lastUsedImageId,
             containerCount, totalBytesUsed, containers, hasBeenRefreshed, flaggedForDelete,
-            loadBalancers, lbProtocols;
+            loadBalancers, lbProtocols, serversByPublicIP;
 
 + (void)initialize {
     accounts = [Archiver retrieve:@"accounts"];
@@ -82,6 +82,23 @@ static NSMutableDictionary *timers = nil;
     NSArray *sortedArray = [NSArray arrayWithArray:[allLoadBalancers sortedArrayUsingSelector:@selector(compare:)]];
     [allLoadBalancers release];
     return sortedArray;
+}
+
+- (void)setServers:(NSMutableDictionary *)s {
+    if ([servers isEqual:s]) {
+        return;
+    } else {
+        [servers release];
+        servers = [s retain];
+        
+        self.serversByPublicIP = [NSMutableDictionary dictionaryWithCapacity:[self.servers count]];
+        for (Server *server in [self.servers allValues]) {
+            NSArray *ips = [server.addresses objectForKey:@"public"];
+            for (NSString *ip in ips) {
+                [self.serversByPublicIP setObject:server forKey:ip];
+            }
+        }
+    }
 }
 
 #pragma mark -
@@ -150,6 +167,7 @@ static NSMutableDictionary *timers = nil;
     copy.totalBytesUsed = self.totalBytesUsed;
     copy.containers = self.containers;
     copy.loadBalancers = self.loadBalancers;
+    copy.serversByPublicIP = self.serversByPublicIP;
     manager = [[AccountManager alloc] init];
     manager.account = copy;
     return copy;
@@ -163,6 +181,7 @@ static NSMutableDictionary *timers = nil;
     [coder encodeObject:images forKey:@"images"];
     [coder encodeObject:flavors forKey:@"flavors"];
     [coder encodeObject:servers forKey:@"servers"];
+    [coder encodeObject:serversByPublicIP forKey:@"serversByPublicIP"];
     
     [coder encodeObject:serversURL forKey:@"serversURL"];
     [coder encodeObject:filesURL forKey:@"filesURL"];
@@ -186,6 +205,7 @@ static NSMutableDictionary *timers = nil;
         images = [[coder decodeObjectForKey:@"images"] retain];
         flavors = [[coder decodeObjectForKey:@"flavors"] retain];
         servers = [[coder decodeObjectForKey:@"servers"] retain];
+        serversByPublicIP = [[coder decodeObjectForKey:@"serversByPublicIP"] retain];
         
         serversURL = [[coder decodeObjectForKey:@"serversURL"] retain];
         filesURL = [[coder decodeObjectForKey:@"filesURL"] retain];
@@ -357,6 +377,7 @@ static NSMutableDictionary *timers = nil;
     [containers release];
     [loadBalancers release];
     [lbProtocols release];
+    [serversByPublicIP release];
     
     [super dealloc];
 }

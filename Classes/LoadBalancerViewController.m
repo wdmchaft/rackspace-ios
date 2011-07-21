@@ -22,6 +22,7 @@
 #import "VirtualIP.h"
 #import "UIViewController+Conveniences.h"
 #import "LBNodeViewController.h"
+#import "Image.h"
 
 #define kDetails 0
 #define kNodes 1
@@ -210,14 +211,29 @@
     
     UITableViewCell *cell = [aTableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
         cell.textLabel.backgroundColor = [UIColor clearColor];
         cell.detailTextLabel.backgroundColor = [UIColor clearColor];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
     LoadBalancerNode *node = [self nodeForIndexPath:indexPath];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@:%@", node.address, node.port];
+    
+    Server *server = [self.account.serversByPublicIP objectForKey:node.address];
+    if (server) {
+        cell.textLabel.text = server.name;
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%@", node.address, node.port];        
+        if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
+            cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
+        } else {
+            cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
+        }
+    } else {
+        cell.textLabel.text = [NSString stringWithFormat:@"%@:%@", node.address, node.port];
+        cell.detailTextLabel.text = @"";
+        cell.imageView.image = nil;
+    }
+    
         
     return cell;
 }

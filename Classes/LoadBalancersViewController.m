@@ -130,6 +130,7 @@
 #pragma - Button Handlers
 
 - (void)addButtonPressed:(id)sender {
+    lbsLoaded = NO; // refresh the list when we come back
     AddLoadBalancerViewController *vc = [[AddLoadBalancerViewController alloc] initWithAccount:self.account];
     [self presentModalViewControllerWithNavigation:vc];
     [vc release];
