@@ -13,7 +13,7 @@
 
 @implementation LoadBalancerNode
 
-@synthesize identifier, address, port, condition, status, weight;
+@synthesize identifier, address, port, condition, status, weight, server;
 
 #pragma mark - Serialization and Copying
 
@@ -37,6 +37,7 @@
     copy.condition = self.condition;
     copy.status = self.status;
     copy.weight = self.weight;
+    copy.server = self.server;
     return copy;
 }
 

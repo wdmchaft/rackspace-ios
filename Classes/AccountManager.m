@@ -685,9 +685,9 @@
         }
         
         NSLog(@"%@", self.account.loadBalancers);
-        NSLog(@"%@", [(LoadBalancerRequest *)request loadBalancers]);
+        NSLog(@"%@", [(LoadBalancerRequest *)request loadBalancers:self.account]);
         NSLog(@"%@", endpoint);
-        NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers];
+        NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers:self.account];
         
         for (NSString *identifier in lbs) {
             LoadBalancer *lb = [lbs objectForKey:identifier];
@@ -704,7 +704,7 @@
     __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancerDetailsRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
 
-        LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer];
+        LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer:self.account];
         loadBalancer.nodes = newLB.nodes;
         loadBalancer.connectionLoggingEnabled = newLB.connectionLoggingEnabled;
         

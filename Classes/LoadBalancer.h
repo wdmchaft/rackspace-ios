@@ -8,7 +8,7 @@
 
 #import "ComputeModel.h"
 
-@class LoadBalancerProtocol, LoadBalancerUsage, LoadBalancerConnectionThrottle;
+@class LoadBalancerProtocol, LoadBalancerUsage, LoadBalancerConnectionThrottle, OpenStackAccount;
 
 @interface LoadBalancer : ComputeModel <NSCoding> {
 
@@ -22,7 +22,7 @@
     NSUInteger maxConcurrentConnections;
     BOOL connectionLoggingEnabled;
     NSMutableArray *nodes;
-    NSMutableArray *cloudServerNodes;
+//    NSMutableArray *cloudServerNodes;
     NSString *sessionPersistenceType;    
     LoadBalancerConnectionThrottle *connectionThrottle;
     NSString *clusterName;
@@ -42,7 +42,7 @@
 @property (nonatomic, assign) NSUInteger maxConcurrentConnections;
 @property (nonatomic, assign) BOOL connectionLoggingEnabled;
 @property (nonatomic, retain) NSMutableArray *nodes;
-@property (nonatomic, retain) NSMutableArray *cloudServerNodes;
+//@property (nonatomic, retain) NSMutableArray *cloudServerNodes;
 @property (nonatomic, retain) NSString *sessionPersistenceType;  
 @property (nonatomic, retain) LoadBalancerConnectionThrottle *connectionThrottle;
 @property (nonatomic, retain) NSString *clusterName;
@@ -50,7 +50,7 @@
 @property (nonatomic, retain) NSString *region;
 @property (nonatomic, retain) LoadBalancerUsage *usage;
 
-+ (LoadBalancer *)fromJSON:(NSDictionary *)dict;
++ (LoadBalancer *)fromJSON:(NSDictionary *)dict account:(OpenStackAccount *)account;
 - (BOOL)shouldBePolled;
 - (NSString *)toJSON;
 - (NSString *)toUpdateJSON;

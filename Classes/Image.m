@@ -45,6 +45,14 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    Image *copy = [[Image allocWithZone:zone] init];
+    copy.identifier = self.identifier;
+    copy.name = self.name;
+    copy.status = self.status;
+    return copy;
+}
+
 #pragma mark -
 #pragma mark JSON
 

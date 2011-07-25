@@ -15,10 +15,10 @@
 }
 
 + (LoadBalancerRequest *)getLoadBalancersRequest:(OpenStackAccount *)account endpoint:(NSString *)endpoint;
-- (NSMutableDictionary *)loadBalancers;
+- (NSMutableDictionary *)loadBalancers:(OpenStackAccount *)account;
 
 + (LoadBalancerRequest *)getLoadBalancerDetailsRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
-- (LoadBalancer *)loadBalancer;
+- (LoadBalancer *)loadBalancer:(OpenStackAccount *)account;
 
 + (LoadBalancerRequest *)createLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 + (LoadBalancerRequest *)updateLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;

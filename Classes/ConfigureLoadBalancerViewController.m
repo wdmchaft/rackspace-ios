@@ -249,10 +249,10 @@
         
         cell.textLabel.text = @"Nodes";
         
-        if ([self.loadBalancer.nodes count] + [self.loadBalancer.cloudServerNodes count] == 1) {
+        if ([self.loadBalancer.nodes count] == 1) {
             cell.detailTextLabel.text = @"1 Node";
         } else {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Nodes", [self.loadBalancer.nodes count] + [self.loadBalancer.cloudServerNodes count]];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Nodes", [self.loadBalancer.nodes count]];
         }
         
         return cell;

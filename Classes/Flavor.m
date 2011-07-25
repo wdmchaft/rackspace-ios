@@ -28,6 +28,15 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    Flavor *copy = [[Flavor allocWithZone:zone] init];
+    copy.identifier = self.identifier;
+    copy.ram = self.ram;
+    copy.disk = self.disk;
+    return copy;
+}
+
+
 #pragma mark - JSON
 
 + (Flavor *)fromJSON:(NSDictionary *)dict {

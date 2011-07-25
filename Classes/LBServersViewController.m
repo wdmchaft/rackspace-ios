@@ -16,22 +16,24 @@
 #import "UIViewController+Conveniences.h"
 #import "ActivityIndicatorView.h"
 #import "APICallback.h"
+#import "LoadBalancerNode.h"
+#import "LoadBalancerProtocol.h"
 
 
 @implementation LBServersViewController
 
-@synthesize account, loadBalancer;
+@synthesize account, loadBalancer, serverNodes;
 
-- (id)initWithAccount:(OpenStackAccount *)a loadBalancer:(LoadBalancer *)lb {
+- (id)initWithAccount:(OpenStackAccount *)a loadBalancer:(LoadBalancer *)lb serverNodes:(NSMutableArray *)sn {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         self = [super initWithStyle:UITableViewStyleGrouped];
     } else {
         self = [super initWithStyle:UITableViewStylePlain];
-//        self = [super initWithNibName:@"LBServersViewController" bundle:nil];
     }
     if (self) {
         self.account = a;
         self.loadBalancer = lb;
+        self.serverNodes = sn;
     }
     return self;
 }
@@ -39,6 +41,7 @@
 - (void)dealloc {
     [account release];
     [loadBalancer release];
+    [serverNodes release];
     [super dealloc];
 }
 
@@ -100,11 +103,12 @@
     } else {
         cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
     }
-    
-    if ([self.loadBalancer.cloudServerNodes containsObject:server]) {
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    } else {
-        cell.accessoryType = UITableViewCellAccessoryNone;
+
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    for (LoadBalancerNode *node in self.serverNodes) {
+        if ([node.server isEqual:server]) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
     }
     
     return cell;
@@ -114,10 +118,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Server *server = [self.account.sortedServers objectAtIndex:indexPath.row];
-    if ([self.loadBalancer.cloudServerNodes containsObject:server]) {
-        [self.loadBalancer.cloudServerNodes removeObject:server];
+    LoadBalancerNode *nodeToRemove = nil;
+    for (LoadBalancerNode *node in self.serverNodes) {
+        if ([node.server isEqual:server]) {
+            nodeToRemove = node;
+        }
+    }
+    
+    if (nodeToRemove) {
+        [self.serverNodes removeObject:nodeToRemove];
     } else {
-        [self.loadBalancer.cloudServerNodes addObject:server];
+        LoadBalancerNode *node = [[LoadBalancerNode alloc] init];
+        node.server = server;
+        node.address = [[server.addresses objectForKey:@"public"] objectAtIndex:0];
+        node.port = [NSString stringWithFormat:@"%i", self.loadBalancer.protocol.port];
+        [self.serverNodes addObject:node];
+        [node release];
     }
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];

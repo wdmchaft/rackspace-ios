@@ -8,7 +8,7 @@
 
 #import "ComputeModel.h"
 
-@interface Flavor : ComputeModel <NSCoding> {
+@interface Flavor : ComputeModel <NSCoding, NSCopying> {
     NSInteger ram;
     NSInteger disk;
 }

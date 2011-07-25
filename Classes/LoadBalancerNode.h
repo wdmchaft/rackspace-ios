@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class Server;
 
 @interface LoadBalancerNode : NSObject <NSCopying> {
     NSString *identifier;
@@ -16,6 +17,7 @@
     NSString *condition;
     NSString *status;
     NSInteger weight;
+    Server *server;
 }
 
 @property (nonatomic, retain) NSString *identifier;
@@ -24,6 +26,7 @@
 @property (nonatomic, retain) NSString *condition;
 @property (nonatomic, retain) NSString *status;
 @property (nonatomic, assign) NSInteger weight;
+@property (nonatomic, assign) Server *server;
 
 + (LoadBalancerNode *)fromJSON:(NSDictionary *)dict;
 - (NSString *)toJSON;

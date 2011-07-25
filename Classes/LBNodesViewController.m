@@ -31,6 +31,8 @@
 - (void)dealloc {
     [account release];
     [loadBalancer release];
+    [ipNodes release];
+    [cloudServerNodes release];
     [super dealloc];
 }
 
@@ -40,7 +42,7 @@
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     NSMutableArray *nodesToRemove = [[NSMutableArray alloc] init];
     
-    for (int i = 0; i < [self.loadBalancer.nodes count]; i++) {
+    for (int i = 0; i < [ipNodes count]; i++) {
         LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:i];
         if (!node.address || [node.address isEqualToString:@""]) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:kNodes];
@@ -64,11 +66,18 @@
     [super viewDidLoad];
     self.navigationItem.title = @"Nodes";
     textFields = [[NSMutableArray alloc] init];
+    ipNodes = [[NSMutableArray alloc] init];
+    cloudServerNodes = [[NSMutableArray alloc] init];
     if (!isNewLoadBalancer) {
         NSMutableArray *nodes = [[NSMutableArray alloc] initWithCapacity:[self.loadBalancer.nodes count]];
         for (LoadBalancerNode *node in self.loadBalancer.nodes) {
             LoadBalancerNode *copiedNode = [node copy];
             [nodes addObject:copiedNode];
+            if (copiedNode.server) {
+                [cloudServerNodes addObject:node];
+            } else {
+                [ipNodes addObject:node];
+            }
             [copiedNode release];
         }
         previousNodes = [[NSArray alloc] initWithArray:nodes];
@@ -86,17 +95,19 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    NSMutableArray *finalNodes = [[NSMutableArray alloc] init];
-    for (LoadBalancerNode *node in self.loadBalancer.nodes) {
-        if (node.address && ![node.address isEqualToString:@""]) {
-            [finalNodes addObject:node];
+    if (isNewLoadBalancer) {
+        NSMutableArray *finalNodes = [[NSMutableArray alloc] init];
+        for (LoadBalancerNode *node in ipNodes) {
+            if (node.address && ![node.address isEqualToString:@""]) {
+                [finalNodes addObject:node];
+            }
         }
+        if ([finalNodes count] > 0) {
+            self.loadBalancer.nodes = [[[NSMutableArray alloc] initWithArray:finalNodes] autorelease];
+        }
+        [finalNodes release];
+        self.navigationItem.rightBarButtonItem = nil;    
     }
-    if ([finalNodes count] > 0) {
-        self.loadBalancer.nodes = [[[NSMutableArray alloc] initWithArray:finalNodes] autorelease];
-    }
-    [finalNodes release];
-    self.navigationItem.rightBarButtonItem = nil;    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -111,9 +122,9 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kNodes) {
-        return [self.loadBalancer.nodes count] + 1;
+        return [ipNodes count] + 1;
     } else {
-        return [self.loadBalancer.cloudServerNodes count] + 1;
+        return [cloudServerNodes count] + 1;
     }
 }
 
@@ -135,8 +146,8 @@
         cell.imageView.image = [UIImage imageNamed:@"red-delete-button.png"];        
     }
 
-    if (indexPath.row < [self.loadBalancer.nodes count]) {
-        LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
+    if (indexPath.row < [ipNodes count]) {
+        LoadBalancerNode *node = [ipNodes objectAtIndex:indexPath.row];
         cell.textField.text = node.address;
     }
     
@@ -154,7 +165,7 @@
     // Configure the cell...
     cell.accessoryType = UITableViewCellAccessoryNone;
     if (indexPath.section == kNodes) {
-        if (indexPath.row == [self.loadBalancer.nodes count]) {
+        if (indexPath.row == [ipNodes count]) {
             cell.textLabel.text = @"Add IP Address";
             cell.detailTextLabel.text = @"";
             cell.imageView.image = [UIImage imageNamed:@"green-add-button.png"];
@@ -162,8 +173,8 @@
             return [self tableView:tableView ipCellForRowAtIndexPath:indexPath];
         }
     } else if (indexPath.section == kCloudServers) {
-        if (indexPath.row == [self.loadBalancer.cloudServerNodes count]) {
-            if ([self.loadBalancer.cloudServerNodes count] == 0) {
+        if (indexPath.row == [cloudServerNodes count]) {
+            if ([cloudServerNodes count] == 0) {
                 cell.textLabel.text = @"Add Cloud Servers";
             } else {
                 cell.textLabel.text = @"Add/Remove Cloud Servers";
@@ -175,7 +186,7 @@
                 cell.accessoryType = UITableViewCellAccessoryNone;
             }
         } else {
-            Server *server = [self.loadBalancer.cloudServerNodes objectAtIndex:indexPath.row];
+            Server *server = [[cloudServerNodes objectAtIndex:indexPath.row] server];
             cell.textLabel.text = server.name;
             cell.detailTextLabel.text = server.flavor.name;
             if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
@@ -191,22 +202,8 @@
 
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.section == kNodes && indexPath.row == [self.loadBalancer.nodes count];
+    return indexPath.section == kNodes && indexPath.row == [ipNodes count];
 }
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -214,9 +211,6 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[textFields count] - 1 inSection:kNodes];
     [[textFields lastObject] becomeFirstResponder];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//    if (isNewLoadBalancer) {
-//        [self addDoneButton];
-//    }
 }
 
 - (void)addIPRow {
@@ -224,26 +218,27 @@
     LoadBalancerNode *node = [[[LoadBalancerNode alloc] init] autorelease];
     node.condition = @"ENABLED";
     node.port = [NSString stringWithFormat:@"%i", self.loadBalancer.protocol.port];
-    [self.loadBalancer.nodes addObject:node];
-    NSArray *indexPath = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[self.loadBalancer.nodes count] - 1 inSection:kNodes]];
+    [ipNodes addObject:node];
+    NSArray *indexPath = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[ipNodes count] - 1 inSection:kNodes]];
     [self.tableView insertRowsAtIndexPaths:indexPath withRowAnimation:UITableViewRowAnimationBottom];
     [NSTimer scheduledTimerWithTimeInterval:0.35 target:self selector:@selector(focusOnLastTextField) userInfo:nil repeats:NO];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kNodes) {
-        if (indexPath.row == [self.loadBalancer.nodes count]) {
+        if (indexPath.row == [ipNodes count]) {
             [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
             [self addIPRow];
         } else {
             [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
             NSArray *indexPaths = [NSArray arrayWithObject:indexPath];
             LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
-            [self.loadBalancer.nodes removeObject:node];
+            [ipNodes removeObject:node];
             [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
         }
     } else if (indexPath.section == kCloudServers) {
-        LBServersViewController *vc = [[LBServersViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
+        //LBServersViewController *vc = [[LBServersViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
+        LBServersViewController *vc = [[LBServersViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer serverNodes:cloudServerNodes];
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             [self.navigationController pushViewController:vc animated:YES];
         } else {
@@ -273,7 +268,7 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {    
-    LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:textField.tag];    
+    LoadBalancerNode *node = [ipNodes objectAtIndex:textField.tag];    
     node.address = [textField.text stringByReplacingCharactersInRange:range withString:string];
     return YES;
 }

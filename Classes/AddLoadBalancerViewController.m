@@ -167,10 +167,10 @@
         
         cell.textLabel.text = @"Nodes";
         
-        if ([self.loadBalancer.nodes count] + [self.loadBalancer.cloudServerNodes count] == 1) {
+        if ([self.loadBalancer.nodes count] == 1) {
             cell.detailTextLabel.text = @"1 Node";
         } else {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Nodes", [self.loadBalancer.nodes count] + [self.loadBalancer.cloudServerNodes count]];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Nodes", [self.loadBalancer.nodes count]];
         }
 
         return cell;
@@ -241,11 +241,7 @@
         if (self.loadBalancer.nodes && [self.loadBalancer.nodes count] > 0) {
             [self saveLoadBalancer];
         } else {
-            if (self.loadBalancer.cloudServerNodes && [self.loadBalancer.cloudServerNodes count] > 0) {
-                [self saveLoadBalancer];
-            } else {            
-                [self alert:nil message:@"Please add at least one node."];
-            }
+            [self alert:nil message:@"Please add at least one node."];
         }
     } else {
         [self alert:nil message:@"Please enter a name."];

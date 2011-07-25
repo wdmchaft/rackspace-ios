@@ -219,10 +219,10 @@
 
     LoadBalancerNode *node = [self nodeForIndexPath:indexPath];
     
-    Server *server = [self.account.serversByPublicIP objectForKey:node.address];
-    if (server) {
+    if (node.server) {
+        Server *server = node.server;
         cell.textLabel.text = server.name;
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%@", node.address, node.port];        
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i", node.address, node.port];
         if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
             cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
         } else {

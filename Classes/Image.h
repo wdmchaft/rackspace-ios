@@ -9,7 +9,7 @@
 #import "ComputeModel.h"
 
 
-@interface Image : ComputeModel <NSCoding> {
+@interface Image : ComputeModel <NSCoding, NSCopying> {
     NSString *status;
     NSDate *created;
     NSDate *updated;

@@ -14,13 +14,15 @@
 #import "LoadBalancerConnectionThrottle.h"
 #import "Server.h"
 #import "NSString+Conveniences.h"
+#import "OpenStackAccount.h"
 
 
 @implementation LoadBalancer
 
 @synthesize protocol, algorithm, status, virtualIPs, created, updated, maxConcurrentConnections,
             connectionLoggingEnabled, nodes, connectionThrottle, clusterName, sessionPersistenceType, progress,
-            cloudServerNodes, virtualIPType, region, usage;
+            virtualIPType, region, usage;
+//@synthesize cloudServerNodes;
 
 #pragma mark - Constructors and Memory Management
 
@@ -28,7 +30,7 @@
     self = [super init];
     if (self) {
         self.nodes = [[[NSMutableArray alloc] init] autorelease];
-        self.cloudServerNodes = [[[NSMutableArray alloc] init] autorelease];
+//        self.cloudServerNodes = [[[NSMutableArray alloc] init] autorelease];
     }
     return self;
 }
@@ -43,7 +45,7 @@
     [nodes release];
     [sessionPersistenceType release];
     [clusterName release];
-    [cloudServerNodes release];
+//    [cloudServerNodes release];
     [virtualIPType release];
     [region release];
     [usage release];
@@ -66,7 +68,7 @@
 
 #pragma mark - JSON
 
-+ (LoadBalancer *)fromJSON:(NSDictionary *)dict {
++ (LoadBalancer *)fromJSON:(NSDictionary *)dict account:(OpenStackAccount *)account {
     
     LoadBalancer *loadBalancer = [[[LoadBalancer alloc] initWithJSONDict:dict] autorelease];
 
@@ -96,8 +98,12 @@
     NSArray *nodeDicts = [dict objectForKey:@"nodes"];
     loadBalancer.nodes = [[[NSMutableArray alloc] initWithCapacity:[nodeDicts count]] autorelease];
     for (NSDictionary *nodeDict in nodeDicts) {
-        LoadBalancerNode *node = [LoadBalancerNode fromJSON:nodeDict];
-        [loadBalancer.nodes addObject:node];
+        LoadBalancerNode *node = [LoadBalancerNode fromJSON:nodeDict];        
+        Server *server = [account.serversByPublicIP objectForKey:node.address];
+        if (server) {
+            node.server = server;
+        }
+        [loadBalancer.nodes addObject:node];        
     }
 
     if ([dict objectForKey:@"connectionThrottle"]) {
@@ -146,21 +152,27 @@
     json = [json stringByAppendingString:@"\"nodes\": ["];
     for (int i = 0; i < [self.nodes count]; i++) {
         LoadBalancerNode *node = [self.nodes objectAtIndex:i];
-        json = [json stringByAppendingString:@"{"];
-        json = [json stringByAppendingString:[NSString stringWithFormat:@"\"address\": \"%@\",", node.address]];
-        json = [json stringByAppendingString:[NSString stringWithFormat:@"\"port\": \"%@\",", node.port]];
-        json = [json stringByAppendingString:[NSString stringWithFormat:@"\"condition\": \"%@\"", node.condition]];
+        if (node.server) {
+            Server *server = node.server;
+            json = [json stringByAppendingString:@"{"];        
+            json = [json stringByAppendingString:[NSString stringWithFormat:@"\"address\": \"%@\",", [[server.addresses objectForKey:@"public"] objectAtIndex:0]]];
+            json = [json stringByAppendingString:[NSString stringWithFormat:@"\"port\": \"%i\",", self.protocol.port]];
+            json = [json stringByAppendingString:@"\"condition\": \"ENABLED\""];
+        } else {
+            LoadBalancerNode *lbNode = node;
+            json = [json stringByAppendingString:@"{"];
+            json = [json stringByAppendingString:[NSString stringWithFormat:@"\"address\": \"%@\",", lbNode.address]];
+            json = [json stringByAppendingString:[NSString stringWithFormat:@"\"port\": \"%@\",", lbNode.port]];
+            json = [json stringByAppendingString:[NSString stringWithFormat:@"\"condition\": \"%@\"", lbNode.condition]];
+        }
         
         if (i == [self.nodes count] - 1) {
-            if ([self.cloudServerNodes count] > 0) {
-                json = [json stringByAppendingString:@"}, "];
-            } else {
-                json = [json stringByAppendingString:@"}"];
-            }
+            json = [json stringByAppendingString:@"}"];
         } else {
             json = [json stringByAppendingString:@"}, "];
         }
     }
+    /*
     for (int i = 0; i < [self.cloudServerNodes count]; i++) {
         Server *server = [self.cloudServerNodes objectAtIndex:i];
         json = [json stringByAppendingString:@"{"];        
@@ -169,6 +181,7 @@
         json = [json stringByAppendingString:@"\"condition\": \"ENABLED\""];
         json = [json stringByAppendingString:i == [self.cloudServerNodes count] - 1 ? @"}" : @"}, "];
     }
+     */
     json = [json stringByAppendingString:@"]"];
     
     json = [json stringByAppendingString:@"}}"];

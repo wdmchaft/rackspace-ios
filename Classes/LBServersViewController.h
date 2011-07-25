@@ -13,11 +13,13 @@
 @interface LBServersViewController : UITableViewController {
     OpenStackAccount *account;
     LoadBalancer *loadBalancer;
+    NSMutableArray *serverNodes;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) LoadBalancer *loadBalancer;
+@property (nonatomic, retain) NSMutableArray *serverNodes;
 
-- (id)initWithAccount:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer;
+- (id)initWithAccount:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer serverNodes:(NSMutableArray *)serverNodes;
 
 @end

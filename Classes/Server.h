@@ -10,7 +10,7 @@
 
 @class Image, Flavor, BackupSchedule;
 
-@interface Server : ComputeModel <NSCoding> {
+@interface Server : ComputeModel <NSCoding, NSCopying> {
     
     // progress from 0-100 for the current or last action
     NSInteger progress;

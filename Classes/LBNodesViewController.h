@@ -17,6 +17,8 @@
     @private
     NSMutableArray *textFields;
     NSArray *previousNodes;
+    NSMutableArray *ipNodes;
+    NSMutableArray *cloudServerNodes;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;

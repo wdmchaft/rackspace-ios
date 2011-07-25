@@ -112,23 +112,23 @@
     return throttle;
 }
 
-- (NSMutableDictionary *)loadBalancers {
+- (NSMutableDictionary *)loadBalancers:(OpenStackAccount *)a {
     SBJSON *parser = [[SBJSON alloc] init];
     NSArray *jsonObjects = [[parser objectWithString:[self responseString]] objectForKey:@"loadBalancers"];
     NSMutableDictionary *objects = [[[NSMutableDictionary alloc] initWithCapacity:[jsonObjects count]] autorelease];
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];
-        LoadBalancer *loadBalancer = [LoadBalancer fromJSON:dict];
+        LoadBalancer *loadBalancer = [LoadBalancer fromJSON:dict account:a];
         [objects setObject:loadBalancer forKey:[NSNumber numberWithInt:loadBalancer.identifier]];
     }
     [parser release];
     return objects;
 }
 
-- (LoadBalancer *)loadBalancer {
+- (LoadBalancer *)loadBalancer:(OpenStackAccount *)a {
     SBJSON *parser = [[SBJSON alloc] init];
     NSDictionary *json = [[parser objectWithString:[self responseString]] objectForKey:@"loadBalancer"];
-    LoadBalancer *loadBalancer = [LoadBalancer fromJSON:json];
+    LoadBalancer *loadBalancer = [LoadBalancer fromJSON:json account:a];
     [parser release];
     return loadBalancer;
 }
