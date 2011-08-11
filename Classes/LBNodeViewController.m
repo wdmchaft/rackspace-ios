@@ -66,6 +66,25 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [self addDoneButton];
     }
+    
+    editable = YES;
+    
+    // if there is only one enabled node on the load balancer, it can't be
+    // edited or deleted
+    if ([self.loadBalancer.nodes count] == 1) {
+        editable = NO;
+    } else {
+        NSInteger enabledCount = 0;
+        for (LoadBalancerNode *n in self.loadBalancer.nodes) {
+            if ([n.condition isEqualToString:@"ENABLED"]) {
+                enabledCount++;
+            }
+        }
+        
+        if (enabledCount <= 1 && [self.node.condition isEqualToString:@"ENABLED"]) {
+            editable = NO;
+        }
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -88,7 +107,11 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section == kConditionSection) {
-        return @"Draining nodes are disabled after all current connections are completed.";
+        if (editable) {
+            return @"Draining nodes are disabled after all current connections are completed.";
+        } else {
+            return @"There must be at least one enabled node for this load balancer.";
+        }
     } else {
         return @"";
     }
@@ -100,8 +123,10 @@
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         cell.textLabel.textAlignment = UITextAlignmentCenter;
-        cell.textLabel.textColor = [UIColor value1DetailTextLabelColor];
+        cell.textLabel.textColor = editable ? [UIColor value1DetailTextLabelColor] : [UIColor lightGrayColor];
         cell.textLabel.text = @"Remove Node";
+        cell.selectionStyle = editable ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
+        
     }
     return cell;
 }
@@ -117,22 +142,30 @@
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];            
         }
         
+        cell.selectionStyle = editable ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
+        
         switch (indexPath.row) {
             case kEnabled:
                 cell.textLabel.text = @"Enabled";
+                cell.textLabel.textColor = [UIColor blackColor];
                 break;
             case kDraining:
                 cell.textLabel.text = @"Draining";
+                cell.textLabel.textColor = editable ? [UIColor blackColor] : [UIColor lightGrayColor];
                 break;
             case kDisabled:
                 cell.textLabel.text = @"Disabled";
+                cell.textLabel.textColor = editable ? [UIColor blackColor] : [UIColor lightGrayColor];
                 break;
             default:
                 break;
         }
-        if ([node.condition isEqualToString:[cell.textLabel.text uppercaseString]]) {
+        
+        if ([self.node.condition isEqualToString:[cell.textLabel.text uppercaseString]]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            cell.accessoryView = nil;
         } else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
             cell.accessoryView = [spinners objectAtIndex:indexPath.row];
         }
         
@@ -143,44 +176,45 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    if (indexPath.section == kConditionSection) {
-        
-        NSString *oldCondition = [NSString stringWithString:self.node.condition];
-        
-        switch (indexPath.row) {
-            case kEnabled:
-                self.node.condition = @"ENABLED";
-                break;
-            case kDraining:
-                self.node.condition = @"DRAINING";
-                break;
-            case kDisabled:
-                self.node.condition = @"DISABLED";
-                break;
-            default:
-                break;
+    if (editable) {
+        if (indexPath.section == kConditionSection) {
+            
+            NSString *oldCondition = [NSString stringWithString:self.node.condition];
+            
+            switch (indexPath.row) {
+                case kEnabled:
+                    self.node.condition = @"ENABLED";
+                    break;
+                case kDraining:
+                    self.node.condition = @"DRAINING";
+                    break;
+                case kDisabled:
+                    self.node.condition = @"DISABLED";
+                    break;
+                default:
+                    break;
+            }
+            
+            // make the API call
+            NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+            [[spinners objectAtIndex:indexPath.row] startAnimating];
+            APICallback *callback = [self.account.manager updateLBNode:self.node loadBalancer:self.loadBalancer endpoint:endpoint];
+            
+            [callback success:^(OpenStackRequest *request) {
+                [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
+            } failure:^(OpenStackRequest *request) {
+                self.node.condition = oldCondition;
+                [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
+                [self alert:@"There was a problem changing the condition of this node." request:request];
+            }];        
+        } else {
+            UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to remove this node from the load balancer?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
+            sheet.delegate = self;
+            [sheet showInView:self.view];
+            [sheet release];
         }
-
-        // make the API call
-        NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
-        [[spinners objectAtIndex:indexPath.row] startAnimating];
-        APICallback *callback = [self.account.manager updateLBNode:self.node loadBalancer:self.loadBalancer endpoint:endpoint];
-        
-        [callback success:^(OpenStackRequest *request) {
-            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-            [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
-        } failure:^(OpenStackRequest *request) {
-            self.node.condition = oldCondition;
-            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-            [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
-            [self alert:@"There was a problem changing the condition of this node." request:request];
-        }];        
-    } else {
-        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to remove this node from the load balancer?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
-        sheet.delegate = self;
-        [sheet showInView:self.view];
-        [sheet release];
     }
 }
 

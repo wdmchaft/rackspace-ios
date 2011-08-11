@@ -28,7 +28,8 @@
     
     // status dot
     self.statusDot.frame = CGRectMake(10, 18, 13, 13);
-    self.statusDot.image = [UIImage imageNamed:@"dot-green.png"];
+    self.statusDot.image = [self.loadBalancer imageForStatus];
+    //self.statusDot.image = [UIImage imageNamed:@"dot-green.png"];
     [self addSubview:self.statusDot];
     
     // label styles

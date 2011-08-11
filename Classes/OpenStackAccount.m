@@ -74,7 +74,9 @@ static NSMutableDictionary *timers = nil;
         } else {
             for (NSString *key in lbs) {
                 LoadBalancer *lb = [lbs objectForKey:key];
-                [allLoadBalancers addObject:lb];
+                if (![lb.status isEqualToString:@"PENDING_DELETE"]) {
+                    [allLoadBalancers addObject:lb];
+                }
             }
         }
         

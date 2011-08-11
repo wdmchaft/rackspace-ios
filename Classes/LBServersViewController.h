@@ -14,11 +14,13 @@
     OpenStackAccount *account;
     LoadBalancer *loadBalancer;
     NSMutableArray *serverNodes;
+    NSMutableArray *originalServerNodes;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) LoadBalancer *loadBalancer;
 @property (nonatomic, retain) NSMutableArray *serverNodes;
+@property (nonatomic, retain) NSMutableArray *originalServerNodes;
 
 - (id)initWithAccount:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer serverNodes:(NSMutableArray *)serverNodes;
 

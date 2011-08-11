@@ -20,6 +20,7 @@
 #import "LoadBalancerProtocol.h"
 #import "ActivityIndicatorView.h"
 #import "APICallback.h"
+#import "AnimatedProgressView.h"
 
 #define kNodes 0
 #define kCloudServers 1
@@ -33,6 +34,7 @@
     [loadBalancer release];
     [ipNodes release];
     [cloudServerNodes release];
+    [nodesToDelete release];
     [super dealloc];
 }
 
@@ -71,14 +73,14 @@
     if (!isNewLoadBalancer) {
         NSMutableArray *nodes = [[NSMutableArray alloc] initWithCapacity:[self.loadBalancer.nodes count]];
         for (LoadBalancerNode *node in self.loadBalancer.nodes) {
-            LoadBalancerNode *copiedNode = [node copy];
+            LoadBalancerNode *copiedNode = node; //[node copy];
             [nodes addObject:copiedNode];
             if (copiedNode.server) {
                 [cloudServerNodes addObject:node];
             } else {
                 [ipNodes addObject:node];
             }
-            [copiedNode release];
+            //[copiedNode release];
         }
         previousNodes = [[NSArray alloc] initWithArray:nodes];
         [nodes release];        
@@ -101,6 +103,9 @@
             if (node.address && ![node.address isEqualToString:@""]) {
                 [finalNodes addObject:node];
             }
+        }
+        for (LoadBalancerNode *node in cloudServerNodes) {
+            [finalNodes addObject:node];
         }
         if ([finalNodes count] > 0) {
             self.loadBalancer.nodes = [[[NSMutableArray alloc] initWithArray:finalNodes] autorelease];
@@ -179,6 +184,7 @@
             } else {
                 cell.textLabel.text = @"Add/Remove Cloud Servers";
             }
+            cell.detailTextLabel.text = @"";
             cell.imageView.image = [UIImage imageNamed:@"green-add-button.png"];
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -219,6 +225,7 @@
     node.condition = @"ENABLED";
     node.port = [NSString stringWithFormat:@"%i", self.loadBalancer.protocol.port];
     [ipNodes addObject:node];
+    [self.loadBalancer.nodes addObject:node];
     NSArray *indexPath = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:[ipNodes count] - 1 inSection:kNodes]];
     [self.tableView insertRowsAtIndexPaths:indexPath withRowAnimation:UITableViewRowAnimationBottom];
     [NSTimer scheduledTimerWithTimeInterval:0.35 target:self selector:@selector(focusOnLastTextField) userInfo:nil repeats:NO];
@@ -237,7 +244,6 @@
             [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
         }
     } else if (indexPath.section == kCloudServers) {
-        //LBServersViewController *vc = [[LBServersViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
         LBServersViewController *vc = [[LBServersViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer serverNodes:cloudServerNodes];
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             [self.navigationController pushViewController:vc animated:YES];
@@ -282,73 +288,191 @@
 //    self.navigationItem.rightBarButtonItem = nil;
 //}
 
+- (void)deleteNodeProgress {
+    currentAPICalls++;
+    NSLog(@"((%i / 1.0) / %i) = %f", currentAPICalls, totalAPICalls, ((currentAPICalls / 1.0) / totalAPICalls));
+    [spinner.progressView setProgress:((currentAPICalls / 1.0) / totalAPICalls) animated:YES];
+    
+    if (currentAPICalls == totalAPICalls) {
+        [spinner removeFromSuperviewAndRelease]; 
+    }
+}
+
+- (void)deleteNode:(LoadBalancerNode *)node {
+    
+    NSLog(@"trying to delete node %@", node.identifier);
+    
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+    
+    APICallback *callback = [self.account.manager deleteLBNode:node loadBalancer:self.loadBalancer endpoint:endpoint];
+    
+    __block void (^callBackBlock)(OpenStackRequest *request);        
+    callBackBlock = ^(OpenStackRequest *request) {
+        
+        deleteIndex++;
+        [self deleteNodeProgress];
+
+        if (![request isSuccess]) {
+            [self alert:@"There was a problem deleting a node." request:request];
+        } else {
+            self.loadBalancer.status = @"PENDING_UPDATE";
+        }
+        
+        
+        if (deleteIndex < [nodesToDelete count]) {
+
+            self.loadBalancer.status = @"PENDING_UPDATE";            
+            [self.loadBalancer pollUntilActive:self.account delegate:self completeSelector:@selector(deleteNode:) object:[nodesToDelete objectAtIndex:deleteIndex]];
+            
+            //                [self.loadBalancer pollUntilActive:self.account complete:^{
+            //                    deleteNodeBlock([nodesToDelete objectAtIndex:deleteIndex]);
+            //                }];
+        };
+        
+    };
+    
+    [callback success:callBackBlock failure:callBackBlock];    
+}
+
+- (void)deleteNodesWithProgress:(ASIBasicBlock)progressBlock {
+    
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+    deleteIndex = 0;
+    
+    __block void (^deleteNodeBlock)(LoadBalancerNode *node);
+    deleteNodeBlock = ^(LoadBalancerNode *node) {
+        
+        NSLog(@"trying to delete node %@", node.identifier);
+        
+        APICallback *callback = [self.account.manager deleteLBNode:node loadBalancer:self.loadBalancer endpoint:endpoint];
+        
+        __block void (^callBackBlock)(OpenStackRequest *request);        
+        callBackBlock = ^(OpenStackRequest *request) {
+            
+            deleteIndex++;
+            [self deleteNodeProgress];
+            
+            if (deleteIndex < [nodesToDelete count]) {
+                self.loadBalancer.status = @"PENDING_UPDATE";            
+                [self.loadBalancer pollUntilActive:self.account delegate:self completeSelector:@selector(deleteNode:) object:[nodesToDelete objectAtIndex:deleteIndex]];
+                
+//                [self.loadBalancer pollUntilActive:self.account complete:^{
+//                    deleteNodeBlock([nodesToDelete objectAtIndex:deleteIndex]);
+//                }];
+            };
+            
+            if (![request isSuccess]) {
+                [self alert:@"There was a problem deleting a node." request:request];
+            }
+        };
+
+        [callback success:callBackBlock failure:callBackBlock];
+        
+    };
+
+    LoadBalancerNode *node = [nodesToDelete objectAtIndex:deleteIndex];
+    deleteNodeBlock(node);
+    
+}
+    
+- (void)addNodes:(NSArray *)nodesToAdd andDeleteNodesWithProgress:(ASIBasicBlock)progressBlock failure:(APIResponseBlock)failureBlock {
+
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];    
+    
+    if ([nodesToAdd count] > 0) {
+        // we want to add before doing any deletes to avoid attempting an invalid delete
+        APICallback *callback = [self.account.manager addLBNodes:nodesToAdd loadBalancer:self.loadBalancer endpoint:endpoint];
+        [callback success:^(OpenStackRequest *request) {
+            
+            // if it's a successful add, the status will be PENDING_UPDATE.  cheaper
+            // to just set it than hit the API again since we're already going to hit it
+            // n times for the deletes
+            self.loadBalancer.status = @"PENDING_UPDATE";
+
+            [self deleteNodeProgress];
+            
+            if ([nodesToDelete count] > 0) {            
+                // before you delete, you need to poll the LB until it hits active status
+                [self.loadBalancer pollUntilActive:self.account complete:^{
+                    [self deleteNodesWithProgress:progressBlock];
+                }];
+            }
+            
+        } failure:^(OpenStackRequest *request) {
+            failureBlock(request);
+        }];
+    } else {
+        [self deleteNodesWithProgress:progressBlock];
+    }
+    
+}
+
 - (void)saveButtonPressed:(id)sender {
+    
+    if ([self.loadBalancer.nodes count] == 0) {
+        [self alert:nil message:@"You must have at least one node attached to this load balancer."];
+        return;
+    } else {
+        NSInteger enabledCount = 0;
+        for (LoadBalancerNode *node in self.loadBalancer.nodes) {
+            if ([node.condition isEqualToString:@"ENABLED"]) {
+                enabledCount++;
+            }
+        }
+        if (enabledCount == 0) {
+            [self alert:nil message:@"You must have at least one enabled node attached to this load balancer."];
+            return;
+        }
+    }
+    
+    
+    
     // we need to compare the previousNodoes list to the current nodes list so we
     // can know which nodes to add and which ones to delete
     NSMutableArray *nodesToAdd = [[NSMutableArray alloc] init];
-    NSMutableArray *nodesToDelete = [[NSMutableArray alloc] init];
-
+    nodesToDelete = [[NSMutableArray alloc] init];
+    
+    NSLog(@"previous nodes: %@", previousNodes);
+    NSLog(@"lb nodes: %@", self.loadBalancer.nodes);
+    
     for (LoadBalancerNode *node in previousNodes) {
         if (![self.loadBalancer.nodes containsObject:node]) {
             [nodesToDelete addObject:node];
-            NSLog(@"going to delete node: %@", node.address);
+            NSLog(@"going to delete node: %@", node);
         }
     }
     
     for (LoadBalancerNode *node in self.loadBalancer.nodes) {
         if (![previousNodes containsObject:node]) {
             [nodesToAdd addObject:node];
-            NSLog(@"going to add node: %@", node.address);
+            NSLog(@"going to add node: %@", node);
         }
     }
-    
-    // make the API calls
-    ActivityIndicatorView *spinner = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Saving..." withProgress:YES] text:@"Saving..." withProgress:YES];
-    [spinner addToView:self.view];
-    
-    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];    
-    NSInteger totalAPICalls = [nodesToDelete count] + ([nodesToAdd count] > 0 ? 1 : 0);
-    __block NSInteger currentAPICalls = 0;
 
-    ASIBasicBlock spinnerBlock = ^{
-        currentAPICalls++;
-        if (currentAPICalls == totalAPICalls) {
-            [spinner removeFromSuperviewAndRelease];
-        }
-    };
-    
-    ASIBasicBlock deleteBlock = ^{
-        for (LoadBalancerNode *node in nodesToDelete) {
-            APICallback *callback = [self.account.manager deleteLBNode:node loadBalancer:self.loadBalancer endpoint:endpoint];
-            [callback success:^(OpenStackRequest *request) {
-                spinnerBlock();
-            } failure:^(OpenStackRequest *request) {
-                spinnerBlock();
-                [self alert:@"There was a problem deleting a node." request:request];
-            }];
-        }
-    };
-    
-    if ([nodesToAdd count] > 0) {
-        // we want to add before doing any deletes to avoid attempting an invalid delete
-        APICallback *callback = [self.account.manager addLBNodes:nodesToAdd loadBalancer:self.loadBalancer endpoint:endpoint];
-        [callback success:^(OpenStackRequest *request) {
-            spinnerBlock();
-            
-            // before you delete, you need to poll the LB until it hits active status
-            
-            deleteBlock();
+    currentAPICalls = 0;
+    totalAPICalls = [nodesToDelete count] + ([nodesToAdd count] > 0 ? 1 : 0);
+
+    if (totalAPICalls > 0) {
+        spinner = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Saving..." withProgress:YES] text:@"Saving..." withProgress:YES];
+        [spinner addToView:self.view];
+        
+        
+        // make the API calls
+        [self addNodes:nodesToAdd andDeleteNodesWithProgress:^{
+            currentAPICalls++;
+            // TODO: update progress view on spinner
+            if (currentAPICalls == totalAPICalls) {
+                [spinner removeFromSuperviewAndRelease]; 
+            }
         } failure:^(OpenStackRequest *request) {
             [self alert:@"There was a problem adding nodes." request:request];
             [spinner removeFromSuperviewAndRelease];
         }];
     } else {
-        deleteBlock();
+        [self alert:nil message:@"You did not select any nodes to add or remove."];
     }
     
-    
     [nodesToAdd release];
-    [nodesToDelete release];
 }
 
 @end

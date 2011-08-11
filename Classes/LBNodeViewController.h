@@ -11,13 +11,9 @@
 @class LoadBalancer, LoadBalancerNode, OpenStackAccount, LoadBalancerViewController;
 
 @interface LBNodeViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate> {
-    OpenStackAccount *account;
-    LoadBalancer *loadBalancer;
-    LoadBalancerNode *node;
-    LoadBalancerViewController *lbViewController;
-    NSIndexPath *lbIndexPath;
     @private
     NSArray *spinners;
+    BOOL editable;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class OpenStackAccount, LoadBalancer;
+@class OpenStackAccount, LoadBalancer, ActivityIndicatorView;
 
 @interface LBNodesViewController : UITableViewController <UITextFieldDelegate> {
     OpenStackAccount *account;
@@ -19,6 +19,13 @@
     NSArray *previousNodes;
     NSMutableArray *ipNodes;
     NSMutableArray *cloudServerNodes;
+    
+    // for add/delete API calls
+    NSMutableArray *nodesToDelete;
+    NSInteger deleteIndex;
+    NSInteger currentAPICalls;
+    NSInteger totalAPICalls;
+    ActivityIndicatorView *spinner;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;

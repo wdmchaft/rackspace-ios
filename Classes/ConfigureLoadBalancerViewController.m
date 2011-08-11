@@ -23,6 +23,7 @@
 #import "VirtualIP.h"
 #import "Analytics.h"
 #import "PingIPAddressViewController.h"
+#import "LoadBalancersViewController.h"
 
 #define kDetailsSection 0
 #define kRegionSection 1
@@ -67,9 +68,9 @@
     self.navigationItem.title = @"Configure";
     [self addSaveButton];
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [self addCancelButton];
-    }
+//    }
     
     algorithmNames = [[NSDictionary alloc] initWithObjectsAndKeys:
                       @"Random",@"RANDOM", 
@@ -295,9 +296,10 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet == deleteActionSheet) {
         if (buttonIndex == 0) {
-            [[self.account.manager deleteLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
-                [self.navigationController popToViewController:[[self.navigationController viewControllers] objectAtIndex:2] animated:YES];
-                [self alert:nil message:@"Load balancer successfully deleted."];
+            [[self.account.manager deleteLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {                
+                LoadBalancersViewController *vc = [[self.navigationController viewControllers] objectAtIndex:2];                
+                [vc refreshButtonPressed:nil];
+                [self.navigationController popToViewController:vc animated:YES];
             } failure:^(OpenStackRequest *request) {
                 [self alert:@"There was a problem deleting the load balancer." request:request];
             }];

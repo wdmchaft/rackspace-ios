@@ -9,11 +9,16 @@
 #import "LoadBalancerNode.h"
 #import "NSObject+NSCoding.h"
 #import "NSString+Conveniences.h"
+#import "Server.h"
 
 
 @implementation LoadBalancerNode
 
 @synthesize identifier, address, port, condition, status, weight, server;
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@: %@:%@ on %@", [super description], self.address, self.port, self.server.name];
+}
 
 #pragma mark - Serialization and Copying
 
@@ -64,7 +69,11 @@
          "}";
     json = [json replace:@"<address>" with:self.address];
     json = [json replace:@"<port>" with:self.port];
-    json = [json replace:@"<condition>" with:self.condition];
+    if (self.condition) {
+        json = [json replace:@"<condition>" with:self.condition];
+    } else {
+        json = [json replace:@"<condition>" with:@"ENABLED"];
+    }
     json = [json replace:@"<weight>" withInt:MAX(1, self.weight)];
     return json;
 }
@@ -83,7 +92,7 @@
 #pragma mark - Comparison
 
 - (NSComparisonResult)compare:(LoadBalancerNode *)aNode {
-    return [aNode.address caseInsensitiveCompare:self.address];
+    return [self.address caseInsensitiveCompare:aNode.address];
 }
 
 #pragma mark - Memory Management

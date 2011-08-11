@@ -258,11 +258,11 @@
 - (void)configButtonPressed:(id)sender {
     ConfigureLoadBalancerViewController *vc = [[ConfigureLoadBalancerViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [self presentModalViewControllerWithNavigation:vc];
-    } else {
-        [self.navigationController pushViewController:vc animated:YES];
-    }    
+//    } else {
+//        [self.navigationController pushViewController:vc animated:YES];
+//    }    
     [vc release];
 }
 

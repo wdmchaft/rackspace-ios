@@ -22,7 +22,7 @@
 
 @implementation LBServersViewController
 
-@synthesize account, loadBalancer, serverNodes;
+@synthesize account, loadBalancer, serverNodes, originalServerNodes;
 
 - (id)initWithAccount:(OpenStackAccount *)a loadBalancer:(LoadBalancer *)lb serverNodes:(NSMutableArray *)sn {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -34,6 +34,7 @@
         self.account = a;
         self.loadBalancer = lb;
         self.serverNodes = sn;
+        self.originalServerNodes = [[sn copy] autorelease];
     }
     return self;
 }
@@ -42,6 +43,7 @@
     [account release];
     [loadBalancer release];
     [serverNodes release];
+    [originalServerNodes release];
     [super dealloc];
 }
 
@@ -129,6 +131,7 @@
         [self.serverNodes removeObject:nodeToRemove];
     } else {
         LoadBalancerNode *node = [[LoadBalancerNode alloc] init];
+        node.condition = @"ENABLED";
         node.server = server;
         node.address = [[server.addresses objectForKey:@"public"] objectAtIndex:0];
         node.port = [NSString stringWithFormat:@"%i", self.loadBalancer.protocol.port];
@@ -142,6 +145,39 @@
 #pragma mark - Button Handlers
 
 - (void)doneButtonPressed:(id)sender {
+    
+    // compare original nodes to current nodes and alter the LB
+    NSMutableArray *nodesToAdd = [[NSMutableArray alloc] init];
+    NSMutableArray *nodesToDelete = [[NSMutableArray alloc] init];
+    
+    NSLog(@"original nodes: %@", self.originalServerNodes);
+    NSLog(@"current nodes: %@", self.serverNodes);
+
+    for (LoadBalancerNode *node in self.originalServerNodes) {
+        if (![self.serverNodes containsObject:node]) {
+            [nodesToDelete addObject:node];
+            NSLog(@"going to delete: %@", node);
+        }
+    }
+    
+    for (LoadBalancerNode *node in self.serverNodes) {
+        if (![self.originalServerNodes containsObject:node]) {
+            [nodesToAdd addObject:node];
+            NSLog(@"going to add: %@", node);
+        }
+    }
+    
+    for (LoadBalancerNode *node in nodesToAdd) {
+        [self.loadBalancer.nodes addObject:node];
+    }
+
+    for (LoadBalancerNode *node in nodesToDelete) {
+        [self.loadBalancer.nodes removeObject:node];
+    }
+    
+    [nodesToDelete release];
+    [nodesToAdd release];
+    
     [self dismissModalViewControllerAnimated:YES];
 }
 

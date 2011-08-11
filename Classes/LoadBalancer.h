@@ -7,29 +7,11 @@
 //
 
 #import "ComputeModel.h"
+#import "ASIHTTPRequest.h"
 
 @class LoadBalancerProtocol, LoadBalancerUsage, LoadBalancerConnectionThrottle, OpenStackAccount;
 
 @interface LoadBalancer : ComputeModel <NSCoding> {
-
-    LoadBalancerProtocol *protocol;
-    NSString *algorithm;
-    NSString *status;
-    NSString *virtualIPType;
-    NSMutableArray *virtualIPs;
-    NSDate *created;
-    NSDate *updated;
-    NSUInteger maxConcurrentConnections;
-    BOOL connectionLoggingEnabled;
-    NSMutableArray *nodes;
-//    NSMutableArray *cloudServerNodes;
-    NSString *sessionPersistenceType;    
-    LoadBalancerConnectionThrottle *connectionThrottle;
-    NSString *clusterName;
-    NSInteger progress;
-    NSString *region;
-
-    LoadBalancerUsage *usage;
 }
 
 @property (nonatomic, retain) LoadBalancerProtocol *protocol;
@@ -54,5 +36,13 @@
 - (BOOL)shouldBePolled;
 - (NSString *)toJSON;
 - (NSString *)toUpdateJSON;
+
+- (void)pollUntilActive:(OpenStackAccount *)account withProgress:(ASIBasicBlock)progressBlock complete:(ASIBasicBlock)completeBlock;
+- (void)pollUntilActive:(OpenStackAccount *)account complete:(ASIBasicBlock)completeBlock;
+
+- (void)pollUntilActive:(OpenStackAccount *)account delegate:(id)delegate completeSelector:(SEL)completeSelector object:(id)object;
+- (void)pollUntilActive:(OpenStackAccount *)account delegate:(id)delegate progressSelector:(SEL)progressSelector completeSelector:(SEL)completeSelector object:(id)object;
+
+- (UIImage *)imageForStatus;
 
 @end

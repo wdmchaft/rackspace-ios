@@ -846,7 +846,6 @@
 #pragma mark Memory Management
 
 - (void)dealloc {
-    [account release];
     [super dealloc];
 }
 

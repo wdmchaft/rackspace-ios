@@ -20,7 +20,7 @@
 
 @property (nonatomic, retain) ASINetworkQueue *queue;
 
-@property (nonatomic, retain) OpenStackAccount *account;
+@property (nonatomic, assign) OpenStackAccount *account;
 
 - (NSString *)notificationName:(NSString *)key identifier:(NSInteger)identifier;
 - (void)notify:(NSString *)name request:(OpenStackRequest *)request;

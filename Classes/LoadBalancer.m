@@ -15,6 +15,8 @@
 #import "Server.h"
 #import "NSString+Conveniences.h"
 #import "OpenStackAccount.h"
+#import "ASIHTTPRequest.h"
+#import "LoadBalancerRequest.h"
 
 
 @implementation LoadBalancer
@@ -190,6 +192,109 @@
 
 - (BOOL)shouldBePolled {
     return ![self.status isEqualToString:@"ACTIVE"];
+}
+
+- (void)pollUntilActive:(OpenStackAccount *)account delegate:(id)delegate progressSelector:(SEL)progressSelector completeSelector:(SEL)completeSelector object:(id)object {
+    
+    NSLog(@"polling.  lb status = %@", self.status);
+    
+    
+    if ([self shouldBePolled]) {
+        NSString *endpoint = [account loadBalancerEndpointForRegion:self.region];
+        __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancerDetailsRequest:account loadBalancer:self endpoint:endpoint];
+        request.delegate = self;
+        [request setCompletionBlock:^{
+            if ([request isSuccess]) {
+                
+                LoadBalancer *newLB = [request loadBalancer:account];                
+                self.status = newLB.status;
+                self.progress = newLB.progress;
+                // load LB stuff                
+                
+                NSLog(@"lb poll status: %@", self.status);
+                
+                if ([self shouldBePolled]) {
+                    if (progressSelector && [delegate respondsToSelector:progressSelector]) {
+                        [delegate performSelector:progressSelector];
+                    }
+                    [self pollUntilActive:account delegate:delegate progressSelector:progressSelector completeSelector:completeSelector object:object];
+                } else {
+                    if ([delegate respondsToSelector:completeSelector]) {
+                        [delegate performSelector:completeSelector withObject:object];
+                    }
+                }
+            }
+        }];
+        [request setFailedBlock:^{
+            [self pollUntilActive:account delegate:delegate progressSelector:progressSelector completeSelector:completeSelector object:object];
+        }];
+        [request startAsynchronous];
+    } else {
+        if ([delegate respondsToSelector:completeSelector]) {
+            [delegate performSelector:completeSelector withObject:object];
+        }
+    }
+}
+
+- (void)pollUntilActive:(OpenStackAccount *)account delegate:(id)delegate completeSelector:(SEL)completeSelector object:(id)object {
+    [self pollUntilActive:account delegate:delegate progressSelector:nil completeSelector:completeSelector object:object];
+}
+
+- (void)pollUntilActive:(OpenStackAccount *)account withProgress:(ASIBasicBlock)progressBlock complete:(ASIBasicBlock)completeBlock {
+    
+    if ([self shouldBePolled]) {
+        NSString *endpoint = [account loadBalancerEndpointForRegion:self.region];
+        __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancerDetailsRequest:account loadBalancer:self endpoint:endpoint];
+        request.delegate = self;
+        [request setCompletionBlock:^{
+            if ([request isSuccess]) {
+                
+                LoadBalancer *newLB = [request loadBalancer:account];                
+                self.status = newLB.status;
+                self.progress = newLB.progress;
+                // load LB stuff                
+                
+                NSLog(@"lb poll status: %@", self.status);
+                
+                if ([self shouldBePolled]) {
+                    if (progressBlock) {
+                        progressBlock();
+                    }
+                    [self pollUntilActive:account withProgress:nil complete:completeBlock];
+                } else {
+                    completeBlock();
+                }
+            }
+        }];
+        [request setFailedBlock:^{
+            //[progressBlock retain];
+            //[completeBlock retain];
+            [self pollUntilActive:account withProgress:progressBlock complete:^{ 
+                completeBlock();
+            }];
+
+        }];
+        [request startAsynchronous];
+    } else {
+        completeBlock();
+    }
+}
+
+- (void)pollUntilActive:(OpenStackAccount *)account complete:(ASIBasicBlock)completeBlock {
+//    [self pollUntilActive:account withProgress:nil complete:[[completeBlock copy] autorelease]];
+    [self pollUntilActive:account withProgress:nil complete:completeBlock];
+}
+
+- (UIImage *)imageForStatus {
+    // load balancer statuses:
+    // ACTIVE    BUILD    PENDING_UPDATE    PENDING_DELETE    SUSPENDED    ERROR    DELETED
+    if ([self.status isEqualToString:@"ACTIVE"]) {
+        return [UIImage imageNamed:@"dot-green.png"];
+    } else if ([self.status isEqualToString:@"BUILD"] || [self.status isEqualToString:@"PENDING_UPDATE"]) {
+        return [UIImage imageNamed:@"dot-orange.png"];
+    } else {
+        return [UIImage imageNamed:@"dot-red.png"];
+    }
 }
 
 @end

@@ -12,47 +12,11 @@
 
 @class AccountManager;
 
-// named OpenStackAccount instead of Account to prevent collisions with
-// the MessageUI framework
 @interface OpenStackAccount : NSObject <NSCoding, NSCopying> {
-    
-    BOOL hasBeenRefreshed;
-    
-    NSString *uuid;
-    Provider *provider;
-    NSString *username;
-    NSMutableDictionary *images;
-    NSDictionary *flavors;
-    NSMutableDictionary *servers;
-    NSMutableDictionary *serversByPublicIP;
-    NSURL *serversURL;
-    NSURL *filesURL;
-    NSURL *cdnURL;
-    NSArray *rateLimits;
-    
-    // this is a dictionary of dictionaries:
-    // { "endpoint1": { "123": { ... }, "456": { ... } },
-    //   "endpoint2": { "789": { ... }, "321": { ... } }}
-    NSMutableDictionary *loadBalancers;
-    
-    AccountManager *manager;
-    
     id getLimitsObserver;
     id getServersObserver;
     id getImagesObserver;
-    id getFlavorsObserver;
-    
-    NSInteger lastUsedFlavorId;
-    NSInteger lastUsedImageId;
-    
-    NSInteger containerCount;
-    unsigned long long totalBytesUsed;
-    
-    NSMutableDictionary *containers;
-    
-    BOOL flaggedForDelete;
-    
-    NSMutableArray *lbProtocols;
+    id getFlavorsObserver;    
 }
 
 @property (nonatomic, assign) BOOL hasBeenRefreshed;
@@ -76,6 +40,10 @@
 @property (nonatomic, assign) unsigned long long totalBytesUsed;
 @property (nonatomic, retain) NSMutableDictionary *containers;
 @property (nonatomic, assign) BOOL flaggedForDelete;
+
+// this is a dictionary of dictionaries:
+// { "endpoint1": { "123": { ... }, "456": { ... } },
+//   "endpoint2": { "789": { ... }, "321": { ... } }}
 @property (nonatomic, retain) NSMutableDictionary *loadBalancers;
 @property (nonatomic, retain) NSMutableArray *lbProtocols;
 
