@@ -36,7 +36,7 @@
     }
 
     logEntryModalViewController = [[LogEntryModalViewController alloc] initWithNibName:@"LogEntryModalViewController" bundle:nil];
-    logEntryModalViewController.logEntry = [[APILogEntry alloc] initWithRequest:request];
+    logEntryModalViewController.logEntry = [[[APILogEntry alloc] initWithRequest:request] autorelease];
     logEntryModalViewController.requestDescription = [logEntryModalViewController.logEntry requestDescription];
     logEntryModalViewController.responseDescription = [logEntryModalViewController.logEntry responseDescription];
     logEntryModalViewController.requestMethod = [logEntryModalViewController.logEntry requestMethod];

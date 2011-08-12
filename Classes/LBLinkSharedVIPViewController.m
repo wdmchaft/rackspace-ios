@@ -44,6 +44,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Link Load Balancers";
+    self.loadBalancer.virtualIPs = [NSMutableArray array];
 }
 
 - (void)viewDidUnload {
@@ -108,6 +109,12 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+    LoadBalancer *lb = [[[self.account.loadBalancers objectForKey:endpoint] allValues] objectAtIndex:indexPath.row];
+    VirtualIP *vip = [lb.virtualIPs objectAtIndex:0];
+    [self.loadBalancer.virtualIPs addObject:vip];
+    selectedVirtualIP = vip;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

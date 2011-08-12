@@ -66,6 +66,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    saved = NO;
     self.navigationItem.title = @"Nodes";
     textFields = [[NSMutableArray alloc] init];
     ipNodes = [[NSMutableArray alloc] init];
@@ -112,6 +113,10 @@
         }
         [finalNodes release];
         self.navigationItem.rightBarButtonItem = nil;    
+    } else {
+        if (!saved) {
+            self.loadBalancer.nodes = [NSMutableArray arrayWithArray:previousNodes];
+        }
     }
 }
 
@@ -456,6 +461,7 @@
         spinner = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Saving..." withProgress:YES] text:@"Saving..." withProgress:YES];
         [spinner addToView:self.view];
         
+        saved = YES;
         
         // make the API calls
         [self addNodes:nodesToAdd andDeleteNodesWithProgress:^{

@@ -8,11 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class OpenStackAccount, LoadBalancer;
+@class OpenStackAccount, LoadBalancer, VirtualIP;
 
 @interface LBLinkSharedVIPViewController : UITableViewController {
-    OpenStackAccount *account;
-    LoadBalancer *loadBalancer;
+    VirtualIP *selectedVirtualIP;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;

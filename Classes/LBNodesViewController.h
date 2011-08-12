@@ -26,6 +26,8 @@
     NSInteger currentAPICalls;
     NSInteger totalAPICalls;
     ActivityIndicatorView *spinner;
+    
+    BOOL saved;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;

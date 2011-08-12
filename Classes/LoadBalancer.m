@@ -147,8 +147,17 @@
         json = [json stringByAppendingString:@"\"virtualIps\": [ { \"type\": \"PUBLIC\" } ], "];
     } else if ([self.virtualIPType isEqualToString:@"ServiceNet"]) {
         json = [json stringByAppendingString:@"\"virtualIps\": [ { \"type\": \"SERVICENET\" } ], "];
-//    } else if ([self.virtualIPType isEqualToString:@"Shared Virtual IP"]) {
-//        json = [json stringByAppendingString:@"\"virtualIps\": [ { \"type\": \"PUBLIC\" } ], "];
+    } else if ([self.virtualIPType isEqualToString:@"Shared Virtual IP"]) {
+        //json = [json stringByAppendingString:@"\"virtualIps\": [ { \"type\": \"PUBLIC\" } ], "];
+        json = [json stringByAppendingString:@"\"virtualIps\": [ "];
+        for (int i = 0; i < [self.virtualIPs count]; i++) {
+            VirtualIP *vip = [self.virtualIPs objectAtIndex:i];
+            json = [json stringByAppendingFormat:@"{ \"id\": \"%@\" }", vip.identifier];
+            if (i < [self.virtualIPs count] - 1) {
+                json = [json stringByAppendingString:@","];
+            }
+        }
+        json = [json stringByAppendingString:@"], "];
     }
     
     json = [json stringByAppendingString:@"\"nodes\": ["];
