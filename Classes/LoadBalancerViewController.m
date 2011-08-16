@@ -257,6 +257,7 @@
 
 - (void)configButtonPressed:(id)sender {
     ConfigureLoadBalancerViewController *vc = [[ConfigureLoadBalancerViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
+    vc.loadBalancerViewController = self;
     
 //    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [self presentModalViewControllerWithNavigation:vc];

@@ -8,11 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@class OpenStackAccount, LoadBalancer, VirtualIP;
+@class OpenStackAccount, LoadBalancer, VirtualIP, LoadBalancerViewController;
 
 @interface ConfigureLoadBalancerViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate> {
-    OpenStackAccount *account;
-    LoadBalancer *loadBalancer;
 @private
     NSDictionary *algorithmNames;
     VirtualIP *selectedVirtualIP;
@@ -23,6 +21,7 @@
 
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) LoadBalancer *loadBalancer;
+@property (nonatomic, retain) LoadBalancerViewController *loadBalancerViewController;
 
 - (id)initWithAccount:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer;
 

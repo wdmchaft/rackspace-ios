@@ -95,6 +95,10 @@
     return [self.address caseInsensitiveCompare:aNode.address];
 }
 
+- (BOOL)isEqual:(LoadBalancerNode *)aNode {
+    return [self.address isEqualToString:aNode.address];
+}
+
 #pragma mark - Memory Management
 
 - (void)dealloc {

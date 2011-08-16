@@ -24,6 +24,7 @@
 #import "Analytics.h"
 #import "PingIPAddressViewController.h"
 #import "LoadBalancersViewController.h"
+#import "LoadBalancerViewController.h"
 
 #define kDetailsSection 0
 #define kRegionSection 1
@@ -41,7 +42,7 @@
 
 @implementation ConfigureLoadBalancerViewController
 
-@synthesize account, loadBalancer;
+@synthesize account, loadBalancer, loadBalancerViewController;
 
 - (id)initWithAccount:(OpenStackAccount *)a loadBalancer:(LoadBalancer *)lb {
     self = [super initWithStyle:UITableViewStyleGrouped];
@@ -58,6 +59,7 @@
     [algorithmNames release];
     [deleteActionSheet release];
     [ipActionSheet release];
+    [loadBalancerViewController release];
     [super dealloc];
 }
 
@@ -295,11 +297,12 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet == deleteActionSheet) {
-        if (buttonIndex == 0) {
+        if (buttonIndex == 0) {            
             [[self.account.manager deleteLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {                
-                LoadBalancersViewController *vc = [[self.navigationController viewControllers] objectAtIndex:2];                
+                LoadBalancersViewController *vc = [[self.loadBalancerViewController.navigationController viewControllers] objectAtIndex:2];                
                 [vc refreshButtonPressed:nil];
-                [self.navigationController popToViewController:vc animated:YES];
+                [self dismissModalViewControllerAnimated:YES];
+                [self.loadBalancerViewController.navigationController popToViewController:vc animated:YES];
             } failure:^(OpenStackRequest *request) {
                 [self alert:@"There was a problem deleting the load balancer." request:request];
             }];
@@ -346,6 +349,7 @@
 
 - (void)saveButtonPressed:(id)sender {
     [[self.account.manager updateLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
+        [self dismissModalViewControllerAnimated:YES];
     } failure:^(OpenStackRequest *request) {
         [self alert:@"There was a problem updating this load balancer." request:request];
     }];

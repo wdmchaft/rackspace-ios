@@ -71,21 +71,19 @@
     textFields = [[NSMutableArray alloc] init];
     ipNodes = [[NSMutableArray alloc] init];
     cloudServerNodes = [[NSMutableArray alloc] init];
-    if (!isNewLoadBalancer) {
-        NSMutableArray *nodes = [[NSMutableArray alloc] initWithCapacity:[self.loadBalancer.nodes count]];
-        for (LoadBalancerNode *node in self.loadBalancer.nodes) {
-            LoadBalancerNode *copiedNode = node; //[node copy];
-            [nodes addObject:copiedNode];
-            if (copiedNode.server) {
-                [cloudServerNodes addObject:node];
-            } else {
-                [ipNodes addObject:node];
-            }
-            //[copiedNode release];
+    NSMutableArray *nodes = [[NSMutableArray alloc] initWithCapacity:[self.loadBalancer.nodes count]];
+    for (LoadBalancerNode *node in self.loadBalancer.nodes) {
+        LoadBalancerNode *copiedNode = node; //[node copy];
+        [nodes addObject:copiedNode];
+        if (copiedNode.server) {
+            [cloudServerNodes addObject:node];
+        } else {
+            [ipNodes addObject:node];
         }
-        previousNodes = [[NSArray alloc] initWithArray:nodes];
-        [nodes release];        
+        //[copiedNode release];
     }
+    previousNodes = [[NSArray alloc] initWithArray:nodes];
+    [nodes release];        
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -244,8 +242,9 @@
         } else {
             [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
             NSArray *indexPaths = [NSArray arrayWithObject:indexPath];
-            LoadBalancerNode *node = [self.loadBalancer.nodes objectAtIndex:indexPath.row];
+            LoadBalancerNode *node = [ipNodes objectAtIndex:indexPath.row];
             [ipNodes removeObject:node];
+            [self.loadBalancer.nodes removeObject:node];
             [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
         }
     } else if (indexPath.section == kCloudServers) {
