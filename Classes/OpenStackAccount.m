@@ -345,15 +345,35 @@ static NSMutableDictionary *timers = nil;
 - (NSArray *)loadBalancerURLs {
     NSString *accountNumber = [self accountNumber];
     
-    if (accountNumber) {
-        NSString *ord = [NSString stringWithFormat:@"https://ord.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
-        NSString *dfw = [NSString stringWithFormat:@"https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
-
-        NSLog(@"ord: %@", ord);
-        
-        return [NSArray arrayWithObjects:ord, dfw, nil];
+    if (accountNumber && [self.provider isRackspace]) {        
+        if ([self.provider isRackspaceUS]) {
+            NSString *ord = [NSString stringWithFormat:@"https://ord.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+            NSString *dfw = [NSString stringWithFormat:@"https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+            return [NSArray arrayWithObjects:ord, dfw, nil];
+        } else if ([self.provider isRackspaceUK]) {
+            NSString *lon = [NSString stringWithFormat:@"https://lon.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+            return [NSArray arrayWithObjects:lon, nil];
+        } else {
+            return nil;
+        }
     } else {
         return nil;
+    }
+}
+
+- (NSArray *)loadBalancerRegions {
+    NSString *accountNumber = [self accountNumber];
+    
+    if (accountNumber && [self.provider isRackspace]) {        
+        if ([self.provider isRackspaceUS]) {
+            return [NSArray arrayWithObjects:@"ORD", @"DFW", nil];
+        } else if ([self.provider isRackspaceUK]) {
+            return [NSArray arrayWithObjects:@"LON", nil];
+        } else {
+            return [NSArray array];
+        }
+    } else {
+        return [NSArray array];
     }
 }
 

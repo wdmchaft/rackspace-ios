@@ -12,11 +12,6 @@
 #import "AddLoadBalancerViewController.h"
 #import "LoadBalancer.h"
 
-#define kRegion 0
-#define kORD 0
-#define kDFW 1
-
-
 @implementation AddLoadBalancerRegionViewController
 
 @synthesize account, loadBalancer;
@@ -65,7 +60,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return [self.account.loadBalancerRegions count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
@@ -80,19 +75,9 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    // Configure the cell...
-    switch (indexPath.row) {
-        case kORD:
-            cell.textLabel.text = @"ORD";
-            cell.accessoryType = [self.loadBalancer.region isEqualToString:@"ORD"] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-            break;
-        case kDFW:
-            cell.textLabel.text = @"DFW";
-            cell.accessoryType = [self.loadBalancer.region isEqualToString:@"DFW"] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-            break;
-        default:
-            break;
-    }
+    NSString *region = [self.account.loadBalancerRegions objectAtIndex:indexPath.row];
+    cell.textLabel.text = region;
+    cell.accessoryType = [self.loadBalancer.region isEqualToString:region] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     
     return cell;
 }
@@ -100,11 +85,7 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == kORD) {
-        self.loadBalancer.region = @"ORD";
-    } else if (indexPath.row == kDFW) {
-        self.loadBalancer.region = @"DFW";
-    }
+    self.loadBalancer.region = [self.account.loadBalancerRegions objectAtIndex:indexPath.row];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
 }

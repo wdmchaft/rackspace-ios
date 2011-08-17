@@ -45,7 +45,7 @@
         self.account = a;
         self.loadBalancer = [[[LoadBalancer alloc] init] autorelease];
         self.loadBalancer.virtualIPType = @"Public";
-        self.loadBalancer.region = @"ORD";
+        self.loadBalancer.region = [self.account.loadBalancerRegions objectAtIndex:0];
         self.loadBalancer.algorithm = @"RANDOM";
         self.loadBalancer.protocol = [[[LoadBalancerProtocol alloc] init] autorelease];
         self.loadBalancer.protocol.name = @"HTTP";

@@ -89,6 +89,8 @@
 + (NSArray *)providers;
 + (Provider *)fromJSON:(NSDictionary *)dict;
 - (BOOL)isRackspace;
+- (BOOL)isRackspaceUS;
+- (BOOL)isRackspaceUK;
 
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSURL *authEndpointURL;

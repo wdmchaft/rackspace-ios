@@ -52,6 +52,7 @@
 + (void)persist:(NSArray *)accountArray;
 - (void)refreshCollections;
 - (NSArray *)loadBalancerURLs;
+- (NSArray *)loadBalancerRegions;
 
 - (NSString *)loadBalancerEndpointForRegion:(NSString *)region;
 - (NSString *)loadBalancerRegionForEndpoint:(NSString *)endpoint;
