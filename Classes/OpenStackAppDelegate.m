@@ -146,7 +146,7 @@
     return YES;
 }
 
-- (void) setupDependencies{
+- (void) setupDependencies {
 #if TARGET_OS_EMBEDDED
     
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Constants" ofType:@"plist"];

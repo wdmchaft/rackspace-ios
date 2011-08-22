@@ -39,6 +39,18 @@ static NSMutableDictionary *timers = nil;
     timers = [[NSMutableDictionary alloc] initWithCapacity:[accounts count]];
 }
 
+- (NSString *)serversKey {
+    return [NSString stringWithFormat:@"%@-servers", self.uuid];
+}
+
+- (NSMutableDictionary *)servers {
+    if (!serversUnarchived) {
+        servers = [Archiver retrieve:[self serversKey]];
+        serversUnarchived = YES;
+    }
+    return servers;
+}
+
 // no sense wasting space by storing sorted arrays, so override the getters to be sure 
 // we at least return something
 
@@ -100,6 +112,8 @@ static NSMutableDictionary *timers = nil;
                 [self.serversByPublicIP setObject:server forKey:ip];
             }
         }
+        
+        [Archiver persist:servers key:[self serversKey]];
     }
 }
 
@@ -122,6 +136,7 @@ static NSMutableDictionary *timers = nil;
         [self.manager getImages];
         [self.manager getFlavors];
         [self.manager getLimits];
+        [self.manager getServers];
         
         // handle success; don't worry about failure
         getLimitsObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getLimitsSucceeded" object:self
@@ -156,9 +171,16 @@ static NSMutableDictionary *timers = nil;
     copy.username = self.username;
     copy.apiKey = self.apiKey;
     copy.authToken = self.authToken;
+    
     copy.images = [[NSMutableDictionary alloc] initWithDictionary:self.images];
     copy.flavors = [[NSDictionary alloc] initWithDictionary:self.flavors];
+    /*
     copy.servers = [[NSMutableDictionary alloc] initWithDictionary:self.servers];
+    copy.containers = self.containers;
+    copy.loadBalancers = self.loadBalancers;
+    copy.serversByPublicIP = self.serversByPublicIP;
+    */
+    
     copy.serversURL = self.serversURL;
     copy.filesURL = self.filesURL;
     copy.cdnURL = self.cdnURL;
@@ -167,9 +189,6 @@ static NSMutableDictionary *timers = nil;
     copy.lastUsedImageId = self.lastUsedImageId;
     copy.containerCount = self.containerCount;
     copy.totalBytesUsed = self.totalBytesUsed;
-    copy.containers = self.containers;
-    copy.loadBalancers = self.loadBalancers;
-    copy.serversByPublicIP = self.serversByPublicIP;
     manager = [[AccountManager alloc] init];
     manager.account = copy;
     return copy;
@@ -179,11 +198,6 @@ static NSMutableDictionary *timers = nil;
     [coder encodeObject:uuid forKey:@"uuid"];
     [coder encodeObject:provider forKey:@"provider"];
     [coder encodeObject:username forKey:@"username"];
-
-    [coder encodeObject:images forKey:@"images"];
-    [coder encodeObject:flavors forKey:@"flavors"];
-    [coder encodeObject:servers forKey:@"servers"];
-    [coder encodeObject:serversByPublicIP forKey:@"serversByPublicIP"];
     
     [coder encodeObject:serversURL forKey:@"serversURL"];
     [coder encodeObject:filesURL forKey:@"filesURL"];
@@ -194,8 +208,14 @@ static NSMutableDictionary *timers = nil;
     [coder encodeInt:containerCount forKey:@"containerCount"];
     [coder encodeInt:totalBytesUsed forKey:@"totalBytesUsed"];
     
+    [coder encodeObject:images forKey:@"images"];
+    [coder encodeObject:flavors forKey:@"flavors"];
+    /*
+    [coder encodeObject:servers forKey:@"servers"];
+    [coder encodeObject:serversByPublicIP forKey:@"serversByPublicIP"];
     [coder encodeObject:containers forKey:@"containers"];
     [coder encodeObject:loadBalancers forKey:@"loadBalancers"];
+    */
 }
 
 - (id)initWithCoder:(NSCoder *)coder {

@@ -22,13 +22,13 @@
 }
 
 + (void)persist:(id)object key:(NSString *)key {
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
-    dispatch_async(queue, ^{        
+//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+//    dispatch_async(queue, ^{        
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         NSString *filePath = [documentsDirectory stringByAppendingString:[NSString stringWithFormat:@"/%@.archive", key]];
         [NSKeyedArchiver archiveRootObject:object toFile:filePath];
-    });
+//    });
 }
 
 + (BOOL)delete:(NSString *)key {

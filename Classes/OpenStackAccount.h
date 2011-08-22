@@ -16,7 +16,9 @@
     id getLimitsObserver;
     id getServersObserver;
     id getImagesObserver;
-    id getFlavorsObserver;    
+    id getFlavorsObserver;
+    @private
+    BOOL serversUnarchived;
 }
 
 @property (nonatomic, assign) BOOL hasBeenRefreshed;
