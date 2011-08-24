@@ -198,26 +198,17 @@
     
     if (indexPath.row == computeRow) {
         cell.textLabel.text = [self.account.provider isRackspace] ? @"Cloud Servers" : @"Compute";
-        cell.detailTextLabel.text = [NSObject pluralizedStringForDictionary:account.servers noun:@"Server"];
         cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:@"cloud-servers-icon.png"] : [UIImage imageNamed:@"openstack-icon.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else if (indexPath.row == storageRow) {
         cell.textLabel.text = [self.account.provider isRackspace] ? @"Cloud Files" : @"Object Storage";
-        if (self.account.containerCount == 1) {
-            //cell.detailTextLabel.text = [NSString stringWithFormat:@"1 Container, %@", [Container humanizedBytes:self.account.totalBytesUsed]];
-            cell.detailTextLabel.text = @"1 Container";
-        } else {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Containers", self.account.containerCount];
-        }
         cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:@"cloud-files-icon.png"] : [UIImage imageNamed:@"openstack-icon.png"];
     } else if (indexPath.row == loadBalancingRow) {
         cell.textLabel.text = @"Load Balancers";
-        cell.detailTextLabel.text = [NSObject pluralizedStringForArray:[account sortedLoadBalancers] noun:@"Load Balancer"];
         cell.imageView.image = [UIImage imageNamed:@"load-balancers-icon.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else if (indexPath.row == rssFeedsRow) {
         cell.textLabel.text = @"System Status";
-        cell.detailTextLabel.text = [NSObject pluralizedStringForArray:account.provider.rssFeeds noun:@"Feed"];
         cell.imageView.image = [UIImage imageNamed:@"rss-feeds-icon.png"];
     } else if (indexPath.row == contactRow) {
         cell.textLabel.text = @"Fanatical Support"; // @"Contact Information";

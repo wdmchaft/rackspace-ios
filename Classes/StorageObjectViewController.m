@@ -330,17 +330,24 @@
                 [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:actionsSection] animated:YES];                
                 
             } else {                
-                // download the file
-                fileDownloading = YES;
-                [self.account.manager getObject:self.container object:self.object downloadProgressDelegate:self];
-                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:actionsSection]] withRowAnimation:UITableViewRowAnimationNone];
+                if (!fileDownloading) {
+                    // download the file
+                    fileDownloading = YES;
+                    [self.account.manager getObject:self.container object:self.object downloadProgressDelegate:self];
+                    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:actionsSection]] withRowAnimation:UITableViewRowAnimationNone];
+                }
                 
             }
         } else if (indexPath.row == 1) {
             
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *documentsDirectory = [paths objectAtIndex:0];        
-            NSString *shortPath = [NSString stringWithFormat:@"/%@/%@", self.container.name, self.object.fullPath];
+            NSString *shortPath = @"";
+            
+            if (self.container && [self.container respondsToSelector:@selector(name)] && self.object && [self.object respondsToSelector:@selector(fullPath)]) {
+                shortPath = [NSString stringWithFormat:@"/%@/%@", self.container.name, self.object.fullPath];
+            }
+            
             NSString *filePath = [documentsDirectory stringByAppendingString:shortPath];
             NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:filePath]];
             

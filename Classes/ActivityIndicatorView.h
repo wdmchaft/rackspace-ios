@@ -30,5 +30,6 @@
 - (void)addToView:(UIView *)view scrollOffset:(CGFloat)offset;
 - (void)addToView:(UIView *)view;
 - (void)removeFromSuperviewAndRelease;
+- (void)removeFromSuperview;
 
 @end

@@ -39,22 +39,29 @@
 - (void)requestFinished {
     
     if ([self isSuccess]) {
-        // go through results and add, rather than full replace
+        // go through results and add, rather than full replace. this way we'll keep correct OS logos
+        // for servers with deprecated images
         NSMutableDictionary *newImages = [[NSMutableDictionary alloc] initWithDictionary:[self images]];
         if (!self.account.images) {
             self.account.images = [NSMutableDictionary dictionaryWithCapacity:[newImages count]];
         }
         // set them all to unlaunchable, then we'll update them
         for (Image *image in [self.account.images allValues]) {
-            image.canBeLaunched = NO;
+            if ([image isKindOfClass:[Image class]]) {
+                image.canBeLaunched = NO;
+            }
         }
         for (Image *image in [newImages allValues]) {
             Image *newImage = [self.account.images objectForKey:[NSNumber numberWithInt:image.identifier]];
             if (newImage) {
-                newImage.canBeLaunched = YES;
+                if ([newImage isKindOfClass:[Image class]]) {
+                    newImage.canBeLaunched = YES;
+                }
             } else {
-                image.canBeLaunched = YES;
-                [self.account.images setObject:image forKey:[NSNumber numberWithInt:image.identifier]];
+                if ([image isKindOfClass:[Image class]]) {
+                    image.canBeLaunched = YES;
+                    [self.account.images setObject:image forKey:[NSNumber numberWithInt:image.identifier]];
+                }
             }
         }
         [newImages release];

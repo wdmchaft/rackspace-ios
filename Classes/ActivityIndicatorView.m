@@ -77,6 +77,14 @@
     [self release];
 }
 
+- (void)removeFromSuperview {
+    self.superview.userInteractionEnabled = YES;
+    [UIView beginAnimations:@"" context:nil];
+    [UIView setAnimationDuration:kFadeTime];
+    self.alpha = 0.0;
+    [UIView commitAnimations];
+}
+
 - (void)removeFromSuperviewAndRelease {
     [UIView beginAnimations:@"" context:nil];
     [UIView setAnimationDuration:kFadeTime];

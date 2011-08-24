@@ -346,9 +346,11 @@
     [request setCompletionBlock:^{
         if ([request isSuccess]) {
             Image *image = [request image];
-            image.canBeLaunched = NO;
-            [self.account.images setObject:image forKey:[NSNumber numberWithInt:image.identifier]];        
-            [self.account persist];        
+            if ([image isKindOfClass:[Image class]]) {
+                image.canBeLaunched = NO;
+                [self.account.images setObject:image forKey:[NSNumber numberWithInt:image.identifier]];        
+                [self.account persist];        
+            }
             [self notify:@"getImageSucceeded" request:request];
         } else {
             [self notify:@"getImageFailed" request:request object:[request.userInfo objectForKey:@"imageId"]];

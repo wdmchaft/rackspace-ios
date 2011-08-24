@@ -27,7 +27,7 @@
 
 @implementation AccountDetailsViewController
 
-@synthesize provider, rootViewController, providersViewController;
+@synthesize provider, rootViewController, providersViewController, activityIndicatorView;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
@@ -38,13 +38,20 @@
 
 - (void)authenticationSucceded:(OpenStackRequest *)request {
     
-    [activityIndicatorView removeFromSuperviewAndRelease];
+    [self.activityIndicatorView removeFromSuperview];
     
     if ([request responseStatusCode] == 204) {        
         account.authToken = [[request responseHeaders] objectForKey:@"X-Auth-Token"];
         account.serversURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Server-Management-Url"]];
         account.filesURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Storage-Url"]];
-        account.cdnURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Cdn-Management-Url"]];
+        
+        NSString *cdnStr = [[request responseHeaders] objectForKey:@"X-Cdn-Management-Url"];
+        if (!cdnStr) {
+            cdnStr = [[request responseHeaders] objectForKey:@"X-CDN-Management-Url"];
+        }
+        if (cdnStr) {
+            account.cdnURL = [NSURL URLWithString:cdnStr];
+        }
         [account persist];
         [account release];
         [rootViewController.tableView reloadData];
@@ -57,7 +64,7 @@
 }
 
 - (void)authenticationFailed:(OpenStackRequest *)request {
-    [activityIndicatorView removeFromSuperviewAndRelease];
+    [self.activityIndicatorView removeFromSuperview];
     self.navigationItem.rightBarButtonItem.enabled = YES;
     if ([request responseStatusCode] == 401) {
         [self alert:@"Authentication Failure" message:@"Please check your User Name and API Key."];
@@ -116,8 +123,8 @@
                             account.username = usernameTextField.text;
                             account.apiKey = [NSString stringWithString:apiKeyTextField.text];
                             
-                            activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Authenticating..."] text:@"Authenticating..."];
-                            [activityIndicatorView addToView:self.view];
+                            self.activityIndicatorView = [[[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Authenticating..."] text:@"Authenticating..."] autorelease];
+                            [self.activityIndicatorView addToView:self.view];
                             
                             OpenStackRequest *request = [OpenStackRequest authenticationRequest:account];
                             request.delegate = self;
@@ -145,8 +152,8 @@
                 account.username = usernameTextField.text;
                 account.apiKey = apiKeyTextField.text;                        
                 
-                activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Authenticating..."] text:@"Authenticating..."];
-                [activityIndicatorView addToView:self.view];
+                self.activityIndicatorView = [[[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Authenticating..."] text:@"Authenticating..."] autorelease];
+                [self.activityIndicatorView addToView:self.view];
                 
                 OpenStackRequest *request = [OpenStackRequest authenticationRequest:account];
                 request.delegate = self;
@@ -347,6 +354,7 @@
     [provider release];
     [rootViewController release];
     [providersViewController release];
+    [activityIndicatorView release];
     [super dealloc];
 }
 

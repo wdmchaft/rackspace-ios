@@ -218,21 +218,39 @@ static NSMutableDictionary *timers = nil;
     */
 }
 
+- (id)decode:(NSCoder *)coder key:(NSString *)key {
+    @try {
+        return [[coder decodeObjectForKey:key] retain];
+    }
+    @catch (NSException *exception) {
+        return nil;
+    }
+}
+
 - (id)initWithCoder:(NSCoder *)coder {
     if ((self = [super init])) {
-        uuid = [[coder decodeObjectForKey:@"uuid"] retain];
-        provider = [[coder decodeObjectForKey:@"provider"] retain];
-        username = [[coder decodeObjectForKey:@"username"] retain];
+        uuid = [self decode:coder key:@"uuid"];
+        provider = [self decode:coder key:@"provider"];
+        username = [self decode:coder key:@"username"];
+
+        images = [self decode:coder key:@"images"];
         
-        images = [[coder decodeObjectForKey:@"images"] retain];
-        flavors = [[coder decodeObjectForKey:@"flavors"] retain];
-        servers = [[coder decodeObjectForKey:@"servers"] retain];
-        serversByPublicIP = [[coder decodeObjectForKey:@"serversByPublicIP"] retain];
+        // make sure images stored aren't corrupt
+        if ([images count] > 0) {
+            id obj = [[images allValues] objectAtIndex:0];
+            if (![obj isKindOfClass:[Image class]]) {
+                images = nil;
+            }
+        }        
         
-        serversURL = [[coder decodeObjectForKey:@"serversURL"] retain];
-        filesURL = [[coder decodeObjectForKey:@"filesURL"] retain];
-        cdnURL = [[coder decodeObjectForKey:@"cdnURL"] retain];
-        rateLimits = [[coder decodeObjectForKey:@"rateLimits"] retain];
+        flavors = [self decode:coder key:@"flavors"];
+        servers = [self decode:coder key:@"servers"];
+        serversByPublicIP = [self decode:coder key:@"serversByPublicIP"];
+        
+        serversURL = [self decode:coder key:@"serversURL"];
+        filesURL = [self decode:coder key:@"filesURL"];
+        cdnURL = [self decode:coder key:@"cdnURL"];
+        rateLimits = [self decode:coder key:@"rateLimits"];
 
         [self loadTimer];
         
@@ -242,8 +260,8 @@ static NSMutableDictionary *timers = nil;
         containerCount = [coder decodeIntForKey:@"containerCount"];
         //totalBytesUsed = [coder decodeIntForKey:@"totalBytesUsed"];
         
-        containers = [[coder decodeObjectForKey:@"containers"] retain];
-        loadBalancers = [[coder decodeObjectForKey:@"loadBalancers"] retain];
+        containers = [self decode:coder key:@"containers"];
+        loadBalancers = [self decode:coder key:@"loadBalancers"];
 
         manager = [[AccountManager alloc] init];
         manager.account = self;

@@ -18,29 +18,30 @@
 #pragma mark Serialization
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    [self autoEncodeWithCoder:coder];
-    /*
+//    [self autoEncodeWithCoder:coder];
     [coder encodeInt:identifier forKey:@"id"];
     [coder encodeObject:name forKey:@"name"];
     [coder encodeObject:status forKey:@"status"];
     [coder encodeObject:created forKey:@"created"];
     [coder encodeObject:updated forKey:@"updated"];
     [coder encodeBool:canBeLaunched forKey:@"canBeLaunched"];
-    */
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
-        [self autoDecode:coder];
-        /*
+//        [self autoDecode:coder];
         identifier = [coder decodeIntForKey:@"id"];
         name = [[coder decodeObjectForKey:@"name"] retain];
         status = [[coder decodeObjectForKey:@"status"] retain];
         created = [[coder decodeObjectForKey:@"created"] retain];
         updated = [[coder decodeObjectForKey:@"updated"] retain];
-        canBeLaunched = [coder decodeBoolForKey:@"canBeLaunched"];
-        */
+        @try {
+            canBeLaunched = [coder decodeBoolForKey:@"canBeLaunched"];
+        }
+        @catch (NSException *exception) {
+            canBeLaunched = YES;
+        }        
     }
     return self;
 }
