@@ -84,7 +84,7 @@
     [super viewWillDisappear:animated];
     
     if (!(folder.name && ![@"" isEqualToString:folder.name])) {
-        [self.containersViewController.tableView deselectRowAtIndexPath:self.selectedContainerIndexPath animated:YES];
+//        [self.containersViewController.tableView deselectRowAtIndexPath:self.selectedContainerIndexPath animated:YES];
     }
 }
 

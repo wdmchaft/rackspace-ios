@@ -290,7 +290,7 @@
         } else { //if (indexPath.row == 1) {
             format = @".png";
         }
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+//        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         [NSTimer scheduledTimerWithTimeInterval:0.35 target:self selector:@selector(updateFormat) userInfo:nil repeats:NO];
     }
 }

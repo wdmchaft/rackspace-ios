@@ -275,7 +275,7 @@
 #pragma mark Popover Controller Delegate
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController {
-    [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:libraryRow inSection:cameraSection] animated:YES];
+//    [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:libraryRow inSection:cameraSection] animated:YES];
     return YES;
 }
 

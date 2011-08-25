@@ -156,7 +156,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [rootViewController.tableView deselectRowAtIndexPath:rootViewIndexPath animated:YES];
+//    [rootViewController.tableView deselectRowAtIndexPath:rootViewIndexPath animated:YES];
     [super viewWillDisappear:animated];
 }
 

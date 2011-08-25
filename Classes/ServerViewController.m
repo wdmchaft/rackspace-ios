@@ -514,7 +514,7 @@
         pollRequest.delegate = nil;
     }
     
-    [self.serversViewController.tableView deselectRowAtIndexPath:self.selectedServerIndexPath animated:YES];
+//    [self.serversViewController.tableView deselectRowAtIndexPath:self.selectedServerIndexPath animated:YES];
     
     [countdownTimer invalidate];
     countdownTimer = nil;
