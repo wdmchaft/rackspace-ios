@@ -239,10 +239,12 @@
         cell.textLabel.text = server.name;
         cell.detailTextLabel.text = [[server.addresses objectForKey:@"public"] objectAtIndex:0];
         
-        if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
-            cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
-        } else {
-            cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
+        if ([server.image respondsToSelector:@selector(logoPrefix)]) {
+            if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
+                cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
+            } else {
+                cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
+            }
         }
         
         return cell;

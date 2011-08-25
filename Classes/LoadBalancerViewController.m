@@ -223,10 +223,12 @@
         Server *server = node.server;
         cell.textLabel.text = server.name;
         cell.detailTextLabel.text = node.address;
-        if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
-            cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
-        } else {
-            cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
+        if ([server.image respondsToSelector:@selector(logoPrefix)]) {
+            if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
+                cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
+            } else {
+                cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
+            }
         }
     } else {
         cell.textLabel.text = [NSString stringWithFormat:@"%@:%@", node.address, node.port];

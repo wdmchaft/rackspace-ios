@@ -100,10 +100,12 @@
     Server *server = [self.account.sortedServers objectAtIndex:indexPath.row];
     cell.textLabel.text = server.name;
     cell.detailTextLabel.text = server.flavor.name;
-    if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
-        cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
-    } else {
-        cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
+    if ([server.image respondsToSelector:@selector(logoPrefix)]) {
+        if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
+            cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
+        } else {
+            cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
+        }
     }
 
     cell.accessoryType = UITableViewCellAccessoryNone;

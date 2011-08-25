@@ -35,7 +35,7 @@
         NSArray *keys = [self.account.images allKeys];
         for (int j = 0; j < [keys count]; j++) {
             Image *image = [self.account.images objectForKey:[keys objectAtIndex:j]];
-            if ([[image logoPrefix] isEqualToString:stringKey]) {
+            if ([image respondsToSelector:@selector(logoPrefix)] && [[image logoPrefix] isEqualToString:stringKey]) {
                 if (![dict objectForKey:stringKey]) {
                     [dict setObject:[[[NSMutableArray alloc] init] autorelease] forKey:stringKey];
                 }
@@ -149,7 +149,11 @@
     NSArray *currentImages = [images objectForKey:selectedFamily];
     Image *image = [currentImages objectAtIndex:indexPath.row];
     cell.textLabel.text = image.name;
-    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [image logoPrefix]]];
+    if ([image respondsToSelector:@selector(logoPrefix)]) {
+        cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [image logoPrefix]]];
+    } else {
+        cell.imageView.image = nil;
+    }
 	
     return cell;
 }
@@ -158,14 +162,6 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-	/*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
-	 */
 }
 
 #pragma mark -

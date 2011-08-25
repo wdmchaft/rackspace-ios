@@ -78,7 +78,12 @@
         // make an offset for the table
         self.tableView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 134.0)] autorelease];
 
-        titleView = [[NameAndStatusTitleView alloc] initWithEntity:self.server logoFilename:[[self.server.image logoPrefix] stringByAppendingString:@"-icon.png"]];
+        NSString *logoFilename = @"";
+        if ([self.server.image respondsToSelector:@selector(logoPrefix)]) {
+            logoFilename = [[self.server.image logoPrefix] stringByAppendingString:@"-icon.png"];
+        }
+        
+        titleView = [[NameAndStatusTitleView alloc] initWithEntity:self.server logoFilename:logoFilename];
         [self.view addSubview:titleView];
         [titleView setNeedsDisplay];
     }
@@ -110,7 +115,11 @@
             backgroundContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             backgroundContainer.backgroundColor = [UIColor iPadTableBackgroundColor];
             
-            NSString *logoFilename = [[self.server.image logoPrefix] stringByAppendingString:@"-large.png"];
+            NSString *logoFilename = @"";
+            if ([self.server.image respondsToSelector:@selector(logoPrefix)]) {
+                logoFilename = [[self.server.image logoPrefix] stringByAppendingString:@"-large.png"];
+            }
+            
             UIImageView *osLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:logoFilename]];
             osLogo.contentMode = UIViewContentModeScaleAspectFit;
             osLogo.frame = CGRectMake(100.0, 100.0, 1000.0, 1000.0);
@@ -266,7 +275,9 @@
         //[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:kStatus inSection:kOverview]] withRowAnimation:UITableViewRowAnimationNone];
         [self.tableView reloadData];
         [self setBackgroundView];
-        titleView.logoView.image = [UIImage imageNamed:[[self.server.image logoPrefix] stringByAppendingString:@"-icon.png"]];
+        if ([self.server.image respondsToSelector:@selector(logoPrefix)]) {
+            titleView.logoView.image = [UIImage imageNamed:[[self.server.image logoPrefix] stringByAppendingString:@"-icon.png"]];
+        }
         
         if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
             [self.serversViewController.tableView reloadData];

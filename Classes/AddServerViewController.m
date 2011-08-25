@@ -309,7 +309,7 @@
         
         for (int i = 0; i < [sortedImages count]; i++) {
             Image *image = [sortedImages objectAtIndex:i];
-            if ([[image logoPrefix] isEqualToString:@"ubuntu"]) {
+            if ([image respondsToSelector:@selector(logoPrefix)] && [[image logoPrefix] isEqualToString:@"ubuntu"]) {
                 [ubuntus addObject:image];
             }
         }

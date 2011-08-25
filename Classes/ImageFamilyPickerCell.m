@@ -31,7 +31,7 @@
         NSArray *keys = [self.account.images allKeys];
         for (int j = 0; j < [keys count]; j++) {
             Image *image = [self.account.images objectForKey:[keys objectAtIndex:j]];
-            if ([[image logoPrefix] isEqualToString:stringKey]) {
+            if ([image respondsToSelector:@selector(logoPrefix)] && [[image logoPrefix] isEqualToString:stringKey]) {
                 if (![dict objectForKey:stringKey]) {
                     [dict setObject:[[[NSMutableArray alloc] init] autorelease] forKey:stringKey];
                 }

@@ -14,6 +14,7 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *filePath = [documentsDirectory stringByAppendingString:[NSString stringWithFormat:@"/%@.archive", key]];
+//    NSLog(@"filepath: %@", filePath);
     return [[NSKeyedUnarchiver unarchiveObjectWithFile:filePath] retain];
     /* TODO: fixme on potential leak - "retrieve" doesn't match copy or alloc pattern, and hence should be returning autoreleased object
      * Not changing right now, but documenting for later fixing - need to see how and where [Archiver.. retrieve:key] is used to make sure 

@@ -218,7 +218,7 @@ static NSMutableDictionary *timers = nil;
     */
 }
 
-- (id)decode:(NSCoder *)coder key:(NSString *)key {
+- (id)decode:(NSCoder *)coder key:(NSString *)key {    
     @try {
         return [[coder decodeObjectForKey:key] retain];
     }
@@ -237,9 +237,11 @@ static NSMutableDictionary *timers = nil;
         
         // make sure images stored aren't corrupt
         if ([images count] > 0) {
-            id obj = [[images allValues] objectAtIndex:0];
-            if (![obj isKindOfClass:[Image class]]) {
-                images = nil;
+            for (id obj in [images allValues]) {
+                if (![obj isKindOfClass:[Image class]]) {
+                    images = nil;
+                    break;
+                }
             }
         }        
         
