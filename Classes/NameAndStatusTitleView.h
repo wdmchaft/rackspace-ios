@@ -11,19 +11,10 @@
 @class Server, DDProgressView;
 
 @interface NameAndStatusTitleView : UIView {
-    
-    // The entity for this view should respond to the following selectors:
-    // name, status, progress, shouldBePolled
-    id entity;
-    
-    UIView *statusTint;
-    UILabel *nameLabel;
-    UILabel *statusLabel;
-    UIImageView *logoView;
-    NSString *logoFilename;
-    DDProgressView *progressView;
 }
 
+// The entity for this view should respond to the following selectors:
+// name, status, progress, shouldBePolled
 @property (nonatomic, retain) id entity;
 @property (nonatomic, retain) UIView *statusTint;
 @property (nonatomic, retain) UILabel *nameLabel;

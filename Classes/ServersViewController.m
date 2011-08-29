@@ -275,6 +275,7 @@
         }
     } else {
         [self.navigationController pushViewController:vc animated:YES];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     [vc release];
 }

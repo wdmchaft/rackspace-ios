@@ -707,6 +707,7 @@
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
 
         LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer:self.account];
+        loadBalancer.status = newLB.status;
         loadBalancer.nodes = newLB.nodes;
         loadBalancer.connectionLoggingEnabled = newLB.connectionLoggingEnabled;
         

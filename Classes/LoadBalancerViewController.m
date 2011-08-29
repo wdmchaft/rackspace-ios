@@ -70,6 +70,17 @@
     return node;
 }
 
+- (void)pollLoadBalancer {
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];    
+    [[self.account.manager getLoadBalancerDetails:self.loadBalancer endpoint:endpoint] success:^(OpenStackRequest *request) {
+        self.titleView.statusDot.image = [self.loadBalancer imageForStatus];
+        if ([self.loadBalancer shouldBePolled]) {
+            [self pollLoadBalancer];
+        }
+    } failure:^(OpenStackRequest *request) {
+    }];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
@@ -158,6 +169,10 @@
         self.titleView.bwInLabel.text = @"";
         self.titleView.bwOutLabel.text = @"";
     }];
+    
+    if ([self.loadBalancer shouldBePolled]) {
+        [self pollLoadBalancer];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -258,15 +273,15 @@
 #pragma mark - Button Handlers
 
 - (void)configButtonPressed:(id)sender {
-    ConfigureLoadBalancerViewController *vc = [[ConfigureLoadBalancerViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
-    vc.loadBalancerViewController = self;
     
-//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    if ([self.loadBalancer shouldBePolled]) {
+        [self alert:nil message:@"This load balancer can not be changed until it is in an active state."];
+    } else {
+        ConfigureLoadBalancerViewController *vc = [[ConfigureLoadBalancerViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
+        vc.loadBalancerViewController = self;
         [self presentModalViewControllerWithNavigation:vc];
-//    } else {
-//        [self.navigationController pushViewController:vc animated:YES];
-//    }    
-    [vc release];
+        [vc release];
+    }
 }
 
 @end

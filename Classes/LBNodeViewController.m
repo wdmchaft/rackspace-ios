@@ -179,36 +179,42 @@
     if (editable) {
         if (indexPath.section == kConditionSection) {
             
-            NSString *oldCondition = [NSString stringWithString:self.node.condition];
-            
-            switch (indexPath.row) {
-                case kEnabled:
-                    self.node.condition = @"ENABLED";
-                    break;
-                case kDraining:
-                    self.node.condition = @"DRAINING";
-                    break;
-                case kDisabled:
-                    self.node.condition = @"DISABLED";
-                    break;
-                default:
-                    break;
+            if ([self.loadBalancer shouldBePolled]) {
+                [self alert:nil message:@"This node can not be changed until the load balancer is in an active state."];                
+                [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            } else {
+                NSString *oldCondition = [NSString stringWithString:self.node.condition];
+                
+                switch (indexPath.row) {
+                    case kEnabled:
+                        self.node.condition = @"ENABLED";
+                        break;
+                    case kDraining:
+                        self.node.condition = @"DRAINING";
+                        break;
+                    case kDisabled:
+                        self.node.condition = @"DISABLED";
+                        break;
+                    default:
+                        break;
+                }
+                
+                // make the API call
+                NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+                [[spinners objectAtIndex:indexPath.row] startAnimating];
+                APICallback *callback = [self.account.manager updateLBNode:self.node loadBalancer:self.loadBalancer endpoint:endpoint];
+                
+                [callback success:^(OpenStackRequest *request) {
+                    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
+                } failure:^(OpenStackRequest *request) {
+                    self.node.condition = oldCondition;
+                    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+                    [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
+                    [self alert:@"There was a problem changing the condition of this node." request:request];
+                }];        
             }
             
-            // make the API call
-            NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
-            [[spinners objectAtIndex:indexPath.row] startAnimating];
-            APICallback *callback = [self.account.manager updateLBNode:self.node loadBalancer:self.loadBalancer endpoint:endpoint];
-            
-            [callback success:^(OpenStackRequest *request) {
-                [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-                [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
-            } failure:^(OpenStackRequest *request) {
-                self.node.condition = oldCondition;
-                [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-                [NSTimer scheduledTimerWithTimeInterval:0.35 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
-                [self alert:@"There was a problem changing the condition of this node." request:request];
-            }];        
         } else {
             UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to remove this node from the load balancer?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
             sheet.delegate = self;

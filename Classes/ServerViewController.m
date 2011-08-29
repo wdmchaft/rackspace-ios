@@ -486,6 +486,12 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
+    titleView = nil;
+    actionView = nil;
+    rebootButton = nil;
+    pingButton = nil;
+    self.tableView = nil;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:rebootSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:rebootFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:getLimitsSucceededObserver];
@@ -1052,6 +1058,7 @@
             }                
             [self.navigationController presentModalViewController:vc animated:YES];
             [vc release];
+            [self.tableView deselectRowAtIndexPath:selectedIPAddressIndexPath animated:YES];
         } else if (buttonIndex == 1) { // Copy to Pasteboard
             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
             [pasteboard setString:selectedIPAddress];
@@ -1062,6 +1069,7 @@
             if ([application canOpenURL:url]) {
                 [application openURL:url];
             }
+            [self.tableView deselectRowAtIndexPath:selectedIPAddressIndexPath animated:YES];
         } else if (buttonIndex == 3 && [application canOpenURL:url]) {
             [application openURL:url];
         } else {
