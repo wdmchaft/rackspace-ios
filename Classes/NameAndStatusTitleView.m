@@ -192,11 +192,8 @@ static UIFont *statusFont = nil;
     } else {
         [UIView animateWithDuration:1 animations:^{
             if ([@"ACTIVE" isEqualToString:[self.entity status]]) {
-                NSLog(@"[[UIApplication sharedApplication] applicationState] = %i", [[UIApplication sharedApplication] applicationState]);
-                if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-                    [self.statusTint.layer removeAnimationForKey:@"animateOpacity"];
-                    self.statusTint.backgroundColor = [UIColor colorWithRed:0.314 green:0.588 blue:0.086 alpha:1.0];
-                }                
+                [self.statusTint.layer removeAnimationForKey:@"animateOpacity"];
+                self.statusTint.backgroundColor = [UIColor colorWithRed:0.314 green:0.588 blue:0.086 alpha:1.0];
             } else if ([self.entity shouldBePolled]) {
                 self.statusTint.backgroundColor = [UIColor orangeColor];
             } else {

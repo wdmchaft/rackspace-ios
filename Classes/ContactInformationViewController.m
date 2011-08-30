@@ -84,7 +84,7 @@
 	
     // if it's a link to twitter, let's see if the device has the Twitter app
     // installed and use that instead
-    if ([url.host isEqualToString:@"twitter.com"] || [url.host isEqualToString:@"www.twitter.com"] && ![url.path isEqualToString:@""]) {
+    if ([url.host isEqualToString:@"twitter.com"] || ([url.host isEqualToString:@"www.twitter.com"] && ![url.path isEqualToString:@""])) {
         cell.imageView.image = [UIImage imageNamed:@"twitter-icon.png"];
         NSURL *twitterURL = [NSURL URLWithString:[NSString stringWithFormat:@"twitter:@%@", [url.path substringFromIndex:1]]];
         if ([application canOpenURL:twitterURL]) {
@@ -138,7 +138,7 @@
     
     // if it's a link to twitter, let's see if the device has the Twitter app
     // installed and use that instead
-    if ([selectedURL.host isEqualToString:@"twitter.com"] || [selectedURL.host isEqualToString:@"www.twitter.com"] && ![selectedURL.path isEqualToString:@""]) {
+    if ([selectedURL.host isEqualToString:@"twitter.com"] || ([selectedURL.host isEqualToString:@"www.twitter.com"] && ![selectedURL.path isEqualToString:@""])) {
         NSURL *twitterURL = [NSURL URLWithString:[NSString stringWithFormat:@"twitter:@%@", [selectedURL.path substringFromIndex:1]]];
         if ([application canOpenURL:twitterURL]) {
             selectedURL = twitterURL;
