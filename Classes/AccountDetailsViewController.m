@@ -53,7 +53,7 @@
             account.cdnURL = [NSURL URLWithString:cdnStr];
         }
         [account persist];
-        [account release];
+//        [account release];
         [rootViewController.tableView reloadData];
         [account refreshCollections];
         [self.navigationController dismissModalViewControllerAnimated:YES];

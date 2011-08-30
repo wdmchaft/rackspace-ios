@@ -16,10 +16,10 @@
 @class AnimatedProgressView;
 
 @interface ActivityIndicatorView : UIView {
-    AnimatedProgressView *progressView;
 }
 
 @property (nonatomic, retain) AnimatedProgressView *progressView;
+@property (nonatomic, retain) UIActivityIndicatorView *spinner;
 
 + (CGRect)frameForText:(NSString *)text;
 + (CGRect)frameForText:(NSString *)text withProgress:(BOOL)withProgress;

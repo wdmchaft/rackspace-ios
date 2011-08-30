@@ -117,14 +117,14 @@
         RSSFeedViewController *vc = [[RSSFeedViewController alloc] initWithNibName:@"RSSFeedViewController" bundle:nil];
         vc.feed = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Cloud Servers Status", @"feed://status.rackspacecloud.com/cloudservers/rss.xml", @"cloud-servers-icon.png", nil] forKeys:[NSArray arrayWithObjects:@"name", @"url", @"logo", nil]];
         
-        masterNavigationController = [[[UINavigationController alloc] initWithRootViewController:vc] autorelease];
-        masterNavigationController.navigationBar.tintColor = navigationController.navigationBar.tintColor;
-        masterNavigationController.navigationBar.translucent = navigationController.navigationBar.translucent;
-        masterNavigationController.navigationBar.opaque = navigationController.navigationBar.opaque;
-        masterNavigationController.navigationBar.barStyle = navigationController.navigationBar.barStyle;
+        self.masterNavigationController = [[[UINavigationController alloc] initWithRootViewController:vc] autorelease];
+        self.masterNavigationController.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
+        self.masterNavigationController.navigationBar.translucent = self.navigationController.navigationBar.translucent;
+        self.masterNavigationController.navigationBar.opaque = self.navigationController.navigationBar.opaque;
+        self.masterNavigationController.navigationBar.barStyle = self.navigationController.navigationBar.barStyle;
         
-        splitViewController.delegate = [navigationController.viewControllers objectAtIndex:0];
-        splitViewController.viewControllers = [NSArray arrayWithObjects:navigationController, masterNavigationController, nil];
+        self.splitViewController.delegate = [navigationController.viewControllers objectAtIndex:0];
+        self.splitViewController.viewControllers = [NSArray arrayWithObjects:self.navigationController, self.masterNavigationController, nil];
         
         [window addSubview:splitViewController.view];
         [window makeKeyAndVisible];
