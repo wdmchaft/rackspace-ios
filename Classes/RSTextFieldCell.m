@@ -53,7 +53,7 @@
         if (modalPresentationStyle == UIModalPresentationFormSheet) {
             textField.frame = CGRectMake(aRect.origin.x + 31.0, aRect.origin.y + 1.0, aRect.size.width, aRect.size.height);
         } else {
-            textField.frame = CGRectMake(aRect.origin.x + 45.0, aRect.origin.y + 1.0, aRect.size.width, aRect.size.height);
+            textField.frame = CGRectMake(aRect.origin.x + 35.0, aRect.origin.y + 1.0, aRect.size.width, aRect.size.height);
         }
     } else {
         textField.frame = CGRectMake(aRect.origin.x + 10.0, aRect.origin.y + 1.0, aRect.size.width, aRect.size.height);
