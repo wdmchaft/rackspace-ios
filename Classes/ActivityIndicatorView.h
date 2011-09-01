@@ -16,10 +16,10 @@
 @class AnimatedProgressView;
 
 @interface ActivityIndicatorView : UIView {
-    AnimatedProgressView *progressView;
 }
 
-@property (retain) AnimatedProgressView *progressView;
+@property (nonatomic, retain) AnimatedProgressView *progressView;
+@property (nonatomic, retain) UIActivityIndicatorView *spinner;
 
 + (CGRect)frameForText:(NSString *)text;
 + (CGRect)frameForText:(NSString *)text withProgress:(BOOL)withProgress;
@@ -30,5 +30,6 @@
 - (void)addToView:(UIView *)view scrollOffset:(CGFloat)offset;
 - (void)addToView:(UIView *)view;
 - (void)removeFromSuperviewAndRelease;
+- (void)removeFromSuperview;
 
 @end

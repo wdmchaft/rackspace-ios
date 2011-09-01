@@ -346,9 +346,11 @@
     [request setCompletionBlock:^{
         if ([request isSuccess]) {
             Image *image = [request image];
-            image.canBeLaunched = NO;
-            [self.account.images setObject:image forKey:[NSNumber numberWithInt:image.identifier]];        
-            [self.account persist];        
+            if ([image isKindOfClass:[Image class]]) {
+                image.canBeLaunched = NO;
+                [self.account.images setObject:image forKey:[NSNumber numberWithInt:image.identifier]];        
+                [self.account persist];        
+            }
             [self notify:@"getImageSucceeded" request:request];
         } else {
             [self notify:@"getImageFailed" request:request object:[request.userInfo objectForKey:@"imageId"]];
@@ -410,7 +412,6 @@
             self.account.totalBytesUsed = strtoull([numStr UTF8String], NULL, 0);
             [self.account persist];
             [self notify:@"getStorageAccountInfoSucceeded" request:request object:self.account];
-            [numStr release];
         } else {
             [self notify:@"getStorageAccountInfoFailed" request:request object:self.account];
         }
@@ -682,13 +683,51 @@
     __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancersRequest:self.account endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
         if (!self.account.loadBalancers) {
-            self.account.loadBalancers = [[NSMutableDictionary alloc] initWithCapacity:2];
+            self.account.loadBalancers = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
         }
-        [self.account.loadBalancers setObject:[(LoadBalancerRequest *)request loadBalancers] forKey:endpoint];
-        [self.account persist];            
-        for (LoadBalancer *lb in self.account.sortedLoadBalancers) {
-            NSLog(@"Load Balancer at %@: %@", endpoint, lb.name);
+        
+        NSLog(@"%@", self.account.loadBalancers);
+        NSLog(@"%@", [(LoadBalancerRequest *)request loadBalancers:self.account]);
+        NSLog(@"%@", endpoint);
+        NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers:self.account];
+        
+        for (NSString *identifier in lbs) {
+            LoadBalancer *lb = [lbs objectForKey:identifier];
+            lb.region = [self.account loadBalancerRegionForEndpoint:endpoint];
+            NSLog(@"lb.region = %@", lb.region);
         }
+        
+        [self.account.loadBalancers setObject:lbs forKey:endpoint];
+        [self.account persist];
+    }];
+}
+
+- (APICallback *)getLoadBalancerDetails:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancerDetailsRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+
+        LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer:self.account];
+        loadBalancer.status = newLB.status;
+        loadBalancer.nodes = newLB.nodes;
+        loadBalancer.connectionLoggingEnabled = newLB.connectionLoggingEnabled;
+        
+//        if (!self.account.loadBalancers) {
+//            self.account.loadBalancers = [[NSMutableDictionary alloc] initWithCapacity:2];
+//        }
+//        
+//        NSLog(@"%@", self.account.loadBalancers);
+//        NSLog(@"%@", [(LoadBalancerRequest *)request loadBalancers]);
+//        NSLog(@"%@", endpoint);
+//        NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers];
+//        
+//        for (NSString *identifier in lbs) {
+//            LoadBalancer *lb = [lbs objectForKey:identifier];
+//            lb.region = [self.account loadBalancerRegionForEndpoint:endpoint];
+//            NSLog(@"lb.region = %@", lb.region);
+//        }
+//        
+//        [self.account.loadBalancers setObject:lbs forKey:endpoint];
+        [self.account persist];
     }];
 }
 
@@ -713,14 +752,83 @@
     
     __block LoadBalancerRequest *request = [LoadBalancerRequest createLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
-//        if (!self.account.loadBalancers) {
-//            self.account.loadBalancers = [[NSMutableDictionary alloc] initWithCapacity:2];
-//        }
-//        [self.account.loadBalancers setObject:[(LoadBalancerRequest *)request loadBalancers] forKey:endpoint];
-//        [self.account persist];            
-//        for (LoadBalancer *lb in self.account.sortedLoadBalancers) {
-//            NSLog(@"Load Balancer at %@: %@", endpoint, lb.name);
-//        }
+    }];
+}
+
+- (APICallback *)updateLoadBalancer:(LoadBalancer *)loadBalancer {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_UPDATED);
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:loadBalancer.region];
+    __block LoadBalancerRequest *request = [LoadBalancerRequest updateLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
+    return [self callbackWithRequest:request];
+}
+
+- (APICallback *)deleteLoadBalancer:(LoadBalancer *)loadBalancer {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_DELETED);
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:loadBalancer.region];
+    NSLog(@"endpoint: %@", endpoint);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest deleteLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
+    return [self callbackWithRequest:request];
+}
+
+- (APICallback *)updateLoadBalancerConnectionLogging:(LoadBalancer *)loadBalancer {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_UPDATED_LB_CONNECTION_LOGGING);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest updateConnectionLoggingRequest:self.account loadBalancer:loadBalancer];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+    } failure:^(OpenStackRequest *request) {
+        loadBalancer.connectionLoggingEnabled = !loadBalancer.connectionLoggingEnabled;
+    }];
+}
+
+- (APICallback *)getLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
+    __block LoadBalancerRequest *request = [LoadBalancerRequest getConnectionThrottlingRequest:self.account loadBalancer:loadBalancer];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        loadBalancer.connectionThrottle = [(LoadBalancerRequest *)request connectionThrottle];
+    }];
+}
+
+- (APICallback *)updateLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_UPDATED_LB_CONNECTION_THROTTLING);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest updateConnectionThrottlingRequest:self.account loadBalancer:loadBalancer];
+    return [self callbackWithRequest:request];
+}
+
+- (APICallback *)deleteLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_DISABLED_LB_CONNECTION_THROTTLING);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest disableConnectionThrottlingRequest:self.account loadBalancer:loadBalancer];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        loadBalancer.connectionThrottle = nil;
+    }];
+}
+
+- (APICallback *)getLoadBalancerUsage:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancerUsageRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        loadBalancer.usage = [(LoadBalancerRequest *)request usage];
+    }];
+}
+
+- (APICallback *)addLBNodes:(NSArray *)nodes loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_ADDED_LB_NODES);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest addLoadBalancerNodesRequest:self.account loadBalancer:loadBalancer nodes:nodes endpoint:endpoint];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        for (LoadBalancerNode *node in nodes) {
+            [loadBalancer.nodes addObject:node];
+        }
+        [self.account persist];
+    }];
+}
+
+- (APICallback *)updateLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_UPDATED_LB_NODE);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest updateLoadBalancerNodeRequest:self.account loadBalancer:loadBalancer node:node endpoint:endpoint];
+    return [self callbackWithRequest:request];
+}
+
+- (APICallback *)deleteLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
+    TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_DELETED_LB_NODE);
+    __block LoadBalancerRequest *request = [LoadBalancerRequest deleteLoadBalancerNodeRequest:self.account loadBalancer:loadBalancer node:node endpoint:endpoint];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        [loadBalancer.nodes removeObject:node];
     }];
 }
 
@@ -741,7 +849,6 @@
 #pragma mark Memory Management
 
 - (void)dealloc {
-    [account release];
     [super dealloc];
 }
 

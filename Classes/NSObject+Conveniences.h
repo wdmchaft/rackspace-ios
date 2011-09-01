@@ -9,7 +9,7 @@
 
 @interface NSObject (Conveniences)
 
-+ (NSString*) stringWithUUID;
++ (NSString*)stringWithUUID;
 + (NSString *)pluralizedStringForArray:(NSArray *)array noun:(NSString *)noun;
 + (NSString *)pluralizedStringForDictionary:(NSDictionary *)dict noun:(NSString *)noun;
 + (BOOL)parseBool:(NSNumber *)number;
@@ -20,5 +20,6 @@
 + (NSDate *)dateFromString:(NSString *)dateString;
 - (NSString *)timeUntilDate:(NSDate *)date;
 - (NSString *)flattenHTML:(NSString *)html;
++ (NSString *)humanizedBytes:(unsigned long long)bytes;
 
 @end

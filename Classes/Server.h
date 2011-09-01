@@ -10,7 +10,7 @@
 
 @class Image, Flavor, BackupSchedule;
 
-@interface Server : ComputeModel <NSCoding> {
+@interface Server : ComputeModel <NSCoding, NSCopying> {
     
     // progress from 0-100 for the current or last action
     NSInteger progress;
@@ -42,19 +42,19 @@
     
 }
 
-@property (assign) NSInteger progress;
-@property (assign) NSInteger imageId;
-@property (assign) NSInteger flavorId;
-@property (retain) NSString *status;
-@property (retain) NSString *hostId;
-@property (retain) NSDictionary *addresses;
-@property (retain) NSDictionary *metadata;
-@property (retain) Image *image;
-@property (retain) Flavor *flavor;
-@property (retain) NSMutableDictionary *urls;
-@property (retain) NSDictionary *personality;
-@property (retain) BackupSchedule *backupSchedule;
-@property (retain) NSString *rootPassword;
+@property (nonatomic, assign) NSInteger progress;
+@property (nonatomic, assign) NSInteger imageId;
+@property (nonatomic, assign) NSInteger flavorId;
+@property (nonatomic, retain) NSString *status;
+@property (nonatomic, retain) NSString *hostId;
+@property (nonatomic, retain) NSDictionary *addresses;
+@property (nonatomic, retain) NSDictionary *metadata;
+@property (nonatomic, retain) Image *image;
+@property (nonatomic, retain) Flavor *flavor;
+@property (nonatomic, retain) NSMutableDictionary *urls;
+@property (nonatomic, retain) NSDictionary *personality;
+@property (nonatomic, retain) BackupSchedule *backupSchedule;
+@property (nonatomic, retain) NSString *rootPassword;
 
 - (id)initWithJSONDict:(NSDictionary *)dict;
 

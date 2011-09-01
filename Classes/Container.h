@@ -37,25 +37,24 @@
 }
 
 // regular container attributes
-@property (retain) NSString *name;
-@property (assign) NSUInteger count;
-@property (assign) unsigned long long bytes;
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, assign) NSUInteger count;
+@property (nonatomic, assign) unsigned long long bytes;
 
 -(NSString *)humanizedSize;
 
 // CDN container attributes
-@property (assign) BOOL cdnEnabled;
-@property (assign) NSUInteger ttl;
-@property (retain) NSString *cdnURL;
-@property (assign) BOOL logRetention;
-@property (retain) NSString *referrerACL;
-@property (retain) NSString *useragentACL;
-@property (retain) Folder *rootFolder;
+@property (nonatomic, assign) BOOL cdnEnabled;
+@property (nonatomic, assign) NSUInteger ttl;
+@property (nonatomic, retain) NSString *cdnURL;
+@property (nonatomic, assign) BOOL logRetention;
+@property (nonatomic, retain) NSString *referrerACL;
+@property (nonatomic, retain) NSString *useragentACL;
+@property (nonatomic, retain) Folder *rootFolder;
 
-@property (assign) BOOL hasEverBeenCDNEnabled;
+@property (nonatomic, assign) BOOL hasEverBeenCDNEnabled;
 
 + (Container *)fromJSON:(NSDictionary *)dict;
-+ (NSString *)humanizedBytes:(unsigned long long)bytes;
 - (NSString *)humanizedBytes;
 - (NSString *)humanizedCount;
 - (NSString *)humanizedSize;

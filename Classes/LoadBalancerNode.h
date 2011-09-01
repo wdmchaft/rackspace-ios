@@ -8,21 +8,28 @@
 
 #import <Foundation/Foundation.h>
 
+@class Server;
 
-@interface LoadBalancerNode : NSObject {
+@interface LoadBalancerNode : NSObject <NSCopying> {
     NSString *identifier;
     NSString *address;
     NSString *port;
     NSString *condition;
     NSString *status;
+    NSInteger weight;
+    Server *server;
 }
 
-@property (retain) NSString *identifier;
-@property (retain) NSString *address;
-@property (retain) NSString *port;
-@property (retain) NSString *condition;
-@property (retain) NSString *status;
+@property (nonatomic, retain) NSString *identifier;
+@property (nonatomic, retain) NSString *address;
+@property (nonatomic, retain) NSString *port;
+@property (nonatomic, retain) NSString *condition;
+@property (nonatomic, retain) NSString *status;
+@property (nonatomic, assign) NSInteger weight;
+@property (nonatomic, assign) Server *server;
 
 + (LoadBalancerNode *)fromJSON:(NSDictionary *)dict;
+- (NSString *)toJSON;
+- (NSString *)toConditionUpdateJSON;
 
 @end

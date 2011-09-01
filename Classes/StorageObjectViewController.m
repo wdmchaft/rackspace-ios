@@ -54,20 +54,7 @@
 
 - (void)setBackgroundView {
     
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];        
-//    NSString *shortPath = [NSString stringWithFormat:@"/%@/%@", self.container.name, self.object.fullPath];
-//    NSString *filePath = [documentsDirectory stringByAppendingString:shortPath];
-    UIImageView *logo;
-
-    // icons are too small, but leaving this in case larger ones show up in iOS later
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-//        UIDocumentInteractionController *udic = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:filePath]];
-//        NSLog(@"icons count: %i", [udic.icons count]);
-//        logo = [[UIImageView alloc] initWithImage:[udic.icons lastObject]];
-//    } else {
-        logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cloudfiles-large.png"]];
-//    }
+    UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cloudfiles-large.png"]];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         UIView *backgroundContainer = [[UIView alloc] init];
@@ -77,17 +64,12 @@
         logo.frame = CGRectMake(100.0, 100.0, 1000.0, 1000.0);
         logo.alpha = 0.5;        
         [backgroundContainer addSubview:logo];
-        [logo release];
         tableView.backgroundView = backgroundContainer;
         [backgroundContainer release];
     } else {        
         self.tableView.backgroundView = nil;
-        
-//        logo.contentMode = UIViewContentModeScaleAspectFit;
-//        logo.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-//        tableView.backgroundView = logo;
-//        [logo release];
     }
+    [logo release];    
 }
 
 
@@ -348,17 +330,24 @@
                 [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:actionsSection] animated:YES];                
                 
             } else {                
-                // download the file
-                fileDownloading = YES;
-                [self.account.manager getObject:self.container object:self.object downloadProgressDelegate:self];
-                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:actionsSection]] withRowAnimation:UITableViewRowAnimationNone];
+                if (!fileDownloading) {
+                    // download the file
+                    fileDownloading = YES;
+                    [self.account.manager getObject:self.container object:self.object downloadProgressDelegate:self];
+                    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:actionsSection]] withRowAnimation:UITableViewRowAnimationNone];
+                }
                 
             }
         } else if (indexPath.row == 1) {
             
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *documentsDirectory = [paths objectAtIndex:0];        
-            NSString *shortPath = [NSString stringWithFormat:@"/%@/%@", self.container.name, self.object.fullPath];
+            NSString *shortPath = @"";
+            
+            if (self.container && [self.container respondsToSelector:@selector(name)] && self.object && [self.object respondsToSelector:@selector(fullPath)]) {
+                shortPath = [NSString stringWithFormat:@"/%@/%@", self.container.name, self.object.fullPath];
+            }
+            
             NSString *filePath = [documentsDirectory stringByAppendingString:shortPath];
             NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:filePath]];
             

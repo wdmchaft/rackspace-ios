@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 
 
-@interface LoadBalancerProtocol : NSObject {
+@interface LoadBalancerProtocol : NSObject <NSCoding> {
     NSString *name;
     NSInteger port;
 }
 
-@property (retain) NSString *name;
-@property (assign) NSInteger port;
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, assign) NSInteger port;
 
 + (LoadBalancerProtocol *)fromJSON:(NSDictionary *)dict;
 

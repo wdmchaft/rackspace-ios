@@ -24,14 +24,14 @@
 
 - (void)groupImages {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:9];
-    NSArray *stringKeys = [NSArray arrayWithObjects:@"ubuntu", @"redhat", @"gentoo", @"centos", @"debian", @"windows", @"arch", @"custom", @"fedora", nil];
+    NSArray *stringKeys = [NSArray arrayWithObjects:@"ubuntu", @"redhat", @"gentoo", @"centos", @"debian", @"windows", @"arch", kCustomImage, @"fedora", nil];
     
     for (int i = 0; i < [stringKeys count]; i++) {
         NSString *stringKey = [stringKeys objectAtIndex:i];
         NSArray *keys = [self.account.images allKeys];
         for (int j = 0; j < [keys count]; j++) {
             Image *image = [self.account.images objectForKey:[keys objectAtIndex:j]];
-            if ([[image logoPrefix] isEqualToString:stringKey]) {
+            if ([image respondsToSelector:@selector(logoPrefix)] && [[image logoPrefix] isEqualToString:stringKey]) {
                 if (![dict objectForKey:stringKey]) {
                     [dict setObject:[[[NSMutableArray alloc] init] autorelease] forKey:stringKey];
                 }
@@ -112,7 +112,7 @@
     } else if (row == 7) {
         selectedFamily = @"fedora";
     } else {
-        selectedFamily = @"custom";
+        selectedFamily = kCustomImage;
     }
     
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kImages] withRowAnimation:UITableViewRowAnimationFade];

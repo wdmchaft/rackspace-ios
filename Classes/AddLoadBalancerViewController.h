@@ -15,10 +15,11 @@
     LoadBalancer *loadBalancer;
     @private
     NSDictionary *algorithmNames;
+    UITextField *nameTextField;
 }
 
-@property (retain) OpenStackAccount *account;
-@property (retain) LoadBalancer *loadBalancer;
+@property (nonatomic, retain) OpenStackAccount *account;
+@property (nonatomic, retain) LoadBalancer *loadBalancer;
 
 - (id)initWithAccount:(OpenStackAccount *)account;
 

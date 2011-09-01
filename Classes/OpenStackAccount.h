@@ -12,77 +12,52 @@
 
 @class AccountManager;
 
-// named OpenStackAccount instead of Account to prevent collisions with
-// the MessageUI framework
 @interface OpenStackAccount : NSObject <NSCoding, NSCopying> {
-    
-    BOOL hasBeenRefreshed;
-    
-    NSString *uuid;
-    Provider *provider;
-    NSString *username;
-    NSMutableDictionary *images;
-    NSDictionary *flavors;
-    NSMutableDictionary *servers;
-    NSURL *serversURL;
-    NSURL *filesURL;
-    NSURL *cdnURL;
-    NSArray *rateLimits;
-    
-    // this is a dictionary of dictionaries:
-    // { "endpoint1": { "123": { ... }, "456": { ... } },
-    //   "endpoint2": { "789": { ... }, "321": { ... } }}
-    NSMutableDictionary *loadBalancers;
-    
-    AccountManager *manager;
-    
     id getLimitsObserver;
     id getServersObserver;
     id getImagesObserver;
     id getFlavorsObserver;
-    
-    NSInteger lastUsedFlavorId;
-    NSInteger lastUsedImageId;
-    
-    NSInteger containerCount;
-    unsigned long long totalBytesUsed;
-    
-    NSMutableDictionary *containers;
-    
-    BOOL flaggedForDelete;
-    
-    NSMutableArray *lbProtocols;
+    @private
+    BOOL serversUnarchived;
 }
 
-@property (assign) BOOL hasBeenRefreshed;
-@property (retain) NSString *uuid;
-@property (retain) Provider *provider;
-@property (retain) NSString *username;
-@property (retain) NSString *apiKey;
-@property (retain) NSString *authToken;
-@property (retain) NSMutableDictionary *images;
-@property (retain) NSDictionary *flavors;
-@property (retain) NSMutableDictionary *servers;
-@property (retain) NSURL *serversURL;
-@property (retain) NSURL *filesURL;
-@property (retain) NSURL *cdnURL;
-@property (retain) NSArray *rateLimits;
-@property (retain) AccountManager *manager;
-@property (assign) NSInteger lastUsedFlavorId;
-@property (assign) NSInteger lastUsedImageId;
-@property (assign) NSInteger containerCount;
-@property (assign) unsigned long long totalBytesUsed;
-@property (retain) NSMutableDictionary *containers;
-@property (assign) BOOL flaggedForDelete;
-@property (retain) NSMutableDictionary *loadBalancers;
-@property (retain) NSMutableArray *lbProtocols;
+@property (nonatomic, assign) BOOL hasBeenRefreshed;
+@property (nonatomic, retain) NSString *uuid;
+@property (nonatomic, retain) Provider *provider;
+@property (nonatomic, retain) NSString *username;
+@property (nonatomic, retain) NSString *apiKey;
+@property (nonatomic, retain) NSString *authToken;
+@property (nonatomic, retain) NSMutableDictionary *images;
+@property (nonatomic, retain) NSDictionary *flavors;
+@property (nonatomic, retain) NSMutableDictionary *servers;
+@property (nonatomic, retain) NSMutableDictionary *serversByPublicIP;
+@property (nonatomic, retain) NSURL *serversURL;
+@property (nonatomic, retain) NSURL *filesURL;
+@property (nonatomic, retain) NSURL *cdnURL;
+@property (nonatomic, retain) NSArray *rateLimits;
+@property (nonatomic, retain) AccountManager *manager;
+@property (nonatomic, assign) NSInteger lastUsedFlavorId;
+@property (nonatomic, assign) NSInteger lastUsedImageId;
+@property (nonatomic, assign) NSInteger containerCount;
+@property (nonatomic, assign) unsigned long long totalBytesUsed;
+@property (nonatomic, retain) NSMutableDictionary *containers;
+@property (nonatomic, assign) BOOL flaggedForDelete;
+
+// this is a dictionary of dictionaries:
+// { "endpoint1": { "123": { ... }, "456": { ... } },
+//   "endpoint2": { "789": { ... }, "321": { ... } }}
+@property (nonatomic, retain) NSMutableDictionary *loadBalancers;
+@property (nonatomic, retain) NSMutableArray *lbProtocols;
 
 + (NSArray *)accounts;
 - (void)persist;
 + (void)persist:(NSArray *)accountArray;
 - (void)refreshCollections;
 - (NSArray *)loadBalancerURLs;
+- (NSArray *)loadBalancerRegions;
 
+- (NSString *)loadBalancerEndpointForRegion:(NSString *)region;
+- (NSString *)loadBalancerRegionForEndpoint:(NSString *)endpoint;
 - (NSString *)accountNumber;
 
 - (NSArray *)sortedServers;

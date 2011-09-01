@@ -8,16 +8,22 @@
 
 #import "LoadBalancersViewController.h"
 #import "OpenStackAccount.h"
+#import "AccountManager.h"
 #import "LoadBalancer.h"
 #import "NSObject+Conveniences.h"
 #import "UIViewController+Conveniences.h"
 #import "LoadBalancerViewController.h"
 #import "AddLoadBalancerViewController.h"
+#import "APICallback.h"
+#import "UIViewController+Conveniences.h"
+#import "LoadBalancerProtocol.h"
+#import "OpenStackAppDelegate.h"
+#import "RootViewController.h"
 
 
 @implementation LoadBalancersViewController
 
-@synthesize account;
+@synthesize account, tableView;
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -26,28 +32,28 @@
     [super viewDidLoad];
     self.navigationItem.title = @"Load Balancers";
     [self addAddButton];
+    
+    algorithmNames = [[NSDictionary alloc] initWithObjectsAndKeys:
+                      @"Random",@"RANDOM", 
+                      @"Round Robin", @"ROUND_ROBIN", 
+                      @"Weighted Round Robin", @"WEIGHTED_ROUND_ROBIN", 
+                      @"Least Connections", @"LEAST_CONNECTIONS", 
+                      @"Weighted Least Connections", @"WEIGHTED_LEAST_CONNECTIONS", 
+                      nil];
 }
 
-/*
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.tableView reloadData];
 }
-*/
-/*
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    if (!lbsLoaded) {
+        [self refreshButtonPressed:nil];
+    }
 }
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-*/
+
 /*
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -60,13 +66,11 @@
 #pragma mark Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
     return 1;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
     return [self.account.sortedLoadBalancers count];
 }
 
@@ -75,22 +79,22 @@
     
     static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    // Configure the cell...
     LoadBalancer *loadBalancer = [self.account.sortedLoadBalancers objectAtIndex:indexPath.row];
     cell.textLabel.text = loadBalancer.name;
-    if ([loadBalancer.nodes count] == 1) {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ to 1 node", loadBalancer.algorithm];
-    } else {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ to %i nodes", loadBalancer.algorithm, [loadBalancer.nodes count]];
-    }
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i - %@", loadBalancer.protocol.name, loadBalancer.protocol.port, [algorithmNames objectForKey:loadBalancer.algorithm]];
+//    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i - %@", loadBalancer.status, loadBalancer.protocol.port, [algorithmNames objectForKey:loadBalancer.algorithm]];
     cell.imageView.image = [UIImage imageNamed:@"load-balancers-icon.png"];
     
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
     return cell;
 }
 
@@ -103,61 +107,72 @@
 }
 */
 
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     LoadBalancer *loadBalancer = [self.account.sortedLoadBalancers objectAtIndex:indexPath.row];
     LoadBalancerViewController *vc = [[LoadBalancerViewController alloc] initWithLoadBalancer:loadBalancer];
-    [self.navigationController pushViewController:vc animated:YES];
+    vc.account = self.account;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self presentPrimaryViewController:vc];
+//        if (loaded) {
+            OpenStackAppDelegate *app = [[UIApplication sharedApplication] delegate];
+            if (app.rootViewController.popoverController != nil) {
+                [app.rootViewController.popoverController dismissPopoverAnimated:YES];
+            }
+//        }
+    } else {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
     [vc release];
 }
 
 #pragma - Button Handlers
 
 - (void)addButtonPressed:(id)sender {
+    lbsLoaded = NO; // refresh the list when we come back
     AddLoadBalancerViewController *vc = [[AddLoadBalancerViewController alloc] initWithAccount:self.account];
     [self presentModalViewControllerWithNavigation:vc];
     [vc release];
 }
 
+- (IBAction)refreshButtonPressed:(id)sender {
+    
+    lbsLoaded = YES;
+    [self showToolbarActivityMessage:@"Refreshing load balancers..."];
+    __block NSInteger refreshCount = 0;
+    
+    for (NSString *endpoint in [self.account loadBalancerURLs]) {
+        [[self.account.manager getLoadBalancers:endpoint] success:^(OpenStackRequest *request) {
+            refreshCount++;
+            if (refreshCount == [[self.account loadBalancerURLs] count]) {
+                [self hideToolbarActivityMessage];
+            }
+            [self.tableView reloadData];
+        } failure:^(OpenStackRequest *request) {
+            refreshCount++;
+            if (refreshCount == [[self.account loadBalancerURLs] count]) {
+                [self hideToolbarActivityMessage];
+            }
+        }];
+    }
+    
+}
+
 #pragma mark -
 #pragma mark Memory management
 
+- (void)viewDidUnload {
+    self.tableView = nil;
+    self.toolbar = nil;
+    [super viewDidUnload];
+}
+
 - (void)dealloc {
     [account release];
+    [tableView release];
+    [algorithmNames release];
     [super dealloc];
 }
 

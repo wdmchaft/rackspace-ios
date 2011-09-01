@@ -30,7 +30,8 @@
 - (void)emailLogEntry {
     MFMailComposeViewController *vc = [[MFMailComposeViewController alloc] init];
     vc.mailComposeDelegate = self;		
-    [vc setSubject:[NSString stringWithFormat:@"OpenStack Log Entry: %@ %@", logEntry.requestMethod, logEntry.url]];            
+//    [vc setSubject:[NSString stringWithFormat:@"OpenStack Log Entry: %@ %@", logEntry.requestMethod, logEntry.url]];            
+    [vc setSubject:[NSString stringWithFormat:@"Rackspace API Call: %@ %@", logEntry.requestMethod, logEntry.url]];            
     [vc setMessageBody:[NSString stringWithFormat:@"%@\n\n%@", [logEntry requestDescription], [logEntry responseDescription]] isHTML:NO];    
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         vc.modalPresentationStyle = UIModalPresentationPageSheet;

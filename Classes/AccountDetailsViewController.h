@@ -25,13 +25,13 @@
     
     BOOL tableShrunk;
     
-    OpenStackAccount *account;
-    ActivityIndicatorView *activityIndicatorView;
+    OpenStackAccount *account;    
 }
 
-@property (retain) Provider *provider;
-@property (retain) RootViewController *rootViewController;
-@property (retain) ProvidersViewController *providersViewController;
+@property (nonatomic, retain) Provider *provider;
+@property (nonatomic, retain) RootViewController *rootViewController;
+@property (nonatomic, retain) ProvidersViewController *providersViewController;
+@property (nonatomic, retain) ActivityIndicatorView *activityIndicatorView;
 
 - (void)saveButtonPressed:(id)sender;
 

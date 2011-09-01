@@ -28,6 +28,19 @@
     return self;
 }
 
+#pragma mark - JSON
+
++ (LoadBalancerUsage *)fromJSON:(NSDictionary *)dict {
+    LoadBalancerUsage *u = [[[LoadBalancerUsage alloc] init] autorelease];
+    u.identifier = [dict objectForKey:@"id"];
+    u.averageNumConnections = [[dict objectForKey:@"averageNumConnections"] doubleValue];
+    u.incomingTransfer = [[dict objectForKey:@"incomingTransfer"] longLongValue];
+    u.outgoingTransfer = [[dict objectForKey:@"outgoingTransfer"] longLongValue];
+    u.numVips = [[dict objectForKey:@"numVips"] intValue];
+    u.numPolls = [[dict objectForKey:@"numPolls"] intValue];
+    return u;
+}
+
 #pragma mark - Memory Management
 
 - (void)dealloc {

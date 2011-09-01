@@ -11,6 +11,7 @@
 #import "LoadBalancer.h"
 #import "AccountManager.h"
 #import "UIViewController+Conveniences.h"
+#import "LBLinkSharedVIPViewController.h"
 
 #define kPublic 0
 #define kServiceNet 1
@@ -64,7 +65,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Virtual IP Type";
-    self.tableView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)viewDidUnload
@@ -94,16 +94,15 @@
     [super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {    
+    NSString *endpoint = [self.account loadBalancerEndpointForRegion:self.loadBalancer.region];
+    return [self.account.loadBalancers objectForKey:endpoint] > 0 ? 3 : 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -142,7 +141,6 @@
     if (indexPath.row == 0) {
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         cell.backgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"grey-highlight.png"]] autorelease];
-        cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"purple-highlight.png"]] autorelease];
     } else {
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -201,12 +199,12 @@
         self.loadBalancer.virtualIPType = @"ServiceNet";
     } else if (indexPath.section == kSharedVirtualIP) {
         self.loadBalancer.virtualIPType = @"Shared Virtual IP";
+        LBLinkSharedVIPViewController *vc = [[LBLinkSharedVIPViewController alloc] initWithAccount:self.account loadBalancer:self.loadBalancer];
+        [self.navigationController pushViewController:vc animated:YES];
+        [vc release];
     }    
 
     [self.tableView reloadData];
-    //[NSTimer scheduledTimerWithTimeInterval:0.2 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
-    
-    //[self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

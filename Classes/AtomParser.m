@@ -32,9 +32,9 @@
 	
 	if ([elementName isEqualToString:@"feed"]) {
 		// we're getting started, so go ahead and alloc the array
-		self.feedItems = [[NSMutableArray alloc] initWithCapacity:1];
+		self.feedItems = [[[NSMutableArray alloc] initWithCapacity:1] autorelease];
 	} else if ([elementName isEqualToString:@"entry"]) {
-		self.feedItem = [[FeedItem alloc] init];
+		self.feedItem = [[[FeedItem alloc] init] autorelease];
 		parsingItem = YES;
 	} else if ([elementName isEqualToString:@"content"]) {
         self.feedItem.content = @"";

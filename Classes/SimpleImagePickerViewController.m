@@ -23,7 +23,7 @@
 
 - (void)groupImages {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:9];
-    stringKeys = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithObjects:@"ubuntu", @"redhat", @"gentoo", @"centos", @"debian", @"windows", @"arch", @"fedora", @"custom", nil]];
+    stringKeys = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithObjects:@"ubuntu", @"redhat", @"gentoo", @"centos", @"debian", @"windows", @"arch", @"fedora", kCustomImage, nil]];
     
     // sort in descending order, since the newest versions are likely the most popular choice
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:nil ascending:NO selector:@selector(compare:)];
@@ -33,7 +33,7 @@
         NSArray *keys = [self.account.images allKeys];
         for (int j = 0; j < [keys count]; j++) {
             Image *image = [self.account.images objectForKey:[keys objectAtIndex:j]];
-            if ([[image logoPrefix] isEqualToString:stringKey]) {
+            if ([image respondsToSelector:@selector(logoPrefix)] && [[image logoPrefix] isEqualToString:stringKey]) {
                 if (![dict objectForKey:stringKey]) {
                     [dict setObject:[[[NSMutableArray alloc] init] autorelease] forKey:stringKey];
                 }
@@ -85,11 +85,13 @@
     
     for (int i = 0; i < [stringKeys count]; i++) {
         NSString *stringKey = [stringKeys objectAtIndex:i];
-        if ([[image logoPrefix] isEqualToString:stringKey]) {
+        if ([image respondsToSelector:@selector(logoPrefix)] && [[image logoPrefix] isEqualToString:stringKey]) {
             [self.pickerView selectRow:i inComponent:0 animated:NO];
         }
     }
-    selectedFamily = [image logoPrefix];
+    if ([image respondsToSelector:@selector(logoPrefix)]) {
+        selectedFamily = [image logoPrefix];
+    }
     [self.tableView reloadData];
 }
 
@@ -135,7 +137,9 @@
     NSArray *currentImages = [images objectForKey:selectedFamily];
     Image *image = [currentImages objectAtIndex:indexPath.row];
     cell.textLabel.text = image.name;
-    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [image logoPrefix]]];
+    if ([image respondsToSelector:@selector(logoPrefix)]) {
+        cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [image logoPrefix]]];
+    }
     
     if (image.identifier == selectedImageId) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -214,8 +218,8 @@
         family = @"Fedora";
     } else {
         //filename = @"openstack_icon.png";
-        //[UIImage imageNamed:@"cloud-servers-icon.png"]
-        filename = @"cloud-servers-icon.png";
+        //[UIImage imageNamed:kCloudServersIcon]
+        filename = kCloudServersIcon;
         family = @"Other";
     }
     UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:filename]];

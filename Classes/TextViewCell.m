@@ -22,7 +22,7 @@
         //rect.size.width += 100;
         //rect.size.height += 5; // make slightly taller to not clip the bottom of text
         
-		self.textView = [[UITextView alloc] initWithFrame:rect];
+		self.textView = [[[UITextView alloc] initWithFrame:rect] autorelease];
         self.textView.editable = NO;
         self.textView.font = [UIFont fontWithName:@"Courier New" size:self.textView.font.pointSize];
         self.textView.userInteractionEnabled = NO;

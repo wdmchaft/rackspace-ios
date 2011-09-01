@@ -26,6 +26,7 @@
 #import "OpenStackAppDelegate.h"
 #import "LoadBalancersViewController.h"
 #import "Reachability.h"
+#import "Image.h"
 
 
 @implementation AccountHomeViewController
@@ -129,8 +130,7 @@
     totalRows = 0;
     computeRow = (self.account.serversURL && [self.account.serversURL host]) ? totalRows++ : -1;
     storageRow = (self.account.filesURL && [self.account.filesURL host]) ? totalRows++ : -1;
-    //loadBalancingRow = [self.account loadBalancerURLs] ? totalRows++ : -1;
-    loadBalancingRow = -1;
+    loadBalancingRow = [self.account loadBalancerURLs] ? totalRows++ : -1;
 
     if (self.account.provider.rssFeeds && [self.account.provider.rssFeeds count] > 0) {
         rssFeedsRow = totalRows++;
@@ -156,7 +156,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    [rootViewController.tableView deselectRowAtIndexPath:rootViewIndexPath animated:YES];
+//    [rootViewController.tableView deselectRowAtIndexPath:rootViewIndexPath animated:YES];
     [super viewWillDisappear:animated];
 }
 
@@ -198,26 +198,17 @@
     
     if (indexPath.row == computeRow) {
         cell.textLabel.text = [self.account.provider isRackspace] ? @"Cloud Servers" : @"Compute";
-        cell.detailTextLabel.text = [NSObject pluralizedStringForDictionary:account.servers noun:@"Server"];
-        cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:@"cloud-servers-icon.png"] : [UIImage imageNamed:@"openstack-icon.png"];
+        cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:kCloudServersIcon] : [UIImage imageNamed:@"openstack-icon.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else if (indexPath.row == storageRow) {
         cell.textLabel.text = [self.account.provider isRackspace] ? @"Cloud Files" : @"Object Storage";
-        if (self.account.containerCount == 1) {
-            //cell.detailTextLabel.text = [NSString stringWithFormat:@"1 Container, %@", [Container humanizedBytes:self.account.totalBytesUsed]];
-            cell.detailTextLabel.text = @"1 Container";
-        } else {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Containers", self.account.containerCount];
-        }
         cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:@"cloud-files-icon.png"] : [UIImage imageNamed:@"openstack-icon.png"];
     } else if (indexPath.row == loadBalancingRow) {
         cell.textLabel.text = @"Load Balancers";
-        cell.detailTextLabel.text = [NSObject pluralizedStringForArray:[account sortedLoadBalancers] noun:@"Load Balancer"];
         cell.imageView.image = [UIImage imageNamed:@"load-balancers-icon.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else if (indexPath.row == rssFeedsRow) {
         cell.textLabel.text = @"System Status";
-        cell.detailTextLabel.text = [NSObject pluralizedStringForArray:account.provider.rssFeeds noun:@"Feed"];
         cell.imageView.image = [UIImage imageNamed:@"rss-feeds-icon.png"];
     } else if (indexPath.row == contactRow) {
         cell.textLabel.text = @"Fanatical Support"; // @"Contact Information";
@@ -319,12 +310,7 @@
     } else if (indexPath.row == loadBalancingRow) {
         LoadBalancersViewController *vc = [[LoadBalancersViewController alloc] initWithNibName:@"LoadBalancersViewController" bundle:nil];
         vc.account = account;
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            [self.navigationController presentPrimaryViewController:vc];
-            shouldHidePopover = YES;
-        } else {
-            [self.navigationController pushViewController:vc animated:YES];
-        }
+        [self.navigationController pushViewController:vc animated:YES];
         [vc release];
     }
     

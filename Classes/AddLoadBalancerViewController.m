@@ -43,11 +43,11 @@
     self = [super initWithNibName:@"AddLoadBalancerNameViewController" bundle:nil];
     if (self) {
         self.account = a;
-        self.loadBalancer = [[LoadBalancer alloc] init];
+        self.loadBalancer = [[[LoadBalancer alloc] init] autorelease];
         self.loadBalancer.virtualIPType = @"Public";
-        self.loadBalancer.region = @"ORD";
+        self.loadBalancer.region = [self.account.loadBalancerRegions objectAtIndex:0];
         self.loadBalancer.algorithm = @"RANDOM";
-        self.loadBalancer.protocol = [[LoadBalancerProtocol alloc] init];
+        self.loadBalancer.protocol = [[[LoadBalancerProtocol alloc] init] autorelease];
         self.loadBalancer.protocol.name = @"HTTP";
         self.loadBalancer.protocol.port = 80;
     }
@@ -66,12 +66,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Add Load Balancer";
-    //[self addNextButton];
     [self addSaveButton];
     [self addCancelButton];
     
     algorithmNames = [[NSDictionary alloc] initWithObjectsAndKeys:
-                       @"Random",@"RANDOM", 
+                       @"Random", @"RANDOM", 
                        @"Round Robin", @"ROUND_ROBIN", 
                        @"Weighted Round Robin", @"WEIGHTED_ROUND_ROBIN", 
                        @"Least Connections", @"LEAST_CONNECTIONS", 
@@ -89,6 +88,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
@@ -113,6 +116,7 @@
         cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
         cell.textLabel.text = @"Name";
         cell.textField.delegate = self;
+        nameTextField = cell.textField;
     }
     return cell;
 }
@@ -163,10 +167,10 @@
         
         cell.textLabel.text = @"Nodes";
         
-        if ([self.loadBalancer.nodes count] + [self.loadBalancer.cloudServerNodes count] == 1) {
+        if ([self.loadBalancer.nodes count] == 1) {
             cell.detailTextLabel.text = @"1 Node";
         } else {
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Nodes", [self.loadBalancer.nodes count] + [self.loadBalancer.cloudServerNodes count]];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Nodes", [self.loadBalancer.nodes count]];
         }
 
         return cell;
@@ -184,6 +188,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kNodesSection) {
         LBNodesViewController *vc = [[LBNodesViewController alloc] initWithNibName:@"LBNodesViewController" bundle:nil];
+        vc.isNewLoadBalancer = YES;
         vc.account = self.account;
         vc.loadBalancer = self.loadBalancer;
         [self.navigationController pushViewController:vc animated:YES];
@@ -222,15 +227,28 @@
 
 #pragma mark - Button Handlers
 
-- (void)saveButtonPressed:(id)sender {
-    [self alert:@"Load Balancer JSON" message:[self.loadBalancer toJSON]];
-    /*
+- (void)saveLoadBalancer {
+    // TODO: show "saving" spinner and refresh list when dismissing
     [[self.account.manager createLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {
-        [self alert:@"Woot!" message:[request responseString]];
+        [self dismissModalViewControllerAnimated:YES];
     } failure:^(OpenStackRequest *request) {
-        [self alert:[NSString stringWithFormat:@"Fail! %i", [request responseStatusCode]] message:[request responseString]];
+        [self alert:@"There was a problem creating the load balancer." request:request];
     }];
-     */
+}
+
+- (void)saveButtonPressed:(id)sender {
+    if (self.loadBalancer.name && ![@"" isEqualToString:self.loadBalancer.name]) {        
+        if (self.loadBalancer.nodes && [self.loadBalancer.nodes count] > 0) {
+            [self saveLoadBalancer];
+        } else {
+            [self alert:nil message:@"Please add at least one node."];
+        }
+    } else {
+        [self alert:nil message:@"Please enter a name."];
+        [nameTextField becomeFirstResponder];
+    }
+    
+    
 }
 
 @end

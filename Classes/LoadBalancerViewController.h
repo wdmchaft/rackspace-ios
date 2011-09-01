@@ -9,28 +9,31 @@
 #import <UIKit/UIKit.h>
 #import "OpenStackViewController.h"
 
-@class LoadBalancer, NameAndStatusTitleView;
+@class LoadBalancer, LBTitleView, OpenStackAccount;
 
 @interface LoadBalancerViewController : OpenStackViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate, UIScrollViewDelegate> {
+    OpenStackAccount *account;
     LoadBalancer *loadBalancer;
-    IBOutlet UIView *segmentView;
-    NameAndStatusTitleView *titleView;
+    LBTitleView *titleView;
     CGPoint previousScrollPoint;
     NSInteger mode;
 
-    IBOutlet UIView *tableViewContainer;
-    IBOutlet UITableView *detailsTableView;
-    IBOutlet UITableView *nodesTableView;
+    IBOutlet UITableView *tableView;
+    
+    @private
+    NSMutableDictionary *nodes;
+    NSInteger totalSections;
+    NSInteger enabledSection;
+    NSInteger disabledSection;
+    NSInteger drainingSection;
 }
 
-@property (retain) LoadBalancer *loadBalancer;
-@property (retain) NameAndStatusTitleView *titleView;
-@property (retain) IBOutlet UIView *tableViewContainer;
-@property (retain) IBOutlet UITableView *detailsTableView;
-@property (retain) IBOutlet UITableView *nodesTableView;
+@property (nonatomic, retain) OpenStackAccount *account;
+@property (nonatomic, retain) LoadBalancer *loadBalancer;
+@property (nonatomic, retain) LBTitleView *titleView;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 
 -(id)initWithLoadBalancer:(LoadBalancer *)loadBalancer;
-- (IBAction)segmentedControlChanged:(UISegmentedControl *)segmentedControl;
 
 @end

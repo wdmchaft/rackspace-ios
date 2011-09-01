@@ -15,6 +15,7 @@
 #import "Server.h"
 #import "Archiver.h"
 #import "Provider.h"
+#import "Image.h"
 
 #import "APILogger.h"
 #import "SettingsPluginHandler.h"
@@ -115,19 +116,20 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         
         RSSFeedViewController *vc = [[RSSFeedViewController alloc] initWithNibName:@"RSSFeedViewController" bundle:nil];
-        vc.feed = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Cloud Servers Status", @"feed://status.rackspacecloud.com/cloudservers/rss.xml", @"cloud-servers-icon.png", nil] forKeys:[NSArray arrayWithObjects:@"name", @"url", @"logo", nil]];
+        vc.feed = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Cloud Servers Status", @"feed://status.rackspacecloud.com/cloudservers/rss.xml", kCloudServersIcon, nil] forKeys:[NSArray arrayWithObjects:@"name", @"url", @"logo", nil]];
         
-        masterNavigationController = [[[UINavigationController alloc] initWithRootViewController:vc] autorelease];
-        masterNavigationController.navigationBar.tintColor = navigationController.navigationBar.tintColor;
-        masterNavigationController.navigationBar.translucent = navigationController.navigationBar.translucent;
-        masterNavigationController.navigationBar.opaque = navigationController.navigationBar.opaque;
-        masterNavigationController.navigationBar.barStyle = navigationController.navigationBar.barStyle;
+        self.masterNavigationController = [[[UINavigationController alloc] initWithRootViewController:vc] autorelease];
+        self.masterNavigationController.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
+        self.masterNavigationController.navigationBar.translucent = self.navigationController.navigationBar.translucent;
+        self.masterNavigationController.navigationBar.opaque = self.navigationController.navigationBar.opaque;
+        self.masterNavigationController.navigationBar.barStyle = self.navigationController.navigationBar.barStyle;
         
-        splitViewController.delegate = [navigationController.viewControllers objectAtIndex:0];
-        splitViewController.viewControllers = [NSArray arrayWithObjects:navigationController, masterNavigationController, nil];
+        self.splitViewController.delegate = [navigationController.viewControllers objectAtIndex:0];
+        self.splitViewController.viewControllers = [NSArray arrayWithObjects:self.navigationController, self.masterNavigationController, nil];
         
         [window addSubview:splitViewController.view];
         [window makeKeyAndVisible];
+        [vc release];
     } else {
         [window addSubview:navigationController.view];
         [window makeKeyAndVisible];
@@ -145,20 +147,24 @@
     return YES;
 }
 
-- (void) setupDependencies{
-    
+- (void) setupDependencies {
 #if TARGET_OS_EMBEDDED
     
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Constants" ofType:@"plist"];
     
-    if([[NSFileManager defaultManager] fileExistsAtPath:path]){
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]){
         
         NSDictionary *constants = [NSDictionary dictionaryWithContentsOfFile:path];
         
         [HTNotifier startNotifierWithAPIKey:[constants objectForKey:@"HOPTOAD_ACCOUNT_KEY"]
                             environmentName:HTNotifierAppStoreEnvironment];
         [[GANTracker sharedTracker] startTrackerWithAccountID:[constants objectForKey:@"ANALYTICS_ACCOUNT_KEY"] dispatchPeriod:10 delegate:nil];
-//        DispatchAnalytics();
+        
+        // track the app version
+        NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+        [[GANTracker sharedTracker] setCustomVariableAtIndex:1 name:@"app_version" value:version withError:nil];
+        
+        DispatchAnalytics();
 
     } else {
         [HTNotifier startNotifierWithAPIKey:@"HOPTOAD_ACCOUNT_KEY" environmentName:HTNotifierAppStoreEnvironment];
@@ -199,7 +205,7 @@
     [defaults synchronize];
     
     [self showPasscodeLock];
-    DispatchAnalytics();
+    //DispatchAnalytics();
 }
 
 
@@ -210,10 +216,10 @@
      */
     // TODO: perhaps this is a good place to release all the stuff allocated in
     // +(void)initialize methods all over the place
-    [[APILogger loggerEntries] release];
-    [[SettingsPluginHandler plugins] release];
-    [[AddServerPluginHandler plugins] release];
-    [[OpenStackAccount accounts] release];
+//    [[APILogger loggerEntries] release];
+//    [[SettingsPluginHandler plugins] release];
+//    [[AddServerPluginHandler plugins] release];
+//    [[OpenStackAccount accounts] release];
 }
 
 - (void) navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{

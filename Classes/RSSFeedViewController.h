@@ -11,13 +11,11 @@
 @class ActivityIndicatorView;
 
 @interface RSSFeedViewController : UITableViewController {
-    NSDictionary *feed;
-    ActivityIndicatorView *activityIndicatorView;
-    NSMutableArray *feedItems;
     BOOL requestFailed;
 }
 
-@property (retain) NSDictionary *feed;
-@property (retain) NSMutableArray *feedItems;
+@property (nonatomic, retain) NSDictionary *feed;
+@property (nonatomic, retain) NSMutableArray *feedItems;
+@property (nonatomic, retain) ActivityIndicatorView *activityIndicatorView;
 
 @end

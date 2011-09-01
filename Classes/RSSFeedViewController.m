@@ -18,7 +18,7 @@
 
 @implementation RSSFeedViewController
 
-@synthesize feed, feedItems;
+@synthesize feed, feedItems, activityIndicatorView;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
@@ -53,8 +53,8 @@
     self.navigationItem.title = [feed objectForKey:@"name"];
     
     NSString *activityMessage = @"Loading...";
-    activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
-    [activityIndicatorView addToView:self.view scrollOffset:self.tableView.contentOffset.y];    
+    self.activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
+    [self.activityIndicatorView addToView:self.view scrollOffset:self.tableView.contentOffset.y];    
     
     NSURL *url = [NSURL URLWithString:[feed objectForKey:@"url"]];
     
@@ -66,7 +66,6 @@
             RSSParser *rssParser = [[RSSParser alloc] init];
             xmlParser.delegate = rssParser;
             if ([xmlParser parse]) {
-                [self.feedItems release];
                 self.feedItems = rssParser.feedItems;
             }            
             [rssParser release];
@@ -75,14 +74,14 @@
         } else {
             requestFailed = YES;
             self.tableView.scrollEnabled = NO;
-        }        
-        [activityIndicatorView removeFromSuperviewAndRelease];
+        }  
+        [self.activityIndicatorView removeFromSuperview];
         [self.tableView reloadData];
     }];
     [request setFailedBlock:^{
         requestFailed = YES;
         self.tableView.scrollEnabled = NO;
-        [activityIndicatorView removeFromSuperviewAndRelease];
+        [self.activityIndicatorView removeFromSuperview];
         [self.tableView reloadData];
     }];    
     [request startAsynchronous];
@@ -231,12 +230,12 @@
     }    
 }
 
-#pragma mark -
-#pragma mark Memory management
+#pragma mark - Memory management
 
 - (void)dealloc {
     [feed release];
     [feedItems release];
+    [activityIndicatorView release];
     [super dealloc];
 }
 

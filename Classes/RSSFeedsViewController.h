@@ -16,7 +16,7 @@
     BOOL comingFromAccountHome;
 }
 
-@property (retain) OpenStackAccount *account;
-@property (assign) BOOL comingFromAccountHome;
+@property (nonatomic, retain) OpenStackAccount *account;
+@property (nonatomic, assign) BOOL comingFromAccountHome;
 
 @end

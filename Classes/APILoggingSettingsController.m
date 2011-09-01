@@ -139,7 +139,7 @@
     } else if (indexPath.section == kEraseLogs) {
         [APILogger eraseAllLogs];
     }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.settingsViewController.tableView reloadData];
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(reselectSettingsTableCell) userInfo:nil repeats:NO];
 }

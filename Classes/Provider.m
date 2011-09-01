@@ -98,6 +98,15 @@ static NSArray *providers = nil;
     return matches > 0;
 }
 
+- (BOOL)isRackspaceUS {
+    return [self.authEndpointURL.host isEqualToString:@"auth.api.rackspacecloud.com"];
+}
+
+- (BOOL)isRackspaceUK {
+    return [self.authEndpointURL.host isEqualToString:@"lon.auth.api.rackspacecloud.com"];
+}
+
+
 #pragma mark -
 #pragma mark Memory Management
 

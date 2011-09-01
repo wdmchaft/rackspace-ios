@@ -40,9 +40,9 @@
 	
 	if ([elementName isEqualToString:@"rss"]) {
 		// we're getting started, so go ahead and alloc the array
-		self.feedItems = [[NSMutableArray alloc] initWithCapacity:1];
+		self.feedItems = [NSMutableArray arrayWithCapacity:1];
 	} else if ([elementName isEqualToString:@"item"]) {
-		self.feedItem = [[FeedItem alloc] init];
+		self.feedItem = [[[FeedItem alloc] init] autorelease];
 		parsingItem = YES;
 	}
 }

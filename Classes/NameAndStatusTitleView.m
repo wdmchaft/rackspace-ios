@@ -113,7 +113,7 @@ static UIFont *statusFont = nil;
             [self addSubview:logoView];    
         }
 
-        self.progressView = [[DDProgressView alloc] initWithFrame:CGRectMake(70 + logoXOffset + iPadXOffset, 37, 100, 20)];
+        self.progressView = [[[DDProgressView alloc] initWithFrame:CGRectMake(70 + logoXOffset + iPadXOffset, 37, 100, 20)] autorelease];
         self.progressView.progress = 0.0;
         [self.progressView.layer setShadowColor:[[UIColor blackColor] CGColor]];        
         [self.progressView.layer setShadowRadius:1.0f];
@@ -190,8 +190,6 @@ static UIFont *statusFont = nil;
             [self.statusTint.layer addAnimation:animation forKey:@"animateOpacity"];
         }
     } else {
-        
-        
         [UIView animateWithDuration:1 animations:^{
             if ([@"ACTIVE" isEqualToString:[self.entity status]]) {
                 [self.statusTint.layer removeAnimationForKey:@"animateOpacity"];

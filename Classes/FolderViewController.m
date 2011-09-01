@@ -84,7 +84,7 @@
     [super viewWillDisappear:animated];
     
     if (!(folder.name && ![@"" isEqualToString:folder.name])) {
-        [self.containersViewController.tableView deselectRowAtIndexPath:self.selectedContainerIndexPath animated:YES];
+//        [self.containersViewController.tableView deselectRowAtIndexPath:self.selectedContainerIndexPath animated:YES];
     }
 }
 
@@ -159,11 +159,15 @@
             
             if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
                 UIDocumentInteractionController *udic = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:filePath]];
-                cell.imageView.image = [udic.icons objectAtIndex:0];
+                if ([udic.icons count] > 0) {
+                    cell.imageView.image = [udic.icons objectAtIndex:0];                    
+                }
             } else {
                 NSString *emptyPath = [[NSBundle mainBundle] pathForResource:@"empty-file" ofType:@""];
                 UIDocumentInteractionController *udic = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:emptyPath]];
-                cell.imageView.image = [udic.icons objectAtIndex:0]; //[UIImage imageNamed:@"file-icon.png"];        
+                if ([udic.icons count] > 0) {
+                    cell.imageView.image = [udic.icons objectAtIndex:0]; //[UIImage imageNamed:@"file-icon.png"];        
+                }
             }
             
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", [item humanizedBytes], [item contentType]];

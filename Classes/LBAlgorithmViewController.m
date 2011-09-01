@@ -8,6 +8,8 @@
 
 #import "LBAlgorithmViewController.h"
 #import "LoadBalancer.h"
+#import "UIViewController+Conveniences.h"
+#import "LBAlgorithmAnimationViewController.h"
 
 #define kRandom 0
 #define kRoundRobin 1
@@ -39,7 +41,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Algorithm";
-    self.tableView.backgroundColor = [UIColor whiteColor];
     descriptions = [[NSDictionary alloc] initWithObjectsAndKeys:
                         @"Directs traffic to a randomly selected node.", @"Random",
                         @"Directs traffic in a circular pattern to each node of a load balancer in succession.", @"Round Robin",
@@ -55,7 +56,15 @@
                        @"LEAST_CONNECTIONS", @"Least Connections",
                        @"WEIGHTED_LEAST_CONNECTIONS", @"Weighted Least Connections",
                        nil];
+}
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
@@ -102,7 +111,6 @@
     
     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     cell.backgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"grey-highlight.png"]] autorelease];
-    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"purple-highlight.png"]] autorelease];
     
     switch (indexPath.section) {
         case kRandom:
@@ -144,6 +152,14 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
         cell.textLabel.backgroundColor = [UIColor clearColor];
         cell.detailTextLabel.numberOfLines = 0;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(0, 0, 22, 22);
+        [button setImage:[UIImage imageNamed:@"blue-camera.png"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(cameraButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        cell.accessoryView = button;
+         
     }
     
     cell.textLabel.text = @"";
@@ -202,6 +218,40 @@
             break;
     }
     [self.tableView reloadData];
+}
+
+#pragma mark - Button Handlers
+
+- (void)cameraButtonPressed:(UIButton *)button {
+    
+    UITableViewCell *cell = (UITableViewCell *) [button superview];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    NSString *algorithm = @"";
+    
+    switch (indexPath.section) {
+        case kRandom:
+            algorithm = @"Random";
+            break;
+        case kRoundRobin:
+            algorithm = @"Round Robin";
+            break;
+        case kWeightedRoundRobin:
+            algorithm = @"Weighted Round Robin";
+            break;
+        case kLeastConnections:
+            algorithm = @"Least Connections";
+            break;
+        case kWeightedLeastConnections:
+            algorithm = @"Weighted Least Connections";
+            break;
+        default:
+            break;
+    }
+
+    LBAlgorithmAnimationViewController *vc = [[LBAlgorithmAnimationViewController alloc] initWithAlgorithm:algorithm];
+    vc.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self.navigationController presentModalViewController:vc animated:YES];
+    [vc release];
 }
 
 @end

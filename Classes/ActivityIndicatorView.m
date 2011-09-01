@@ -13,7 +13,7 @@
 
 @implementation ActivityIndicatorView
 
-@synthesize progressView;
+@synthesize progressView, spinner;
 
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
@@ -37,7 +37,7 @@
 }
 
 + (void)addToView:(UIView *)view text:(NSString *)text {
-    UIActivityIndicatorView *activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:text] text:text];
+    ActivityIndicatorView *activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:text] text:text];
     activityIndicatorView.alpha = 0.0;
     [view addSubview:activityIndicatorView];
     
@@ -77,7 +77,17 @@
     [self release];
 }
 
+- (void)removeFromSuperview {
+    [self.spinner stopAnimating];
+    self.superview.userInteractionEnabled = YES;
+    [UIView beginAnimations:@"" context:nil];
+    [UIView setAnimationDuration:kFadeTime];
+    self.alpha = 0.0;
+    [UIView commitAnimations];
+}
+
 - (void)removeFromSuperviewAndRelease {
+    [self.spinner stopAnimating];
     [UIView beginAnimations:@"" context:nil];
     [UIView setAnimationDuration:kFadeTime];
     [UIView setAnimationDelegate:self];
@@ -100,11 +110,10 @@
         [self addSubview:contentView];
         [self sendSubviewToBack:contentView];
         
-        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:kSpinnerStyle];
-        spinner.frame = CGRectMake(19.0, 10.0, 20.0, 20.0);
-        [spinner startAnimating];
-        [self addSubview:spinner];
-        [spinner release];
+        self.spinner = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:kSpinnerStyle] autorelease];
+        self.spinner.frame = CGRectMake(19.0, 10.0, 20.0, 20.0);
+        [self.spinner startAnimating];
+        [self addSubview:self.spinner];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 5.0, contentFrame.size.width, 30.0)];
         label.textColor = [UIColor whiteColor];
@@ -131,6 +140,7 @@
 
 - (void)dealloc {
     [progressView release];
+    [spinner release];
     [super dealloc];
 }
 

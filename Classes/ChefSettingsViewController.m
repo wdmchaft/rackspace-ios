@@ -214,7 +214,7 @@
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:kChefEndpointConfiguration]] withRowAnimation:UITableViewRowAnimationLeft];
             [NSTimer scheduledTimerWithTimeInterval:0.3 target:self.tableView selector:@selector(reloadData) userInfo:nil repeats:NO];
         }
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+//        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         
     }
 }

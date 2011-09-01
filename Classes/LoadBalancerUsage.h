@@ -20,13 +20,15 @@
     NSDate *endTime;
 }
 
-@property (retain) NSString *identifier;
-@property (assign) double averageNumConnections;
-@property (assign) unsigned long long incomingTransfer;
-@property (assign) unsigned long long outgoingTransfer;
-@property (assign) NSInteger numVips;
-@property (assign) NSInteger numPolls;
-@property (retain) NSDate *startTime;
-@property (retain) NSDate *endTime;
+@property (nonatomic, retain) NSString *identifier;
+@property (nonatomic, assign) double averageNumConnections;
+@property (nonatomic, assign) unsigned long long incomingTransfer;
+@property (nonatomic, assign) unsigned long long outgoingTransfer;
+@property (nonatomic, assign) NSInteger numVips;
+@property (nonatomic, assign) NSInteger numPolls;
+@property (nonatomic, retain) NSDate *startTime;
+@property (nonatomic, retain) NSDate *endTime;
+
++ (LoadBalancerUsage *)fromJSON:(NSDictionary *)dict;
 
 @end

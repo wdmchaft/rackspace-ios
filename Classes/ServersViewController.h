@@ -27,10 +27,10 @@
     BOOL serversLoaded;
 }
 
-@property (retain) IBOutlet UITableView *tableView;
-@property (retain) OpenStackAccount *account;
-@property (retain) AccountHomeViewController *accountHomeViewController;
-@property (assign) BOOL comingFromAccountHome;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) OpenStackAccount *account;
+@property (nonatomic, retain) AccountHomeViewController *accountHomeViewController;
+@property (nonatomic, assign) BOOL comingFromAccountHome;
 
 - (void)refreshButtonPressed:(id)sender;
 

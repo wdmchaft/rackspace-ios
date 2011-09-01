@@ -8,13 +8,13 @@
 
 #import "ComputeModel.h"
 
-@interface Flavor : ComputeModel <NSCoding> {
+@interface Flavor : ComputeModel <NSCoding, NSCopying> {
     NSInteger ram;
     NSInteger disk;
 }
 
-@property (assign) NSInteger ram;
-@property (assign) NSInteger disk;
+@property (nonatomic, assign) NSInteger ram;
+@property (nonatomic, assign) NSInteger disk;
 
 + (Flavor *)fromJSON:(NSDictionary *)dict;
 

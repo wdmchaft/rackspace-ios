@@ -14,22 +14,30 @@
 
 @synthesize ram, disk;
 
-#pragma mark -
-#pragma mark Serialization
+#pragma mark - Serialization
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [self autoEncodeWithCoder:coder];
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
-    if (self = [super init]) {
+    self = [super init];
+    if (self) {
         [self autoDecode:coder];
     }
     return self;
 }
 
-#pragma mark -
-#pragma mark JSON
+- (id)copyWithZone:(NSZone *)zone {
+    Flavor *copy = [[Flavor allocWithZone:zone] init];
+    copy.identifier = self.identifier;
+    copy.ram = self.ram;
+    copy.disk = self.disk;
+    return copy;
+}
+
+
+#pragma mark - JSON
 
 + (Flavor *)fromJSON:(NSDictionary *)dict {
     Flavor *flavor = [[[Flavor alloc] initWithJSONDict:dict] autorelease];
@@ -37,8 +45,7 @@
     return flavor;
 }
 
-#pragma mark -
-#pragma mark Comparison
+#pragma mark - Comparison
 
 // flavors should be sorted by RAM instead of name
 - (NSComparisonResult)compare:(Flavor *)aFlavor {

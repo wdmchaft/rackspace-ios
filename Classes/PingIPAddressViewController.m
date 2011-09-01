@@ -26,7 +26,7 @@
 
 - (void)cancelButtonPressed:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
-    [serverViewController.tableView deselectRowAtIndexPath:serverViewController.selectedIPAddressIndexPath animated:YES];
+//    [serverViewController.tableView deselectRowAtIndexPath:serverViewController.selectedIPAddressIndexPath animated:YES];
 }
 
 - (void)refreshButtonPressed:(id)sender {

@@ -28,7 +28,7 @@ static NSMutableDictionary *timers = nil;
 @synthesize uuid, provider, username, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
             lastUsedFlavorId, lastUsedImageId,
             containerCount, totalBytesUsed, containers, hasBeenRefreshed, flaggedForDelete,
-            loadBalancers, lbProtocols;
+            loadBalancers, lbProtocols, serversByPublicIP;
 
 + (void)initialize {
     accounts = [Archiver retrieve:@"accounts"];
@@ -37,6 +37,18 @@ static NSMutableDictionary *timers = nil;
         [Archiver persist:accounts key:@"accounts"];
     }
     timers = [[NSMutableDictionary alloc] initWithCapacity:[accounts count]];
+}
+
+- (NSString *)serversKey {
+    return [NSString stringWithFormat:@"%@-servers", self.uuid];
+}
+
+- (NSMutableDictionary *)servers {
+    if (!serversUnarchived) {
+        servers = [Archiver retrieve:[self serversKey]];
+        serversUnarchived = YES;
+    }
+    return servers;
 }
 
 // no sense wasting space by storing sorted arrays, so override the getters to be sure 
@@ -72,9 +84,11 @@ static NSMutableDictionary *timers = nil;
             lbs = nil;
             [self persist];
         } else {
-            NSLog(@"lbs for %@: %@", endpoint, lbs);
             for (NSString *key in lbs) {
-                [allLoadBalancers addObject:[lbs objectForKey:key]];
+                LoadBalancer *lb = [lbs objectForKey:key];
+                if (![lb.status isEqualToString:@"PENDING_DELETE"]) {
+                    [allLoadBalancers addObject:lb];
+                }
             }
         }
         
@@ -82,6 +96,25 @@ static NSMutableDictionary *timers = nil;
     NSArray *sortedArray = [NSArray arrayWithArray:[allLoadBalancers sortedArrayUsingSelector:@selector(compare:)]];
     [allLoadBalancers release];
     return sortedArray;
+}
+
+- (void)setServers:(NSMutableDictionary *)s {
+    if ([servers isEqual:s]) {
+        return;
+    } else {
+        [servers release];
+        servers = [s retain];
+        
+        self.serversByPublicIP = [NSMutableDictionary dictionaryWithCapacity:[self.servers count]];
+        for (Server *server in [self.servers allValues]) {
+            NSArray *ips = [server.addresses objectForKey:@"public"];
+            for (NSString *ip in ips) {
+                [self.serversByPublicIP setObject:server forKey:ip];
+            }
+        }
+        
+        [Archiver persist:servers key:[self serversKey]];
+    }
 }
 
 #pragma mark -
@@ -103,6 +136,7 @@ static NSMutableDictionary *timers = nil;
         [self.manager getImages];
         [self.manager getFlavors];
         [self.manager getLimits];
+        [self.manager getServers];
         
         // handle success; don't worry about failure
         getLimitsObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getLimitsSucceeded" object:self
@@ -137,9 +171,16 @@ static NSMutableDictionary *timers = nil;
     copy.username = self.username;
     copy.apiKey = self.apiKey;
     copy.authToken = self.authToken;
+    
     copy.images = [[NSMutableDictionary alloc] initWithDictionary:self.images];
     copy.flavors = [[NSDictionary alloc] initWithDictionary:self.flavors];
+    /*
     copy.servers = [[NSMutableDictionary alloc] initWithDictionary:self.servers];
+    copy.containers = self.containers;
+    copy.loadBalancers = self.loadBalancers;
+    copy.serversByPublicIP = self.serversByPublicIP;
+    */
+    
     copy.serversURL = self.serversURL;
     copy.filesURL = self.filesURL;
     copy.cdnURL = self.cdnURL;
@@ -148,8 +189,6 @@ static NSMutableDictionary *timers = nil;
     copy.lastUsedImageId = self.lastUsedImageId;
     copy.containerCount = self.containerCount;
     copy.totalBytesUsed = self.totalBytesUsed;
-    copy.containers = self.containers;
-    copy.loadBalancers = self.loadBalancers;
     manager = [[AccountManager alloc] init];
     manager.account = copy;
     return copy;
@@ -159,10 +198,6 @@ static NSMutableDictionary *timers = nil;
     [coder encodeObject:uuid forKey:@"uuid"];
     [coder encodeObject:provider forKey:@"provider"];
     [coder encodeObject:username forKey:@"username"];
-
-    [coder encodeObject:images forKey:@"images"];
-    [coder encodeObject:flavors forKey:@"flavors"];
-    [coder encodeObject:servers forKey:@"servers"];
     
     [coder encodeObject:serversURL forKey:@"serversURL"];
     [coder encodeObject:filesURL forKey:@"filesURL"];
@@ -173,24 +208,51 @@ static NSMutableDictionary *timers = nil;
     [coder encodeInt:containerCount forKey:@"containerCount"];
     [coder encodeInt:totalBytesUsed forKey:@"totalBytesUsed"];
     
+    [coder encodeObject:images forKey:@"images"];
+    [coder encodeObject:flavors forKey:@"flavors"];
+    /*
+    [coder encodeObject:servers forKey:@"servers"];
+    [coder encodeObject:serversByPublicIP forKey:@"serversByPublicIP"];
     [coder encodeObject:containers forKey:@"containers"];
     [coder encodeObject:loadBalancers forKey:@"loadBalancers"];
+    */
+}
+
+- (id)decode:(NSCoder *)coder key:(NSString *)key {    
+    @try {
+        return [[coder decodeObjectForKey:key] retain];
+    }
+    @catch (NSException *exception) {
+        return nil;
+    }
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
     if ((self = [super init])) {
-        uuid = [[coder decodeObjectForKey:@"uuid"] retain];
-        provider = [[coder decodeObjectForKey:@"provider"] retain];
-        username = [[coder decodeObjectForKey:@"username"] retain];
+        uuid = [self decode:coder key:@"uuid"];
+        provider = [self decode:coder key:@"provider"];
+        username = [self decode:coder key:@"username"];
+
+        images = [self decode:coder key:@"images"];
         
-        images = [[coder decodeObjectForKey:@"images"] retain];
-        flavors = [[coder decodeObjectForKey:@"flavors"] retain];
-        servers = [[coder decodeObjectForKey:@"servers"] retain];
+        // make sure images stored aren't corrupt
+        if ([images count] > 0) {
+            for (id obj in [images allValues]) {
+                if (![obj isKindOfClass:[Image class]]) {
+                    images = nil;
+                    break;
+                }
+            }
+        }        
         
-        serversURL = [[coder decodeObjectForKey:@"serversURL"] retain];
-        filesURL = [[coder decodeObjectForKey:@"filesURL"] retain];
-        cdnURL = [[coder decodeObjectForKey:@"cdnURL"] retain];
-        rateLimits = [[coder decodeObjectForKey:@"rateLimits"] retain];
+        flavors = [self decode:coder key:@"flavors"];
+        servers = [self decode:coder key:@"servers"];
+        serversByPublicIP = [self decode:coder key:@"serversByPublicIP"];
+        
+        serversURL = [self decode:coder key:@"serversURL"];
+        filesURL = [self decode:coder key:@"filesURL"];
+        cdnURL = [self decode:coder key:@"cdnURL"];
+        rateLimits = [self decode:coder key:@"rateLimits"];
 
         [self loadTimer];
         
@@ -200,8 +262,8 @@ static NSMutableDictionary *timers = nil;
         containerCount = [coder decodeIntForKey:@"containerCount"];
         //totalBytesUsed = [coder decodeIntForKey:@"totalBytesUsed"];
         
-        containers = [[coder decodeObjectForKey:@"containers"] retain];
-        loadBalancers = [[coder decodeObjectForKey:@"loadBalancers"] retain];
+        containers = [self decode:coder key:@"containers"];
+        loadBalancers = [self decode:coder key:@"loadBalancers"];
 
         manager = [[AccountManager alloc] init];
         manager.account = self;
@@ -303,18 +365,55 @@ static NSMutableDictionary *timers = nil;
     return accountNumber;
 }
 
+- (NSString *)loadBalancerEndpointForRegion:(NSString *)region {
+    NSString *accountNumber = [self accountNumber];
+    if ([region isEqualToString:@"DFW"]) {
+        return [NSString stringWithFormat:@"https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+    } else if ([region isEqualToString:@"ORD"]) {
+        return [NSString stringWithFormat:@"https://ord.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+    } else {
+        return @"";
+    }
+}
+
+- (NSString *)loadBalancerRegionForEndpoint:(NSString *)endpoint {
+    NSString *component = [[endpoint componentsSeparatedByString:@"."] objectAtIndex:0];
+    component = [[component componentsSeparatedByString:@"//"] objectAtIndex:1];
+    return [component uppercaseString];
+}
+
 - (NSArray *)loadBalancerURLs {
     NSString *accountNumber = [self accountNumber];
     
-    if (accountNumber) {
-        NSString *ord = [NSString stringWithFormat:@"https://ord.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
-        NSString *dfw = [NSString stringWithFormat:@"https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
-
-        NSLog(@"ord: %@", ord);
-        
-        return [NSArray arrayWithObjects:ord, dfw, nil];
+    if (accountNumber && [self.provider isRackspace]) {        
+        if ([self.provider isRackspaceUS]) {
+            NSString *ord = [NSString stringWithFormat:@"https://ord.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+            NSString *dfw = [NSString stringWithFormat:@"https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+            return [NSArray arrayWithObjects:ord, dfw, nil];
+        } else if ([self.provider isRackspaceUK]) {
+            NSString *lon = [NSString stringWithFormat:@"https://lon.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+            return [NSArray arrayWithObjects:lon, nil];
+        } else {
+            return nil;
+        }
     } else {
         return nil;
+    }
+}
+
+- (NSArray *)loadBalancerRegions {
+    NSString *accountNumber = [self accountNumber];
+    
+    if (accountNumber && [self.provider isRackspace]) {        
+        if ([self.provider isRackspaceUS]) {
+            return [NSArray arrayWithObjects:@"ORD", @"DFW", nil];
+        } else if ([self.provider isRackspaceUK]) {
+            return [NSArray arrayWithObjects:@"LON", nil];
+        } else {
+            return [NSArray array];
+        }
+    } else {
+        return [NSArray array];
     }
 }
 
@@ -340,6 +439,7 @@ static NSMutableDictionary *timers = nil;
     [containers release];
     [loadBalancers release];
     [lbProtocols release];
+    [serversByPublicIP release];
     
     [super dealloc];
 }

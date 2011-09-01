@@ -14,6 +14,7 @@
 #import "APICallback.h"
 #import "RSTextFieldCell.h"
 #import "LoadBalancerProtocol.h"
+#import "ActivityIndicatorView.h"
 
 #define kPort 0
 #define kProtocols 1
@@ -46,17 +47,27 @@
     
     // default is HTTP on port 80
     if (!self.loadBalancer.protocol) {
-        self.loadBalancer.protocol = [[LoadBalancerProtocol alloc] init];
+        self.loadBalancer.protocol = [[[LoadBalancerProtocol alloc] init] autorelease];
         self.loadBalancer.protocol.name = @"HTTP";
         self.loadBalancer.protocol.port = 80;
     }
+
+    ActivityIndicatorView *activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Loading..."] text:@"Loading..."];
+
+    [activityIndicatorView addToView:self.view];
     
     NSString *endpoint = [account.loadBalancerURLs objectAtIndex:0];
-    [[self.account.manager getLoadBalancerProtocols:endpoint] success:^(OpenStackRequest *request){
+    [[self.account.manager getLoadBalancerProtocols:endpoint] success:^(OpenStackRequest *request) {
+        [activityIndicatorView removeFromSuperviewAndRelease];
         [self.tableView reloadData];
     } failure:^(OpenStackRequest *request){
+        [activityIndicatorView removeFromSuperviewAndRelease];
         [self alert:@"Could not load Load Balancer protocols." request:request];
     }];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source

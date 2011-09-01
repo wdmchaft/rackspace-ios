@@ -194,6 +194,7 @@
         vc.selectedContainerIndexPath = indexPath;
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {

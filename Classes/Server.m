@@ -38,6 +38,18 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    Server *copy = [[Server allocWithZone:zone] init];
+    copy.identifier = self.identifier;
+    copy.imageId = self.imageId;
+    copy.flavorId = self.flavorId;
+    copy.status = self.status;
+    copy.addresses = self.addresses;
+    copy.image = self.image;
+    copy.flavor = self.flavor;
+    return copy;
+}
+
 #pragma mark -
 #pragma mark JSON
 
