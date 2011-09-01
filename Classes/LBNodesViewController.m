@@ -198,8 +198,8 @@
             Server *server = [[cloudServerNodes objectAtIndex:indexPath.row] server];
             cell.textLabel.text = server.name;
             cell.detailTextLabel.text = server.flavor.name;
-            if ([server.image respondsToSelector:@selector(logoPrefix)] && [[server.image logoPrefix] isEqualToString:@"custom"]) {
-                cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
+            if ([server.image respondsToSelector:@selector(logoPrefix)] && [[server.image logoPrefix] isEqualToString:kCustomImage]) {
+                cell.imageView.image = [UIImage imageNamed:kCloudServersIcon];
             } else {
                 if ([server.image respondsToSelector:@selector(logoPrefix)]) {
                     cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];

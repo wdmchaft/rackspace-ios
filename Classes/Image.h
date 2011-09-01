@@ -8,6 +8,8 @@
 
 #import "ComputeModel.h"
 
+#define kCustomImage @"custom"
+#define kCloudServersIcon @"cloud-servers-icon.png"
 
 @interface Image : ComputeModel <NSCoding, NSCopying> {
     NSString *status;

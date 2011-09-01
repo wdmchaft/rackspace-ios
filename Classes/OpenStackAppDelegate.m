@@ -15,6 +15,7 @@
 #import "Server.h"
 #import "Archiver.h"
 #import "Provider.h"
+#import "Image.h"
 
 #import "APILogger.h"
 #import "SettingsPluginHandler.h"
@@ -115,7 +116,7 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         
         RSSFeedViewController *vc = [[RSSFeedViewController alloc] initWithNibName:@"RSSFeedViewController" bundle:nil];
-        vc.feed = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Cloud Servers Status", @"feed://status.rackspacecloud.com/cloudservers/rss.xml", @"cloud-servers-icon.png", nil] forKeys:[NSArray arrayWithObjects:@"name", @"url", @"logo", nil]];
+        vc.feed = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Cloud Servers Status", @"feed://status.rackspacecloud.com/cloudservers/rss.xml", kCloudServersIcon, nil] forKeys:[NSArray arrayWithObjects:@"name", @"url", @"logo", nil]];
         
         self.masterNavigationController = [[[UINavigationController alloc] initWithRootViewController:vc] autorelease];
         self.masterNavigationController.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;

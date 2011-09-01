@@ -231,7 +231,7 @@
         family = @"Fedora";
     } else {
         //filename = @"openstack_icon.png";
-        filename = @"cloud-servers-icon.png";
+        filename = kCloudServersIcon;
         family = @"Other";
     }
     

@@ -97,7 +97,7 @@
 	} else if ([name hasPrefix:@"Windows"]) {
 		return @"windows";
 	} else {
-        return @"custom";
+        return kCustomImage;
 	}
 }
 

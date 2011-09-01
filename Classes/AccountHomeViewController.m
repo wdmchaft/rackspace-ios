@@ -26,6 +26,7 @@
 #import "OpenStackAppDelegate.h"
 #import "LoadBalancersViewController.h"
 #import "Reachability.h"
+#import "Image.h"
 
 
 @implementation AccountHomeViewController
@@ -197,7 +198,7 @@
     
     if (indexPath.row == computeRow) {
         cell.textLabel.text = [self.account.provider isRackspace] ? @"Cloud Servers" : @"Compute";
-        cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:@"cloud-servers-icon.png"] : [UIImage imageNamed:@"openstack-icon.png"];
+        cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:kCloudServersIcon] : [UIImage imageNamed:@"openstack-icon.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else if (indexPath.row == storageRow) {
         cell.textLabel.text = [self.account.provider isRackspace] ? @"Cloud Files" : @"Object Storage";

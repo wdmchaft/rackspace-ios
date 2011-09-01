@@ -101,8 +101,8 @@
     cell.textLabel.text = server.name;
     cell.detailTextLabel.text = server.flavor.name;
     if ([server.image respondsToSelector:@selector(logoPrefix)]) {
-        if ([[server.image logoPrefix] isEqualToString:@"custom"]) {
-            cell.imageView.image = [UIImage imageNamed:@"cloud-servers-icon.png"];
+        if ([[server.image logoPrefix] isEqualToString:kCustomImage]) {
+            cell.imageView.image = [UIImage imageNamed:kCloudServersIcon];
         } else {
             cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-icon.png", [server.image logoPrefix]]];
         }

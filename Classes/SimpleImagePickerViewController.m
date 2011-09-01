@@ -23,7 +23,7 @@
 
 - (void)groupImages {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:9];
-    stringKeys = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithObjects:@"ubuntu", @"redhat", @"gentoo", @"centos", @"debian", @"windows", @"arch", @"fedora", @"custom", nil]];
+    stringKeys = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithObjects:@"ubuntu", @"redhat", @"gentoo", @"centos", @"debian", @"windows", @"arch", @"fedora", kCustomImage, nil]];
     
     // sort in descending order, since the newest versions are likely the most popular choice
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:nil ascending:NO selector:@selector(compare:)];
@@ -218,8 +218,8 @@
         family = @"Fedora";
     } else {
         //filename = @"openstack_icon.png";
-        //[UIImage imageNamed:@"cloud-servers-icon.png"]
-        filename = @"cloud-servers-icon.png";
+        //[UIImage imageNamed:kCloudServersIcon]
+        filename = kCloudServersIcon;
         family = @"Other";
     }
     UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:filename]];
