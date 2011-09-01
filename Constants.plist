@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>ANALYTICS_ACCOUNT_KEY</key>
-	<string>UA-2104369-6</string>
+	<string>your-ga-key</string>
 	<key>HOPTOAD_ACCOUNT_KEY</key>
-	<string>fba0669fe541bbfecd445818fae9a718</string>
+	<string>your-hoptoad-key</string>
 </dict>
 </plist>
