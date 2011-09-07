@@ -254,28 +254,55 @@ static NSRecursiveLock *accessDetailsLock = nil;
     [super failWithError:theError];
 }
 
-#pragma mark -
-#pragma mark Authentication
+#pragma mark - Authentication
 
-+ (OpenStackRequest *)authenticationRequest:(OpenStackAccount *)account {
- 	//[accessDetailsLock lock];
-	OpenStackRequest *request = [[[OpenStackRequest alloc] initWithURL:account.provider.authEndpointURL] autorelease];
-    
-    
-    //request.didFinishSelector
-    
-    request.account = account;
-    //NSLog(@"auth: %@ %@", account.username, account.apiKey);
-	[request addRequestHeader:@"X-Auth-User" value:account.username];
++ (NSString *)apiVersionForURL:(NSURL *)url {
+    NSArray *components = [[url description] componentsSeparatedByString:@"/"];
+    if ([[components lastObject] isEqualToString:@"2.0"]) {
+        return @"2.0";
+    } else if ([[components lastObject] isEqualToString:@"1.1"]) {
+        return @"1.1";
+    } else {
+        return @"1.0";
+    }
+}
+
++ (void)setupV1AuthForRequest:(OpenStackRequest *)request account:(OpenStackAccount *)account apiVersion:(NSString *)apiVersion {
+    [request addRequestHeader:@"X-Auth-User" value:account.username];
     if (account.apiKey) {
         [request addRequestHeader:@"X-Auth-Key" value:account.apiKey];
     } else {
         [request addRequestHeader:@"X-Auth-Key" value:@""];
+    }        
+}
+
++ (void)setupAuthForRequest:(OpenStackRequest *)request account:(OpenStackAccount *)account apiVersion:(NSString *)apiVersion {
+
+    if ([apiVersion isEqualToString:@"1.0"]) {
+        
+        [OpenStackRequest setupV1AuthForRequest:request account:account apiVersion:apiVersion];
+        
+    } else if ([apiVersion isEqualToString:@"1.1"]) {
+        
+        [OpenStackRequest setupV1AuthForRequest:request account:account apiVersion:apiVersion];
+        if (account.projectId) {
+            [request addRequestHeader:@"X-Auth-Project-Id" value:account.projectId];
+        }
+        
+    } else if ([apiVersion isEqualToString:@"2.0"]) {
+        
+        // TODO: support 2.0 auth
     }
-    
-    //NSLog(@"Authenticating to %@ with %@/%@", account.provider.authEndpointURL, account.username, account.apiKey);
-    
-	//[accessDetailsLock unlock];
+}
+
++ (OpenStackRequest *)authenticationRequest:(OpenStackAccount *)account {
+
+	OpenStackRequest *request = [[[OpenStackRequest alloc] initWithURL:account.provider.authEndpointURL] autorelease];
+    request.account = account;
+
+    NSString *apiVersion = [OpenStackRequest apiVersionForURL:account.provider.authEndpointURL];
+    [OpenStackRequest setupAuthForRequest:request account:account apiVersion:apiVersion];
+
 	return request;
 }
 

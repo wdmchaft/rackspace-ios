@@ -25,7 +25,7 @@ static NSMutableDictionary *timers = nil;
 
 @implementation OpenStackAccount
 
-@synthesize uuid, provider, username, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
+@synthesize uuid, provider, username, projectId, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
             lastUsedFlavorId, lastUsedImageId,
             containerCount, totalBytesUsed, containers, hasBeenRefreshed, flaggedForDelete,
             loadBalancers, lbProtocols, serversByPublicIP;
@@ -429,6 +429,7 @@ static NSMutableDictionary *timers = nil;
     [manager release];
     [provider release];
     [username release];
+    [projectId release];
     [flavors release];
     [images release];
     [servers release];

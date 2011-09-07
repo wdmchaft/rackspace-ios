@@ -26,6 +26,7 @@
 @property (nonatomic, retain) Provider *provider;
 @property (nonatomic, retain) NSString *username;
 @property (nonatomic, retain) NSString *apiKey;
+@property (nonatomic, retain) NSString *projectId;
 @property (nonatomic, retain) NSString *authToken;
 @property (nonatomic, retain) NSMutableDictionary *images;
 @property (nonatomic, retain) NSDictionary *flavors;
