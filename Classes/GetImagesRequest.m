@@ -52,7 +52,7 @@
             }
         }
         for (Image *image in [newImages allValues]) {
-            Image *newImage = [self.account.images objectForKey:[NSNumber numberWithInt:image.identifier]];
+            Image *newImage = [self.account.images objectForKey:image.identifier];
             if (newImage) {
                 if ([newImage isKindOfClass:[Image class]]) {
                     newImage.canBeLaunched = YES;
@@ -60,7 +60,7 @@
             } else {
                 if ([image isKindOfClass:[Image class]]) {
                     image.canBeLaunched = YES;
-                    [self.account.images setObject:image forKey:[NSNumber numberWithInt:image.identifier]];
+                    [self.account.images setObject:image forKey:image.identifier];
                 }
             }
         }

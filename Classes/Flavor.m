@@ -41,7 +41,8 @@
 
 + (Flavor *)fromJSON:(NSDictionary *)dict {
     Flavor *flavor = [[[Flavor alloc] initWithJSONDict:dict] autorelease];
-    [self autoParse:&flavor fromJSONDict:dict];
+    flavor.ram = [[dict objectForKey:@"ram"] intValue];
+    flavor.disk = [[dict objectForKey:@"disk"] intValue];
     return flavor;
 }
 

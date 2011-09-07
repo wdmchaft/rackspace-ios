@@ -250,10 +250,10 @@
     if ([request isSuccess]) {
         self.server = [request server];
         
-        self.server.flavor = [self.account.flavors objectForKey:[NSNumber numberWithInt:self.server.flavorId]];
-        self.server.image = [self.account.images objectForKey:[NSNumber numberWithInt:self.server.imageId]];
+        self.server.flavor = [self.account.flavors objectForKey:self.server.flavorId];
+        self.server.image = [self.account.images objectForKey:self.server.imageId];
         
-        [self.account.servers setObject:server forKey:[NSNumber numberWithInt:self.server.identifier]];
+        [self.account.servers setObject:server forKey:self.server.identifier];
         [self.account persist];
         
         NSLog(@"polling server worked. %i, %@", self.server.progress, self.server.status);
@@ -369,7 +369,7 @@
         getImageSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageSucceeded" object:nil
                                                                                        queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
         {
-            Image *image = [self.account.images objectForKey:[NSNumber numberWithInt:self.server.imageId]];
+            Image *image = [self.account.images objectForKey:self.server.imageId];
             self.server.image = image;
 
             /*
@@ -383,7 +383,7 @@
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:kImage inSection:kDetails]] withRowAnimation:UITableViewRowAnimationNone];
         }];
         
-        getImageFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageFailed" object:[NSNumber numberWithInt:self.server.imageId]
+        getImageFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageFailed" object:self.server.imageId
                                                                                     queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
         {
             NSLog(@"loading image failed");
@@ -978,7 +978,7 @@
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
             
             NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:self.account.servers];
-            [dict removeObjectForKey:[NSNumber numberWithInt:self.server.identifier]];
+            [dict removeObjectForKey:self.server.identifier];
             self.account.servers = [[NSMutableDictionary alloc] initWithDictionary:dict]; // TODO: release
             [self.account persist];
             [dict release];

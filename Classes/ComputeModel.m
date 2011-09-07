@@ -19,20 +19,12 @@
 
 - (void)encodeWithCoder: (NSCoder *)coder {
     [self autoEncodeWithCoder:coder];
-    /*
-    [coder encodeInt:identifier forKey:@"id"];
-    [coder encodeObject:name forKey:@"name"];
-     */
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
         [self autoDecode:coder];
-        /*
-        identifier = [coder decodeIntForKey:@"id"];
-        name = [[coder decodeObjectForKey:@"name"] retain];
-         */
     }
     return self;
 }
@@ -42,7 +34,7 @@
 
 - (id)initWithJSONDict:(NSDictionary *)dict {
     if (self = [super init]) {
-        self.identifier = [self intForKey:@"id" inDict:dict];
+        self.identifier = [dict objectForKey:@"id"];
         self.name = [dict objectForKey:@"name"];
     }
     return self;
@@ -109,6 +101,7 @@
 #pragma mark Memory Management
 
 - (void)dealloc {
+    [identifier release];
     [name release];
     [super dealloc];
 }

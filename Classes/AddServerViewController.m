@@ -115,10 +115,10 @@
             
             OpenStackRequest *request = [notification.userInfo objectForKey:@"request"];
             Server *createdServer = [request server];
-            createdServer.flavor = [self.account.flavors objectForKey:[NSNumber numberWithInt:createdServer.flavorId]];
-            createdServer.image = [self.account.images objectForKey:[NSNumber numberWithInt:createdServer.imageId]];
+            createdServer.flavor = [self.account.flavors objectForKey:createdServer.flavorId];
+            createdServer.image = [self.account.images objectForKey:createdServer.imageId];
             
-            [servers setObject:createdServer forKey:[NSNumber numberWithInt:createdServer.identifier]];
+            [servers setObject:createdServer forKey:createdServer.identifier];
             
             self.account.servers = [NSMutableDictionary dictionaryWithDictionary:servers];
             
@@ -323,7 +323,7 @@
         [ubuntus release];
         
     } else {
-        selectedImage = [self.account.images objectForKey:[NSNumber numberWithInt:account.lastUsedImageId]];
+        selectedImage = [self.account.images objectForKey:account.lastUsedImageId];
     }
     
     [self.tableView reloadData]; // force the image name to show up

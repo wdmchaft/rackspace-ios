@@ -78,8 +78,8 @@
 
         for (NSString *serverId in self.account.servers) {
             Server *server = [self.account.servers objectForKey:serverId];
-            server.image = [self.account.images objectForKey:[NSNumber numberWithInt:server.imageId]];
-            server.flavor = [self.account.flavors objectForKey:[NSNumber numberWithInt:server.flavorId]];
+            server.image = [self.account.images objectForKey:server.imageId];
+            server.flavor = [self.account.flavors objectForKey:server.flavorId];
         }
         
         [self.account persist];
@@ -130,7 +130,7 @@
                                                                          queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
                        {
                            [self.tableView reloadData];                           
-                           [[NSNotificationCenter defaultCenter] removeObserver:[renameServerSucceededObservers objectForKey:[NSNumber numberWithInt:server.identifier]]];
+                           [[NSNotificationCenter defaultCenter] removeObserver:[renameServerSucceededObservers objectForKey:server.identifier]];
                        }];
         [renameServerSucceededObservers setObject:observer forKey:key];
     }
@@ -142,7 +142,7 @@
           for (Server *server in sortedServers) {
               BOOL updated = NO;
               if (!server.image) {
-                  server.image = [self.account.images objectForKey:[NSNumber numberWithInt:server.imageId]];
+                  server.image = [self.account.images objectForKey:server.imageId];
                   updated = YES;
               }
               if (updated) {

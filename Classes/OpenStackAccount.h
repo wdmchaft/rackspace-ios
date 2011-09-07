@@ -37,8 +37,8 @@
 @property (nonatomic, retain) NSURL *cdnURL;
 @property (nonatomic, retain) NSArray *rateLimits;
 @property (nonatomic, retain) AccountManager *manager;
-@property (nonatomic, assign) NSInteger lastUsedFlavorId;
-@property (nonatomic, assign) NSInteger lastUsedImageId;
+@property (nonatomic, retain) NSString *lastUsedFlavorId;
+@property (nonatomic, retain) NSString *lastUsedImageId;
 @property (nonatomic, assign) NSInteger containerCount;
 @property (nonatomic, assign) unsigned long long totalBytesUsed;
 @property (nonatomic, retain) NSMutableDictionary *containers;

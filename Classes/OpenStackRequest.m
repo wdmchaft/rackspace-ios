@@ -348,7 +348,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];
         Server *server = [[Server alloc] initWithJSONDict:dict];
-        [objects setObject:server forKey:[NSNumber numberWithInt:server.identifier]];
+        [objects setObject:server forKey:server.identifier];
         [server release];
     }
     
@@ -356,8 +356,8 @@ static NSRecursiveLock *accessDetailsLock = nil;
     return objects;
 }
 
-+ (OpenStackRequest *)getServerRequest:(OpenStackAccount *)account serverId:(NSInteger)serverId {
-    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/servers/%i", serverId]];
++ (OpenStackRequest *)getServerRequest:(OpenStackAccount *)account serverId:(NSString *)serverId {
+    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/servers/%@", serverId]];
 }
 
 + (OpenStackRequest *)getImagesRequest:(OpenStackAccount *)account {
@@ -372,7 +372,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];
         Image *image = [[Image alloc] initWithJSONDict:dict];
-        [objects setObject:image forKey:[NSNumber numberWithInt:image.identifier]];
+        [objects setObject:image forKey:image.identifier];
         [image release];
     }
     
@@ -380,8 +380,8 @@ static NSRecursiveLock *accessDetailsLock = nil;
     return objects;
 }
 
-+ (OpenStackRequest *)getImageRequest:(OpenStackAccount *)account imageId:(NSInteger)imageId {
-    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/images/%i", imageId]];
++ (OpenStackRequest *)getImageRequest:(OpenStackAccount *)account imageId:(NSString *)imageId {
+    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/images/%@", imageId]];
 }
 
 - (Image *)image {
@@ -405,7 +405,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];
         Flavor *flavor = [Flavor fromJSON:dict];
-        [objects setObject:flavor forKey:[NSNumber numberWithInt:flavor.identifier]];
+        [objects setObject:flavor forKey:flavor.identifier];
     }
     
     [parser release];

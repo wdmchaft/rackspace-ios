@@ -26,7 +26,6 @@
 @property (nonatomic, retain) NSDate *updated;
 @property (nonatomic, assign) BOOL canBeLaunched;
 
-- (id)initWithJSONDict:(NSDictionary *)dict;
 + (Image *)fromJSON:(NSDictionary *)dict;
 
 // returns part of the name of the logo (ex: "ubuntu")

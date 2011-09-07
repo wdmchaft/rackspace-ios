@@ -22,7 +22,7 @@
 
 @property (nonatomic, assign) OpenStackAccount *account;
 
-- (NSString *)notificationName:(NSString *)key identifier:(NSInteger)identifier;
+- (NSString *)notificationName:(NSString *)key identifier:(NSString *)identifier;
 - (void)notify:(NSString *)name request:(OpenStackRequest *)request;
 - (void)notify:(NSString *)name request:(OpenStackRequest *)request object:(id)object;
     

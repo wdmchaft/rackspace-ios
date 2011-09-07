@@ -121,7 +121,7 @@
 - (Image *)image {
     if (!image) {
         for (OpenStackAccount *account in [OpenStackAccount accounts]) {
-            Image *i = [account.images objectForKey:[NSNumber numberWithInt:self.imageId]];
+            Image *i = [account.images objectForKey:self.imageId];
             if (i) {
                 image = i;
                 break;
@@ -154,6 +154,8 @@
     [personality release];
     [backupSchedule release];
     [rootPassword release];
+    [flavorId release];
+    [imageId release];
     [super dealloc];
 }
 

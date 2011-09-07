@@ -12,7 +12,7 @@
 
 @interface ImagePickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource> {
     IBOutlet UITableView *tableView;
-	NSUInteger selectedImageId;
+	NSString *selectedImageId;
     OpenStackAccount *account;    
     NSDictionary *images;
     NSString *selectedFamily;

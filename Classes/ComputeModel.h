@@ -10,11 +10,11 @@
 
 // superclass for OpenStack Compute models with common parsing and utility methods
 @interface ComputeModel : NSObject <NSCoding> {
-    NSInteger identifier; // i'd call it id, but Objective-C won't let me :(
+    NSString *identifier;
     NSString *name;
 }
 
-@property (nonatomic, assign) NSInteger identifier;
+@property (nonatomic, retain) NSString *identifier;
 @property (nonatomic, retain) NSString *name;
 
 // parses the stuff common to all models for you

@@ -18,20 +18,16 @@
 @interface SimpleImagePickerViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource, UITableViewDelegate, UITableViewDataSource> {
     IBOutlet UITableView *tableView;
     IBOutlet UIPickerView *pickerView;
-	NSUInteger selectedImageId;
-    OpenStackAccount *account;
     NSDictionary *images;
     NSMutableArray *stringKeys;
     NSString *selectedFamily;
     id delegate;
-    NSInteger mode;
-    ServerViewController *serverViewController;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain) IBOutlet UIPickerView *pickerView;
-@property (nonatomic, assign) NSUInteger selectedImageId;
+@property (nonatomic, retain) NSString *selectedImageId;
 @property (nonatomic, assign) NSInteger mode;
 @property (nonatomic, retain) ServerViewController *serverViewController;
 

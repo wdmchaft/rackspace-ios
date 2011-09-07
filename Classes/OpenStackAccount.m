@@ -203,8 +203,8 @@ static NSMutableDictionary *timers = nil;
     [coder encodeObject:filesURL forKey:@"filesURL"];
     [coder encodeObject:cdnURL forKey:@"cdnURL"];
     [coder encodeObject:rateLimits forKey:@"rateLimits"];
-    [coder encodeInt:lastUsedFlavorId forKey:@"lastUsedFlavorId"];
-    [coder encodeInt:lastUsedImageId forKey:@"lastUsedImageId"];
+    [coder encodeObject:lastUsedFlavorId forKey:@"lastUsedFlavorId"];
+    [coder encodeObject:lastUsedImageId forKey:@"lastUsedImageId"];
     [coder encodeInt:containerCount forKey:@"containerCount"];
     [coder encodeInt:totalBytesUsed forKey:@"totalBytesUsed"];
     
@@ -256,8 +256,8 @@ static NSMutableDictionary *timers = nil;
 
         [self loadTimer];
         
-        lastUsedFlavorId = [coder decodeIntForKey:@"lastUsedFlavorId"];
-        lastUsedImageId = [coder decodeIntForKey:@"lastUsedImageId"];
+        lastUsedFlavorId = [self decode:coder key:@"lastUserFlavorId"];
+        lastUsedImageId = [self decode:coder key:@"lastUsedImageId"];
         
         containerCount = [coder decodeIntForKey:@"containerCount"];
         //totalBytesUsed = [coder decodeIntForKey:@"totalBytesUsed"];
@@ -441,6 +441,8 @@ static NSMutableDictionary *timers = nil;
     [loadBalancers release];
     [lbProtocols release];
     [serversByPublicIP release];
+    [lastUsedFlavorId release];
+    [lastUsedImageId release];
     
     [super dealloc];
 }
