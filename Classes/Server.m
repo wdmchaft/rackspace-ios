@@ -52,94 +52,29 @@
 
 #pragma mark - JSON
 
-- (id)initWithJSONDict:(NSDictionary *)dict {
-    self = [super initWithJSONDict:dict];
-    if (self) {
-//        NSLog(@"server json dict: %@", dict);
-        
-        self.identifier = [dict objectForKey:@"id"];
-        if ([dict objectForKey:@"flavorId"]) {
-            self.flavorId = [dict objectForKey:@"flavorId"];
-        }
-        if ([dict objectForKey:@"flavor"]) {
-            Flavor *f = [Flavor fromJSON:[dict objectForKey:@"flavor"]];
-            self.flavorId = f.identifier;
-        }
-        if ([dict objectForKey:@"imageId"]) {
-            self.imageId = [dict objectForKey:@"imageId"];
-        }
-        if ([dict objectForKey:@"image"]) {
-            self.image = [Image fromJSON:[dict objectForKey:@"image"]];
-            self.imageId = self.image.identifier;
-        }
-        self.addresses = [dict objectForKey:@"addresses"];
-        
-        if ([[self.addresses objectForKey:@"public"] isKindOfClass:[NSArray class]]) {
-            
-            NSMutableDictionary *newAddresses = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
-            
-            NSArray *publicIPs = [self.addresses objectForKey:@"public"];
-            NSMutableArray *newPublicIPs = [[[NSMutableArray alloc] initWithCapacity:[publicIPs count]] autorelease];
-            for (NSDictionary *ip in publicIPs) {
-                if ([ip isKindOfClass:[NSDictionary class]]) {
-                    [newPublicIPs addObject:[ip objectForKey:@"addr"]];
-                } else {
-                    [newPublicIPs addObject:ip];
-                }
-            }
-            [newAddresses setObject:newPublicIPs forKey:@"public"];
-            
-            NSArray *privateIPs = [self.addresses objectForKey:@"private"];
-            NSMutableArray *newPrivateIPs = [[[NSMutableArray alloc] initWithCapacity:[privateIPs count]] autorelease];
-            for (NSDictionary *ip in privateIPs) {
-                if ([ip isKindOfClass:[NSDictionary class]]) {
-                    [newPrivateIPs addObject:[ip objectForKey:@"addr"]];
-                } else {
-                    [newPrivateIPs addObject:ip];
-                }
-            }
-            [newAddresses setObject:newPrivateIPs forKey:@"private"];
-            
-            self.addresses = newAddresses;
-        }
-        
-        self.status = [dict objectForKey:@"status"];
-        
-        if ([dict objectForKey:@"progress"]) {
-            self.progress = [[dict objectForKey:@"progress"] intValue];
-        }
-    }
-    return self;
-}
-
-// TODO: maybe should remove this
-+ (Server *)fromJSON:(NSDictionary *)dict {
-    
-//    NSLog(@"server json dict: %@", dict);
-    
-    Server *server = [[[Server alloc] initWithJSONDict:dict] autorelease];
-    
-    server.identifier = [dict objectForKey:@"id"];
+- (void)populateWithJSON:(NSDictionary *)dict {
+    self.identifier = [dict objectForKey:@"id"];
     if ([dict objectForKey:@"flavorId"]) {
-        server.flavorId = [dict objectForKey:@"flavorId"];
+        self.flavorId = [dict objectForKey:@"flavorId"];
     }
     if ([dict objectForKey:@"flavor"]) {
-        Flavor *flavor = [Flavor fromJSON:[dict objectForKey:@"flavor"]];
-        server.flavorId = flavor.identifier;
+        Flavor *f = [Flavor fromJSON:[dict objectForKey:@"flavor"]];
+        self.flavorId = f.identifier;
     }
     if ([dict objectForKey:@"imageId"]) {
-        server.imageId = [dict objectForKey:@"imageId"];
+        self.imageId = [dict objectForKey:@"imageId"];
     }
     if ([dict objectForKey:@"image"]) {
-        server.image = [Image fromJSON:[dict objectForKey:@"image"]];
-        server.imageId = server.image.identifier;
+        self.image = [Image fromJSON:[dict objectForKey:@"image"]];
+        self.imageId = self.image.identifier;
     }
-    server.addresses = [dict objectForKey:@"addresses"];
-    if ([[server.addresses objectForKey:@"public"] isKindOfClass:[NSArray class]]) {
+    self.addresses = [dict objectForKey:@"addresses"];
+    
+    if ([[self.addresses objectForKey:@"public"] isKindOfClass:[NSArray class]]) {
         
         NSMutableDictionary *newAddresses = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
         
-        NSArray *publicIPs = [server.addresses objectForKey:@"public"];
+        NSArray *publicIPs = [self.addresses objectForKey:@"public"];
         NSMutableArray *newPublicIPs = [[[NSMutableArray alloc] initWithCapacity:[publicIPs count]] autorelease];
         for (NSDictionary *ip in publicIPs) {
             if ([ip isKindOfClass:[NSDictionary class]]) {
@@ -150,7 +85,7 @@
         }
         [newAddresses setObject:newPublicIPs forKey:@"public"];
         
-        NSArray *privateIPs = [server.addresses objectForKey:@"private"];
+        NSArray *privateIPs = [self.addresses objectForKey:@"private"];
         NSMutableArray *newPrivateIPs = [[[NSMutableArray alloc] initWithCapacity:[privateIPs count]] autorelease];
         for (NSDictionary *ip in privateIPs) {
             if ([ip isKindOfClass:[NSDictionary class]]) {
@@ -161,15 +96,27 @@
         }
         [newAddresses setObject:newPrivateIPs forKey:@"private"];
         
-        server.addresses = newAddresses;
+        self.addresses = newAddresses;
     }
     
-    server.status = [dict objectForKey:@"status"];
+    self.status = [dict objectForKey:@"status"];
     
     if ([dict objectForKey:@"progress"]) {
-        server.progress = [[dict objectForKey:@"progress"] intValue];
+        self.progress = [[dict objectForKey:@"progress"] intValue];
     }
-    
+}
+
+- (id)initWithJSONDict:(NSDictionary *)dict {
+    self = [super initWithJSONDict:dict];
+    if (self) {
+        [self populateWithJSON:dict];        
+    }
+    return self;
+}
+
++ (Server *)fromJSON:(NSDictionary *)dict {
+    Server *server = [[[Server alloc] initWithJSONDict:dict] autorelease];
+    [server populateWithJSON:dict];
     return server;
 }
 
