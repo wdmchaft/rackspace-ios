@@ -43,6 +43,7 @@
     Flavor *flavor = [[[Flavor alloc] initWithJSONDict:dict] autorelease];
     flavor.ram = [[dict objectForKey:@"ram"] intValue];
     flavor.disk = [[dict objectForKey:@"disk"] intValue];
+    
     return flavor;
 }
 

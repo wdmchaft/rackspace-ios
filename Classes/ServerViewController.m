@@ -250,7 +250,12 @@
     if ([request isSuccess]) {
         self.server = [request server];
         
+        NSLog(@"flavor id: %@", self.server.flavorId);
+        
         self.server.flavor = [self.account.flavors objectForKey:self.server.flavorId];
+        
+        NSLog(@"server flavor: %@", self.server.flavor);
+        
         self.server.image = [self.account.images objectForKey:self.server.imageId];
         
         [self.account.servers setObject:server forKey:self.server.identifier];
@@ -638,13 +643,10 @@
 
         if (indexPath.row == kImage) {
             cell.textLabel.text = @"Image";
-            //cell.textLabel.text = server.image.name;
             cell.detailTextLabel.text = server.image.name; 
         } else if (indexPath.row == kMemory) {
             cell.textLabel.text = @"Size";
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%i MB RAM, %i GB Disk", self.server.flavor.ram, self.server.flavor.disk];
-            //cell.textLabel.text = @"Memory";
-            //cell.detailTextLabel.text = [NSString stringWithFormat:@"%i MB", server.flavor.ram];
         } else if (indexPath.row == kDisk) {
             cell.textLabel.text = @"Disk";
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%i GB", server.flavor.disk];
@@ -669,13 +671,7 @@
             }            
         } else {
             cell.textLabel.text = @"Private";
-            if ([[privateIPs objectAtIndex:[publicIPs count] - indexPath.row] isKindOfClass:[NSString class]]) {
-                // v1.0 API
-                cell.detailTextLabel.text = [privateIPs objectAtIndex:[publicIPs count] - indexPath.row];
-            } else {
-                // v1.1 API
-                cell.detailTextLabel.text = [[privateIPs objectAtIndex:[publicIPs count] - indexPath.row] objectForKey:@"addr"];
-            }            
+            cell.detailTextLabel.text = [privateIPs objectAtIndex:indexPath.row - [publicIPs count]];
         }
     } else if (indexPath.section == kActions) {
         cell.textLabel.text = @"Actions";

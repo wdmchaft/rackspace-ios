@@ -39,9 +39,8 @@
 @property (nonatomic, retain) NSString *rootPassword;
 
 - (id)initWithJSONDict:(NSDictionary *)dict;
-
 + (Server *)fromJSON:(NSDictionary *)jsonDict;
-- (NSString *)toJSON;
+- (NSString *)toJSON:(NSString *)apiVersion;
 - (BOOL)shouldBePolled;
 
 @end

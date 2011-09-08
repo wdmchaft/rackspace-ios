@@ -11,7 +11,6 @@
 @class OpenStackAccount;
 
 @interface AccountSettingsViewController : UITableViewController <UITextFieldDelegate> {
-    OpenStackAccount *account;
     UITextField *usernameTextField;
     UITextField *apiKeyTextField;
 }

@@ -34,7 +34,7 @@
 
 - (id)initWithJSONDict:(NSDictionary *)dict {
     if (self = [super init]) {
-        self.identifier = [dict objectForKey:@"id"];
+        self.identifier = [[dict objectForKey:@"id"] description];
         self.name = [dict objectForKey:@"name"];
     }
     return self;

@@ -50,39 +50,145 @@
     return copy;
 }
 
-#pragma mark -
-#pragma mark JSON
+#pragma mark - JSON
 
 - (id)initWithJSONDict:(NSDictionary *)dict {
     self = [super initWithJSONDict:dict];
     if (self) {
-        [self autoParse:&self fromJSONDict:dict];
+//        NSLog(@"server json dict: %@", dict);
+        
+        self.identifier = [dict objectForKey:@"id"];
+        if ([dict objectForKey:@"flavorId"]) {
+            self.flavorId = [dict objectForKey:@"flavorId"];
+        }
+        if ([dict objectForKey:@"flavor"]) {
+            Flavor *f = [Flavor fromJSON:[dict objectForKey:@"flavor"]];
+            self.flavorId = f.identifier;
+        }
+        if ([dict objectForKey:@"imageId"]) {
+            self.imageId = [dict objectForKey:@"imageId"];
+        }
+        if ([dict objectForKey:@"image"]) {
+            self.image = [Image fromJSON:[dict objectForKey:@"image"]];
+            self.imageId = self.image.identifier;
+        }
+        self.addresses = [dict objectForKey:@"addresses"];
+        
+        if ([[self.addresses objectForKey:@"public"] isKindOfClass:[NSArray class]]) {
+            
+            NSMutableDictionary *newAddresses = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
+            
+            NSArray *publicIPs = [self.addresses objectForKey:@"public"];
+            NSMutableArray *newPublicIPs = [[[NSMutableArray alloc] initWithCapacity:[publicIPs count]] autorelease];
+            for (NSDictionary *ip in publicIPs) {
+                if ([ip isKindOfClass:[NSDictionary class]]) {
+                    [newPublicIPs addObject:[ip objectForKey:@"addr"]];
+                } else {
+                    [newPublicIPs addObject:ip];
+                }
+            }
+            [newAddresses setObject:newPublicIPs forKey:@"public"];
+            
+            NSArray *privateIPs = [self.addresses objectForKey:@"private"];
+            NSMutableArray *newPrivateIPs = [[[NSMutableArray alloc] initWithCapacity:[privateIPs count]] autorelease];
+            for (NSDictionary *ip in privateIPs) {
+                if ([ip isKindOfClass:[NSDictionary class]]) {
+                    [newPrivateIPs addObject:[ip objectForKey:@"addr"]];
+                } else {
+                    [newPrivateIPs addObject:ip];
+                }
+            }
+            [newAddresses setObject:newPrivateIPs forKey:@"private"];
+            
+            self.addresses = newAddresses;
+        }
+        
+        self.status = [dict objectForKey:@"status"];
+        
+        if ([dict objectForKey:@"progress"]) {
+            self.progress = [[dict objectForKey:@"progress"] intValue];
+        }
     }
     return self;
 }
 
+// TODO: maybe should remove this
 + (Server *)fromJSON:(NSDictionary *)dict {
+    
+//    NSLog(@"server json dict: %@", dict);
+    
     Server *server = [[[Server alloc] initWithJSONDict:dict] autorelease];
-    [self autoParse:&server fromJSONDict:dict];
+    
+    server.identifier = [dict objectForKey:@"id"];
+    if ([dict objectForKey:@"flavorId"]) {
+        server.flavorId = [dict objectForKey:@"flavorId"];
+    }
+    if ([dict objectForKey:@"flavor"]) {
+        Flavor *flavor = [Flavor fromJSON:[dict objectForKey:@"flavor"]];
+        server.flavorId = flavor.identifier;
+    }
+    if ([dict objectForKey:@"imageId"]) {
+        server.imageId = [dict objectForKey:@"imageId"];
+    }
+    if ([dict objectForKey:@"image"]) {
+        server.image = [Image fromJSON:[dict objectForKey:@"image"]];
+        server.imageId = server.image.identifier;
+    }
+    server.addresses = [dict objectForKey:@"addresses"];
+    if ([[server.addresses objectForKey:@"public"] isKindOfClass:[NSArray class]]) {
+        
+        NSMutableDictionary *newAddresses = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
+        
+        NSArray *publicIPs = [server.addresses objectForKey:@"public"];
+        NSMutableArray *newPublicIPs = [[[NSMutableArray alloc] initWithCapacity:[publicIPs count]] autorelease];
+        for (NSDictionary *ip in publicIPs) {
+            if ([ip isKindOfClass:[NSDictionary class]]) {
+                [newPublicIPs addObject:[ip objectForKey:@"addr"]];
+            } else {
+                [newPublicIPs addObject:ip];
+            }
+        }
+        [newAddresses setObject:newPublicIPs forKey:@"public"];
+        
+        NSArray *privateIPs = [server.addresses objectForKey:@"private"];
+        NSMutableArray *newPrivateIPs = [[[NSMutableArray alloc] initWithCapacity:[privateIPs count]] autorelease];
+        for (NSDictionary *ip in privateIPs) {
+            if ([ip isKindOfClass:[NSDictionary class]]) {
+                [newPrivateIPs addObject:[ip objectForKey:@"addr"]];
+            } else {
+                [newPrivateIPs addObject:ip];
+            }
+        }
+        [newAddresses setObject:newPrivateIPs forKey:@"private"];
+        
+        server.addresses = newAddresses;
+    }
+    
+    server.status = [dict objectForKey:@"status"];
+    
+    if ([dict objectForKey:@"progress"]) {
+        server.progress = [[dict objectForKey:@"progress"] intValue];
+    }
+    
     return server;
 }
 
-- (NSString *)toJSON {
+- (NSString *)toVersion1JSON {
     NSString *json = @"{ \"server\": { ";
     
     if (self.name && ![@"" isEqualToString:self.name]) {
         json = [json stringByAppendingString:[NSString stringWithFormat:@"\"name\": \"%@\", ", self.name]];
     }
-
+    
     json = [json stringByAppendingString:[NSString stringWithFormat:@"\"flavorId\": %i, \"imageId\": %i ", self.flavorId, self.imageId]];
-
+    
     if (self.metadata && [self.metadata count] > 0) {
         json = [json stringByAppendingString:[NSString stringWithFormat:@", \"metadata\": %@", [self.metadata JSONRepresentation]]];
     }
     
     if (self.personality && [self.personality count] > 0) {
         json = [json stringByAppendingString:@", \"personality\": [ "];
-
+        
         NSArray *paths = [self.personality allKeys];
         for (int i = 0; i < [paths count]; i++) {
             NSString *path = [paths objectAtIndex:i];
@@ -100,8 +206,49 @@
     return json;
 }
 
-#pragma mark -
-#pragma mark Build
+- (NSString *)toVersion11JSON {
+    NSString *json = @"{ \"server\": { ";
+    
+    if (self.name && ![@"" isEqualToString:self.name]) {
+        json = [json stringByAppendingString:[NSString stringWithFormat:@"\"name\": \"%@\", ", self.name]];
+    }
+    
+    json = [json stringByAppendingString:[NSString stringWithFormat:@"\"flavorRef\": \"%@\", \"imageRef\": \"%@\" ", self.flavorId, self.imageId]];
+    
+    if (self.metadata && [self.metadata count] > 0) {
+        json = [json stringByAppendingString:[NSString stringWithFormat:@", \"metadata\": %@", [self.metadata JSONRepresentation]]];
+    }
+    
+    if (self.personality && [self.personality count] > 0) {
+        json = [json stringByAppendingString:@", \"personality\": [ "];
+        
+        NSArray *paths = [self.personality allKeys];
+        for (int i = 0; i < [paths count]; i++) {
+            NSString *path = [paths objectAtIndex:i];
+            json = [json stringByAppendingString:[NSString stringWithFormat:@"{ \"path\": \"%@\", \"contents\": \"%@\" }", path, [Base64 encode:[[self.personality objectForKey:path] dataUsingEncoding:NSUTF8StringEncoding]]]];
+            if (i < [paths count] - 1) {
+                json = [json stringByAppendingString:@", "];
+            }
+        }
+        json = [json stringByAppendingString:@" ]"];
+        
+    }
+    
+    json = [json stringByAppendingString:@"}}"];
+    
+    return json;
+}
+
+- (NSString *)toJSON:(NSString *)apiVersion {
+    // TODO: this isn't DRY at all.  refactor
+    if ([apiVersion isEqualToString:@"1.1"]) {
+        return [self toVersion11JSON];
+    } else {
+        return [self toVersion1JSON];
+    }
+}
+
+#pragma mark - Build
 
 - (BOOL)shouldBePolled {
 	return ([self.status isEqualToString:@"BUILD"] || [self.status isEqualToString:@"UNKNOWN"] || [self.status isEqualToString:@"RESIZE"] || [self.status isEqualToString:@"QUEUE_RESIZE"] || [self.status isEqualToString:@"PREP_RESIZE"] || [self.status isEqualToString:@"REBUILD"] || [self.status isEqualToString:@"REBOOT"] || [self.status isEqualToString:@"HARD_REBOOT"]);
@@ -143,7 +290,6 @@
 #pragma mark Memory Management
 
 - (void)dealloc {
-    NSLog(@"server dealloc");
     [status release];
     [hostId release];
     [addresses release];

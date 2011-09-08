@@ -40,7 +40,6 @@
 
 - (void)requestFinished {        
     if ([self isSuccess]) {
-        //NSLog(@"servers response: %@", [self responseString]);
         
         account.servers = [NSMutableDictionary dictionaryWithDictionary:[self servers]];
         
@@ -50,7 +49,7 @@
             Server *server = [self.account.servers objectForKey:[keys objectAtIndex:i]];            
             server.image = [self.account.images objectForKey:server.imageId];
             server.flavor = [self.account.flavors objectForKey:server.flavorId];
-            if (!server.image) {
+            if (!server.image && server.imageId) {
                 [self.account.manager getImage:server];
             }
             [fullServers setObject:server forKey:server.identifier];            

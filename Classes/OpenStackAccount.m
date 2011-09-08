@@ -28,7 +28,7 @@ static NSMutableDictionary *timers = nil;
 @synthesize uuid, provider, username, projectId, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
             lastUsedFlavorId, lastUsedImageId,
             containerCount, totalBytesUsed, containers, hasBeenRefreshed, flaggedForDelete,
-            loadBalancers, lbProtocols, serversByPublicIP;
+            loadBalancers, lbProtocols, serversByPublicIP, apiVersion;
 
 + (void)initialize {
     accounts = [Archiver retrieve:@"accounts"];
@@ -189,6 +189,7 @@ static NSMutableDictionary *timers = nil;
     copy.lastUsedImageId = self.lastUsedImageId;
     copy.containerCount = self.containerCount;
     copy.totalBytesUsed = self.totalBytesUsed;
+    copy.apiVersion = self.apiVersion;
     manager = [[AccountManager alloc] init];
     manager.account = copy;
     return copy;
@@ -216,6 +217,8 @@ static NSMutableDictionary *timers = nil;
     [coder encodeObject:containers forKey:@"containers"];
     [coder encodeObject:loadBalancers forKey:@"loadBalancers"];
     */
+    
+    [coder encodeObject:apiVersion forKey:@"apiVersion"];
 }
 
 - (id)decode:(NSCoder *)coder key:(NSString *)key {    
@@ -265,6 +268,16 @@ static NSMutableDictionary *timers = nil;
         containers = [self decode:coder key:@"containers"];
         loadBalancers = [self decode:coder key:@"loadBalancers"];
 
+        apiVersion = [self decode:coder key:@"apiVersion"];
+        if (!apiVersion) {
+            NSString *component = [[[provider.authEndpointURL description] componentsSeparatedByString:@"/"] lastObject];
+            if ([component isEqualToString:@"v1.1"]) {
+                self.apiVersion = @"1.1";
+            } else {
+                self.apiVersion = component;
+            }
+        }
+        
         manager = [[AccountManager alloc] init];
         manager.account = self;
     }
@@ -417,8 +430,7 @@ static NSMutableDictionary *timers = nil;
     }
 }
 
-#pragma mark -
-#pragma mark Memory Management
+#pragma mark - Memory Management
 
 - (void)dealloc {
     NSTimer *timer = [timers objectForKey:uuid];
@@ -443,6 +455,7 @@ static NSMutableDictionary *timers = nil;
     [serversByPublicIP release];
     [lastUsedFlavorId release];
     [lastUsedImageId release];
+    [apiVersion release];
     
     [super dealloc];
 }

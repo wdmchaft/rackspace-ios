@@ -73,12 +73,15 @@
     [self showToolbarActivityMessage:@"Refreshing servers..."];
 
     [[self.account.manager getServersWithCallback] success:^(OpenStackRequest *request) {
+        
+        NSLog(@"get servers response: %@", [request responseString]);
+        
         [self enableRefreshButton];
         self.account.servers = [NSMutableDictionary dictionaryWithDictionary:[request servers]];
 
         for (NSString *serverId in self.account.servers) {
             Server *server = [self.account.servers objectForKey:serverId];
-            server.image = [self.account.images objectForKey:server.imageId];
+            server.image = [self.account.images objectForKey:server.imageId];            
             server.flavor = [self.account.flavors objectForKey:server.flavorId];
         }
         
@@ -237,7 +240,11 @@
         Server *server = [account.sortedServers objectAtIndex:indexPath.row];
         
         cell.textLabel.text = server.name;
-        cell.detailTextLabel.text = [[server.addresses objectForKey:@"public"] objectAtIndex:0];
+        if ([server.addresses objectForKey:@"public"]) {
+            cell.detailTextLabel.text = [[server.addresses objectForKey:@"public"] objectAtIndex:0];
+        } else {
+            cell.detailTextLabel.text = @"";
+        }
         
         if ([server.image respondsToSelector:@selector(logoPrefix)]) {
             if ([[server.image logoPrefix] isEqualToString:kCustomImage]) {

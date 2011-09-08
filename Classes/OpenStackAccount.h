@@ -43,6 +43,7 @@
 @property (nonatomic, assign) unsigned long long totalBytesUsed;
 @property (nonatomic, retain) NSMutableDictionary *containers;
 @property (nonatomic, assign) BOOL flaggedForDelete;
+@property (nonatomic, retain) NSString *apiVersion;
 
 // this is a dictionary of dictionaries:
 // { "endpoint1": { "123": { ... }, "456": { ... } },
