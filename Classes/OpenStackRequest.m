@@ -303,18 +303,13 @@ static NSRecursiveLock *accessDetailsLock = nil;
 	OpenStackRequest *request = [[[OpenStackRequest alloc] initWithURL:account.provider.authEndpointURL] autorelease];
     request.account = account;
 
-    NSLog(@"auth url: %@", account.provider.authEndpointURL);
-    
     NSString *apiVersion = [OpenStackRequest apiVersionForURL:account.provider.authEndpointURL];
-    NSLog(@"api version component: %@", apiVersion);
-    
     [OpenStackRequest setupAuthForRequest:request account:account apiVersion:apiVersion];
 
 	return request;
 }
 
-#pragma mark -
-#pragma mark Rate Limits
+#pragma mark - Rate Limits
 
 + (OpenStackRequest *)getLimitsRequest:(OpenStackAccount *)account {
     return [OpenStackRequest serversRequest:account method:@"GET" path:@"/limits"];
