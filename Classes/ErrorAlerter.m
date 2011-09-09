@@ -30,10 +30,16 @@
     viewController = aViewController;
 
     NSString *title = @"Error";
-    if (request.responseStatusCode == 0) {
-        title = @"Connection Error";
-        message = @"Please check your connection or API URL and try again.";
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults boolForKey:@"already_failed_on_connection"]) {
+        if (request.responseStatusCode == 0) {
+            title = @"Connection Error";
+            message = @"Please check your connection or API URL and try again.";
+        }
     }
+    [defaults setBool:YES forKey:@"already_failed_on_connection"];
+    [defaults synchronize];              
 
     logEntryModalViewController = [[LogEntryModalViewController alloc] initWithNibName:@"LogEntryModalViewController" bundle:nil];
     logEntryModalViewController.logEntry = [[[APILogEntry alloc] initWithRequest:request] autorelease];
