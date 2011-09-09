@@ -13,6 +13,7 @@
 #import "Image.h"
 #import "OpenStackAccount.h"
 #import "NSObject+NSCoding.h"
+#import "NSString+Conveniences.h"
 
 
 @implementation Server
@@ -55,14 +56,14 @@
 - (void)populateWithJSON:(NSDictionary *)dict {
     self.identifier = [dict objectForKey:@"id"];
     if ([dict objectForKey:@"flavorId"]) {
-        self.flavorId = [dict objectForKey:@"flavorId"];
+        self.flavorId = [[dict objectForKey:@"flavorId"] description];
     }
     if ([dict objectForKey:@"flavor"]) {
         Flavor *f = [Flavor fromJSON:[dict objectForKey:@"flavor"]];
         self.flavorId = f.identifier;
     }
     if ([dict objectForKey:@"imageId"]) {
-        self.imageId = [dict objectForKey:@"imageId"];
+        self.imageId = [[dict objectForKey:@"imageId"] description];
     }
     if ([dict objectForKey:@"image"]) {
         self.image = [Image fromJSON:[dict objectForKey:@"image"]];
@@ -120,79 +121,49 @@
     return server;
 }
 
-- (NSString *)toVersion1JSON {
-    NSString *json = @"{ \"server\": { ";
-    
-    if (self.name && ![@"" isEqualToString:self.name]) {
-        json = [json stringByAppendingString:[NSString stringWithFormat:@"\"name\": \"%@\", ", self.name]];
-    }
-    
-    json = [json stringByAppendingString:[NSString stringWithFormat:@"\"flavorId\": %i, \"imageId\": %i ", self.flavorId, self.imageId]];
-    
-    if (self.metadata && [self.metadata count] > 0) {
-        json = [json stringByAppendingString:[NSString stringWithFormat:@", \"metadata\": %@", [self.metadata JSONRepresentation]]];
-    }
-    
-    if (self.personality && [self.personality count] > 0) {
-        json = [json stringByAppendingString:@", \"personality\": [ "];
-        
-        NSArray *paths = [self.personality allKeys];
-        for (int i = 0; i < [paths count]; i++) {
-            NSString *path = [paths objectAtIndex:i];
-            json = [json stringByAppendingString:[NSString stringWithFormat:@"{ \"path\": \"%@\", \"contents\": \"%@\" }", path, [Base64 encode:[[self.personality objectForKey:path] dataUsingEncoding:NSUTF8StringEncoding]]]];
-            if (i < [paths count] - 1) {
-                json = [json stringByAppendingString:@", "];
-            }
-        }
-        json = [json stringByAppendingString:@" ]"];
-        
-    }
-    
-    json = [json stringByAppendingString:@"}}"];
-    
-    return json;
-}
-
-- (NSString *)toVersion11JSON {
-    NSString *json = @"{ \"server\": { ";
-    
-    if (self.name && ![@"" isEqualToString:self.name]) {
-        json = [json stringByAppendingString:[NSString stringWithFormat:@"\"name\": \"%@\", ", self.name]];
-    }
-    
-    json = [json stringByAppendingString:[NSString stringWithFormat:@"\"flavorRef\": \"%@\", \"imageRef\": \"%@\" ", self.flavorId, self.imageId]];
-    
-    if (self.metadata && [self.metadata count] > 0) {
-        json = [json stringByAppendingString:[NSString stringWithFormat:@", \"metadata\": %@", [self.metadata JSONRepresentation]]];
-    }
-    
-    if (self.personality && [self.personality count] > 0) {
-        json = [json stringByAppendingString:@", \"personality\": [ "];
-        
-        NSArray *paths = [self.personality allKeys];
-        for (int i = 0; i < [paths count]; i++) {
-            NSString *path = [paths objectAtIndex:i];
-            json = [json stringByAppendingString:[NSString stringWithFormat:@"{ \"path\": \"%@\", \"contents\": \"%@\" }", path, [Base64 encode:[[self.personality objectForKey:path] dataUsingEncoding:NSUTF8StringEncoding]]]];
-            if (i < [paths count] - 1) {
-                json = [json stringByAppendingString:@", "];
-            }
-        }
-        json = [json stringByAppendingString:@" ]"];
-        
-    }
-    
-    json = [json stringByAppendingString:@"}}"];
-    
-    return json;
-}
-
 - (NSString *)toJSON:(NSString *)apiVersion {
-    // TODO: this isn't DRY at all.  refactor
-    if ([apiVersion isEqualToString:@"1.1"]) {
-        return [self toVersion11JSON];
+    BOOL version1 = [apiVersion isEqualToString:@"1.0"];
+    
+    NSString *json
+        = @"{ \"server\": { "
+        "        \"name\": \"<name>\","
+        "        \"<flavorType>\": \"<flavor>\","
+        "        \"<imageType>\": \"<image>\""
+        "        <metadata><personality>"
+        "  }}";
+    json = [json replace:@"<name>" with:self.name];    
+    json = [json replace:@"<flavorType>" with:version1 ? @"flavorId" : @"flavorRef"];
+    json = [json replace:@"<flavor>" with:self.flavorId];
+    json = [json replace:@"<imageType>" with:version1 ? @"imageId" : @"imageRef"];
+    json = [json replace:@"<image>" with:self.imageId];
+    
+    if (self.metadata && [self.metadata count] > 0) {
+        json = [json replace:@"<metadata>" with:[NSString stringWithFormat:@", \"metadata\": %@", [self.metadata JSONRepresentation]]];
     } else {
-        return [self toVersion1JSON];
+        json = [json replace:@"<metadata>" with:@""];
     }
+
+    if (self.personality && [self.personality count] > 0) {
+        NSString *personalityJSON = @", \"personality\": [ ";
+        
+        NSArray *paths = [self.personality allKeys];
+        for (int i = 0; i < [paths count]; i++) {
+            NSString *path = [paths objectAtIndex:i];
+            personalityJSON = [personalityJSON stringByAppendingString:[NSString stringWithFormat:@"{ \"path\": \"%@\", \"contents\": \"%@\" }", path, [Base64 encode:[[self.personality objectForKey:path] dataUsingEncoding:NSUTF8StringEncoding]]]];
+            if (i < [paths count] - 1) {
+                personalityJSON = [json stringByAppendingString:@", "];
+            }
+        }
+        personalityJSON = [personalityJSON stringByAppendingString:@" ]"];
+        
+        json = [json replace:@"<personality>" with:personalityJSON];
+        
+    } else {
+        json = [json replace:@"<personality>" with:@""];
+    }
+    
+    return json;
+    
 }
 
 #pragma mark - Build

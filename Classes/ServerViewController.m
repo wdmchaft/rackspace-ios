@@ -192,7 +192,7 @@
             [indexPaths addObject:[NSIndexPath indexPathForRow:kDelete inSection:kActions]];
         }
 
-        [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView reloadData];
         [indexPaths release];        
     }
 
@@ -545,8 +545,8 @@
     } else if (section == kDetails) {
         return 2;
     } else if (section == kIPAddresses) {
-        NSArray *publicIPs = [server.addresses objectForKey:@"public"];
-        NSArray *privateIPs = [server.addresses objectForKey:@"private"];
+        NSArray *publicIPs = [self.server.addresses objectForKey:@"public"];
+        NSArray *privateIPs = [self.server.addresses objectForKey:@"private"];
         return [publicIPs count] + [privateIPs count];
     } else if (section == kActions) {
         //return actionsExpanded ? 8 : 1;
