@@ -87,6 +87,7 @@
         failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getBackupScheduleFailed" object:server 
                                                                              queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
         {
+            [self alert:@"Error" message:@"There was a problem retrieving the backup schedule."];
             [activityIndicatorView removeFromSuperviewAndRelease];
             [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
         }];  

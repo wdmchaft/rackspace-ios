@@ -105,8 +105,7 @@
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
-#pragma mark -
-#pragma mark API Calls
+#pragma mark - API Calls
 
 #pragma mark Get Limits
 
