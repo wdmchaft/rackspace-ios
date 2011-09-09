@@ -44,7 +44,7 @@
 }
 
 + (LoadBalancerRequest *)getLoadBalancerDetailsRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@", loadBalancer.identifier];
     return [LoadBalancerRequest lbRequest:account method:@"GET" endpoint:endpoint path:path];
 }
 
@@ -58,7 +58,7 @@
 }
 
 + (LoadBalancerRequest *)updateLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@", loadBalancer.identifier];
 	NSString *body = [loadBalancer toUpdateJSON];
     NSLog(@"update load balancer: %@", body);
     LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
@@ -68,13 +68,13 @@
 }
 
 + (LoadBalancerRequest *)deleteLoadBalancerRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@", loadBalancer.identifier];
     return [LoadBalancerRequest lbRequest:account method:@"DELETE" endpoint:endpoint path:path];
 }
 
 + (LoadBalancerRequest *)updateConnectionLoggingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer {
     NSString *endpoint = [account loadBalancerEndpointForRegion:loadBalancer.region];
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/connectionlogging", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@/connectionlogging", loadBalancer.identifier];
 	NSString *body = [NSString stringWithFormat:@"{ \"connectionLogging\": { \"enabled\": \"%@\" } }", loadBalancer.connectionLoggingEnabled ? @"true": @"false"];
     LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
@@ -84,13 +84,13 @@
 
 + (LoadBalancerRequest *)getConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer {
     NSString *endpoint = [account loadBalancerEndpointForRegion:loadBalancer.region];
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/connectionthrottle", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@/connectionthrottle", loadBalancer.identifier];
     return [LoadBalancerRequest lbRequest:account method:@"GET" endpoint:endpoint path:path];
 }
 
 + (LoadBalancerRequest *)updateConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer {
     NSString *endpoint = [account loadBalancerEndpointForRegion:loadBalancer.region];
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/connectionthrottle", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@/connectionthrottle", loadBalancer.identifier];
     NSString *body = [loadBalancer.connectionThrottle toJSON];
     LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
@@ -100,7 +100,7 @@
 
 + (LoadBalancerRequest *)disableConnectionThrottlingRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer {
     NSString *endpoint = [account loadBalancerEndpointForRegion:loadBalancer.region];
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/connectionthrottle", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@/connectionthrottle", loadBalancer.identifier];
     return [LoadBalancerRequest lbRequest:account method:@"DELETE" endpoint:endpoint path:path];
 }
 
@@ -149,7 +149,7 @@
 }
 
 + (LoadBalancerRequest *)getLoadBalancerUsageRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint {
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/usage/current", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@/usage/current", loadBalancer.identifier];
     return [LoadBalancerRequest lbRequest:account method:@"GET" endpoint:endpoint path:path];
 }
 
@@ -169,7 +169,7 @@
 }
  
 + (LoadBalancerRequest *)addLoadBalancerNodesRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer nodes:(NSArray *)nodes endpoint:(NSString *)endpoint {
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/nodes", loadBalancer.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@/nodes", loadBalancer.identifier];
     NSString *body = @"{ \"nodes\": [ <nodes> ] }";
     NSString *nodesJSON = @"";
     for (int i = 0; i < [nodes count]; i++) {
@@ -187,7 +187,7 @@
 }
 
 + (LoadBalancerRequest *)updateLoadBalancerNodeRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer node:(LoadBalancerNode *)node endpoint:(NSString *)endpoint {
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/nodes/%@", loadBalancer.identifier, node.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@/nodes/%@", loadBalancer.identifier, node.identifier];
 	NSData *data = [[node toConditionUpdateJSON] dataUsingEncoding:NSUTF8StringEncoding];
     LoadBalancerRequest *request = [LoadBalancerRequest lbRequest:account method:@"PUT" endpoint:endpoint path:path];
 	[request setPostBody:[NSMutableData dataWithData:data]];
@@ -195,7 +195,7 @@
 }
 
 + (LoadBalancerRequest *)deleteLoadBalancerNodeRequest:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer node:(LoadBalancerNode *)node endpoint:(NSString *)endpoint {
-    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%i/nodes/%@", loadBalancer.identifier, node.identifier];
+    NSString *path = [NSString stringWithFormat:@"/loadbalancers/%@/nodes/%@", loadBalancer.identifier, node.identifier];
     return [LoadBalancerRequest lbRequest:account method:@"DELETE" endpoint:endpoint path:path];
 }
 
