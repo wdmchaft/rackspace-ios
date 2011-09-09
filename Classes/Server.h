@@ -11,55 +11,36 @@
 @class Image, Flavor, BackupSchedule;
 
 @interface Server : ComputeModel <NSCoding, NSCopying> {
-    
-    // progress from 0-100 for the current or last action
-    NSInteger progress;
-        
-    NSInteger imageId;
-    NSInteger flavorId;
-    NSString *status;
-    
-    // unique ID for the host machine
-    NSString *hostId;
-    
-    // "public" and "private" IP addresses
-    NSDictionary *addresses;
-    
-    NSDictionary *metadata;
-    
-    Image *image;
-    Flavor *flavor;
-    
-    NSString *rootPassword;
-    
-    // user configured URLs that are associated with the server
-    NSMutableDictionary *urls;
-        
-    // personality is for file injection.  keys are the path, and values are file contents
-    NSDictionary *personality;
-    
-    BackupSchedule *backupSchedule;
-    
 }
 
-@property (nonatomic, assign) NSInteger progress;
-@property (nonatomic, assign) NSInteger imageId;
-@property (nonatomic, assign) NSInteger flavorId;
+// progress from 0-100 for the current or last action
+@property (nonatomic, assign) NSInteger progress; 
+
+@property (nonatomic, retain) NSString *imageId;
+@property (nonatomic, retain) NSString *flavorId;
 @property (nonatomic, retain) NSString *status;
+
+// unique ID for the host machine
 @property (nonatomic, retain) NSString *hostId;
+
+// "public" and "private" IP addresses
 @property (nonatomic, retain) NSDictionary *addresses;
+
 @property (nonatomic, retain) NSDictionary *metadata;
 @property (nonatomic, retain) Image *image;
 @property (nonatomic, retain) Flavor *flavor;
+
+// user configured URLs that are associated with the server
 @property (nonatomic, retain) NSMutableDictionary *urls;
+
+// personality is for file injection.  keys are the path, and values are file contents
 @property (nonatomic, retain) NSDictionary *personality;
 @property (nonatomic, retain) BackupSchedule *backupSchedule;
 @property (nonatomic, retain) NSString *rootPassword;
 
 - (id)initWithJSONDict:(NSDictionary *)dict;
-
 + (Server *)fromJSON:(NSDictionary *)jsonDict;
-- (NSString *)toJSON;
+- (NSString *)toJSON:(NSString *)apiVersion;
 - (BOOL)shouldBePolled;
 
 @end

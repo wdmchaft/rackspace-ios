@@ -18,8 +18,7 @@
 #pragma mark Serialization
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-//    [self autoEncodeWithCoder:coder];
-    [coder encodeInt:identifier forKey:@"id"];
+    [coder encodeObject:identifier forKey:@"id"];
     [coder encodeObject:name forKey:@"name"];
     [coder encodeObject:status forKey:@"status"];
     [coder encodeObject:created forKey:@"created"];
@@ -30,8 +29,7 @@
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
-//        [self autoDecode:coder];
-        identifier = [coder decodeIntForKey:@"id"];
+        identifier = [[coder decodeObjectForKey:@"id"] retain];
         name = [[coder decodeObjectForKey:@"name"] retain];
         status = [[coder decodeObjectForKey:@"status"] retain];
         created = [[coder decodeObjectForKey:@"created"] retain];
@@ -57,22 +55,10 @@
 #pragma mark -
 #pragma mark JSON
 
-- (id)initWithJSONDict:(NSDictionary *)dict {
-    self = [super initWithJSONDict:dict];
-    if (self) {
-        [self autoParse:&self fromJSONDict:dict];
-    }
-    return self;
-}
-
 + (Image *)fromJSON:(NSDictionary *)dict {
     Image *image = [[[Image alloc] initWithJSONDict:dict] autorelease];
-    [self autoParse:&image fromJSONDict:dict];
-    /*
+//    [self autoParse:&image fromJSONDict:dict];
     image.status = [dict objectForKey:@"status"];
-    image.updated = [image dateForKey:@"updated" inDict:dict];
-    image.created = [image dateForKey:@"created" inDict:dict];
-     */
     return image;
 }
 

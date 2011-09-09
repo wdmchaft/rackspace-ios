@@ -63,10 +63,9 @@
     return [self callbackWithRequest:request success:^(OpenStackRequest *request){} failure:^(OpenStackRequest *request){}];
 }
 
-#pragma mark -
-#pragma mark Notification
+#pragma mark - Notification
 
-- (NSString *)notificationName:(NSString *)key identifier:(NSInteger)identifier {
+- (NSString *)notificationName:(NSString *)key identifier:(NSString *)identifier {
     return [NSString stringWithFormat:@"%@-%@-%i", key, self.account.uuid, identifier];
 }
 
@@ -106,8 +105,7 @@
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
-#pragma mark -
-#pragma mark API Calls
+#pragma mark - API Calls
 
 #pragma mark Get Limits
 
@@ -342,13 +340,13 @@
 - (void)getImage:(Server *)server {
     __block OpenStackRequest *request = [OpenStackRequest getImageRequest:self.account imageId:server.imageId];
     request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:server.imageId] forKey:@"imageId"];
+    request.userInfo = [NSDictionary dictionaryWithObject:server.imageId forKey:@"imageId"];
     [request setCompletionBlock:^{
         if ([request isSuccess]) {
             Image *image = [request image];
             if ([image isKindOfClass:[Image class]]) {
                 image.canBeLaunched = NO;
-                [self.account.images setObject:image forKey:[NSNumber numberWithInt:image.identifier]];        
+                [self.account.images setObject:image forKey:image.identifier];        
                 [self.account persist];        
             }
             [self notify:@"getImageSucceeded" request:request];

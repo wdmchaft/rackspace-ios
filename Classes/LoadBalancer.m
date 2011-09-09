@@ -125,7 +125,6 @@
            "        \"protocol\": \"<protocol>\","
            "        \"port\": \"<port>\""
            "  }}";
-    ;
     json = [json replace:@"<name>" with:self.name];
     json = [json replace:@"<algorithm>" with:self.algorithm];
     json = [json replace:@"<protocol>" with:self.protocol.name];

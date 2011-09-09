@@ -26,6 +26,7 @@
 @property (nonatomic, retain) Provider *provider;
 @property (nonatomic, retain) NSString *username;
 @property (nonatomic, retain) NSString *apiKey;
+@property (nonatomic, retain) NSString *projectId;
 @property (nonatomic, retain) NSString *authToken;
 @property (nonatomic, retain) NSMutableDictionary *images;
 @property (nonatomic, retain) NSDictionary *flavors;
@@ -36,12 +37,13 @@
 @property (nonatomic, retain) NSURL *cdnURL;
 @property (nonatomic, retain) NSArray *rateLimits;
 @property (nonatomic, retain) AccountManager *manager;
-@property (nonatomic, assign) NSInteger lastUsedFlavorId;
-@property (nonatomic, assign) NSInteger lastUsedImageId;
+@property (nonatomic, retain) NSString *lastUsedFlavorId;
+@property (nonatomic, retain) NSString *lastUsedImageId;
 @property (nonatomic, assign) NSInteger containerCount;
 @property (nonatomic, assign) unsigned long long totalBytesUsed;
 @property (nonatomic, retain) NSMutableDictionary *containers;
 @property (nonatomic, assign) BOOL flaggedForDelete;
+@property (nonatomic, retain) NSString *apiVersion;
 
 // this is a dictionary of dictionaries:
 // { "endpoint1": { "123": { ... }, "456": { ... } },

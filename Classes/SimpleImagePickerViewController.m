@@ -81,7 +81,7 @@
         [self addSaveButton];
     }
     
-    Image *image = [self.account.images objectForKey:[NSNumber numberWithInt:selectedImageId]];
+    Image *image = [self.account.images objectForKey:selectedImageId];
     
     for (int i = 0; i < [stringKeys count]; i++) {
         NSString *stringKey = [stringKeys objectAtIndex:i];
@@ -249,7 +249,7 @@
 
 - (void)saveButtonPressed:(id)sender {
     [self.serverViewController showToolbarActivityMessage:@"Rebuilding server..."];
-    [self.account.manager rebuildServer:self.serverViewController.server image:[self.account.images objectForKey:[NSNumber numberWithInt:self.selectedImageId]]];
+    [self.account.manager rebuildServer:self.serverViewController.server image:[self.account.images objectForKey:self.selectedImageId]];
     [self dismissModalViewControllerAnimated:YES];
     [serverViewController.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:kRebuild inSection:kActions] animated:YES];
 }
@@ -271,6 +271,7 @@
     [delegate release];
     [stringKeys release];
     [serverViewController release];
+    [selectedImageId release];
     [super dealloc];
 }
 

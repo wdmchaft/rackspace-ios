@@ -192,7 +192,7 @@
             [indexPaths addObject:[NSIndexPath indexPathForRow:kDelete inSection:kActions]];
         }
 
-        [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView reloadData];
         [indexPaths release];        
     }
 
@@ -250,10 +250,15 @@
     if ([request isSuccess]) {
         self.server = [request server];
         
-        self.server.flavor = [self.account.flavors objectForKey:[NSNumber numberWithInt:self.server.flavorId]];
-        self.server.image = [self.account.images objectForKey:[NSNumber numberWithInt:self.server.imageId]];
+        NSLog(@"flavor id: %@", self.server.flavorId);
         
-        [self.account.servers setObject:server forKey:[NSNumber numberWithInt:self.server.identifier]];
+        self.server.flavor = [self.account.flavors objectForKey:self.server.flavorId];
+        
+        NSLog(@"server flavor: %@", self.server.flavor);
+        
+        self.server.image = [self.account.images objectForKey:self.server.imageId];
+        
+        [self.account.servers setObject:server forKey:self.server.identifier];
         [self.account persist];
         
         NSLog(@"polling server worked. %i, %@", self.server.progress, self.server.status);
@@ -369,7 +374,7 @@
         getImageSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageSucceeded" object:nil
                                                                                        queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
         {
-            Image *image = [self.account.images objectForKey:[NSNumber numberWithInt:self.server.imageId]];
+            Image *image = [self.account.images objectForKey:self.server.imageId];
             self.server.image = image;
 
             /*
@@ -383,7 +388,7 @@
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:kImage inSection:kDetails]] withRowAnimation:UITableViewRowAnimationNone];
         }];
         
-        getImageFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageFailed" object:[NSNumber numberWithInt:self.server.imageId]
+        getImageFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageFailed" object:self.server.imageId
                                                                                     queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
         {
             NSLog(@"loading image failed");
@@ -540,8 +545,8 @@
     } else if (section == kDetails) {
         return 2;
     } else if (section == kIPAddresses) {
-        NSArray *publicIPs = [server.addresses objectForKey:@"public"];
-        NSArray *privateIPs = [server.addresses objectForKey:@"private"];
+        NSArray *publicIPs = [self.server.addresses objectForKey:@"public"];
+        NSArray *privateIPs = [self.server.addresses objectForKey:@"private"];
         return [publicIPs count] + [privateIPs count];
     } else if (section == kActions) {
         //return actionsExpanded ? 8 : 1;
@@ -638,13 +643,10 @@
 
         if (indexPath.row == kImage) {
             cell.textLabel.text = @"Image";
-            //cell.textLabel.text = server.image.name;
             cell.detailTextLabel.text = server.image.name; 
         } else if (indexPath.row == kMemory) {
             cell.textLabel.text = @"Size";
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%i MB RAM, %i GB Disk", self.server.flavor.ram, self.server.flavor.disk];
-            //cell.textLabel.text = @"Memory";
-            //cell.detailTextLabel.text = [NSString stringWithFormat:@"%i MB", server.flavor.ram];
         } else if (indexPath.row == kDisk) {
             cell.textLabel.text = @"Disk";
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%i GB", server.flavor.disk];
@@ -669,13 +671,7 @@
             }            
         } else {
             cell.textLabel.text = @"Private";
-            if ([[privateIPs objectAtIndex:[publicIPs count] - indexPath.row] isKindOfClass:[NSString class]]) {
-                // v1.0 API
-                cell.detailTextLabel.text = [privateIPs objectAtIndex:[publicIPs count] - indexPath.row];
-            } else {
-                // v1.1 API
-                cell.detailTextLabel.text = [[privateIPs objectAtIndex:[publicIPs count] - indexPath.row] objectForKey:@"addr"];
-            }            
+            cell.detailTextLabel.text = [privateIPs objectAtIndex:indexPath.row - [publicIPs count]];
         }
     } else if (indexPath.section == kActions) {
         cell.textLabel.text = @"Actions";
@@ -978,7 +974,7 @@
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
             
             NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:self.account.servers];
-            [dict removeObjectForKey:[NSNumber numberWithInt:self.server.identifier]];
+            [dict removeObjectForKey:self.server.identifier];
             self.account.servers = [[NSMutableDictionary alloc] initWithDictionary:dict]; // TODO: release
             [self.account persist];
             [dict release];

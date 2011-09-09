@@ -25,10 +25,10 @@ static NSMutableDictionary *timers = nil;
 
 @implementation OpenStackAccount
 
-@synthesize uuid, provider, username, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
+@synthesize uuid, provider, username, projectId, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
             lastUsedFlavorId, lastUsedImageId,
             containerCount, totalBytesUsed, containers, hasBeenRefreshed, flaggedForDelete,
-            loadBalancers, lbProtocols, serversByPublicIP;
+            loadBalancers, lbProtocols, serversByPublicIP, apiVersion;
 
 + (void)initialize {
     accounts = [Archiver retrieve:@"accounts"];
@@ -189,6 +189,7 @@ static NSMutableDictionary *timers = nil;
     copy.lastUsedImageId = self.lastUsedImageId;
     copy.containerCount = self.containerCount;
     copy.totalBytesUsed = self.totalBytesUsed;
+    copy.apiVersion = self.apiVersion;
     manager = [[AccountManager alloc] init];
     manager.account = copy;
     return copy;
@@ -203,8 +204,8 @@ static NSMutableDictionary *timers = nil;
     [coder encodeObject:filesURL forKey:@"filesURL"];
     [coder encodeObject:cdnURL forKey:@"cdnURL"];
     [coder encodeObject:rateLimits forKey:@"rateLimits"];
-    [coder encodeInt:lastUsedFlavorId forKey:@"lastUsedFlavorId"];
-    [coder encodeInt:lastUsedImageId forKey:@"lastUsedImageId"];
+    [coder encodeObject:lastUsedFlavorId forKey:@"lastUsedFlavorId"];
+    [coder encodeObject:lastUsedImageId forKey:@"lastUsedImageId"];
     [coder encodeInt:containerCount forKey:@"containerCount"];
     [coder encodeInt:totalBytesUsed forKey:@"totalBytesUsed"];
     
@@ -216,6 +217,8 @@ static NSMutableDictionary *timers = nil;
     [coder encodeObject:containers forKey:@"containers"];
     [coder encodeObject:loadBalancers forKey:@"loadBalancers"];
     */
+    
+    [coder encodeObject:apiVersion forKey:@"apiVersion"];
 }
 
 - (id)decode:(NSCoder *)coder key:(NSString *)key {    
@@ -256,8 +259,8 @@ static NSMutableDictionary *timers = nil;
 
         [self loadTimer];
         
-        lastUsedFlavorId = [coder decodeIntForKey:@"lastUsedFlavorId"];
-        lastUsedImageId = [coder decodeIntForKey:@"lastUsedImageId"];
+        lastUsedFlavorId = [self decode:coder key:@"lastUserFlavorId"];
+        lastUsedImageId = [self decode:coder key:@"lastUsedImageId"];
         
         containerCount = [coder decodeIntForKey:@"containerCount"];
         //totalBytesUsed = [coder decodeIntForKey:@"totalBytesUsed"];
@@ -265,6 +268,16 @@ static NSMutableDictionary *timers = nil;
         containers = [self decode:coder key:@"containers"];
         loadBalancers = [self decode:coder key:@"loadBalancers"];
 
+        apiVersion = [self decode:coder key:@"apiVersion"];
+        if (!apiVersion) {
+            NSString *component = [[[provider.authEndpointURL description] componentsSeparatedByString:@"/"] lastObject];
+            if ([component isEqualToString:@"v1.1"]) {
+                self.apiVersion = @"1.1";
+            } else {
+                self.apiVersion = component;
+            }
+        }
+        
         manager = [[AccountManager alloc] init];
         manager.account = self;
     }
@@ -417,8 +430,7 @@ static NSMutableDictionary *timers = nil;
     }
 }
 
-#pragma mark -
-#pragma mark Memory Management
+#pragma mark - Memory Management
 
 - (void)dealloc {
     NSTimer *timer = [timers objectForKey:uuid];
@@ -429,6 +441,7 @@ static NSMutableDictionary *timers = nil;
     [manager release];
     [provider release];
     [username release];
+    [projectId release];
     [flavors release];
     [images release];
     [servers release];
@@ -440,6 +453,9 @@ static NSMutableDictionary *timers = nil;
     [loadBalancers release];
     [lbProtocols release];
     [serversByPublicIP release];
+    [lastUsedFlavorId release];
+    [lastUsedImageId release];
+    [apiVersion release];
     
     [super dealloc];
 }

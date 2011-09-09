@@ -38,13 +38,11 @@
 + (id)filesRequest:(OpenStackAccount *)account method:(NSString *)method path:(NSString *)path;
 + (id)cdnRequest:(OpenStackAccount *)account method:(NSString *)method path:(NSString *)path;
 
-#pragma mark -
-#pragma mark Authentication
+#pragma mark - Authentication
 
 + (OpenStackRequest *)authenticationRequest:(OpenStackAccount *)account;
 
-#pragma mark -
-#pragma mark Compute Requests
+#pragma mark - Compute Requests
 
 #pragma mark Rate Limits
 
@@ -57,12 +55,12 @@
 + (OpenStackRequest *)getServersRequest:(OpenStackAccount *)account;
 - (NSDictionary *)servers;
 
-+ (OpenStackRequest *)getServerRequest:(OpenStackAccount *)account serverId:(NSInteger)serverId;
++ (OpenStackRequest *)getServerRequest:(OpenStackAccount *)account serverId:(NSString *)serverId;
 
 + (OpenStackRequest *)getImagesRequest:(OpenStackAccount *)account;
 - (NSDictionary *)images;
 
-+ (OpenStackRequest *)getImageRequest:(OpenStackAccount *)account imageId:(NSInteger)imageId;
++ (OpenStackRequest *)getImageRequest:(OpenStackAccount *)account imageId:(NSString *)imageId;
 - (Image *)image;
 
 + (OpenStackRequest *)getFlavorsRequest:(OpenStackAccount *)account;
@@ -109,8 +107,7 @@
 - (Server *)server;
 - (BackupSchedule *)backupSchedule;
 
-#pragma mark -
-#pragma mark Object Storage Requests
+#pragma mark - Object Storage Requests
 
 + (OpenStackRequest *)getStorageAccountInfoRequest:(OpenStackAccount *)account;
 + (OpenStackRequest *)getContainersRequest:(OpenStackAccount *)account;

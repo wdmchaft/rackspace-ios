@@ -142,7 +142,11 @@
     } else {
         contactRow = -1;
     }
-    limitsRow = totalRows++;
+    if ([self.account.apiVersion isEqualToString:@"1.0"]) {
+        limitsRow = totalRows++;
+    } else {
+        limitsRow = -1;
+    }
     accountSettingsRow = totalRows++;
     [self.tableView reloadData];
 }

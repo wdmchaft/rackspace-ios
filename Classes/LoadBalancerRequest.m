@@ -119,7 +119,7 @@
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];
         LoadBalancer *loadBalancer = [LoadBalancer fromJSON:dict account:a];
-        [objects setObject:loadBalancer forKey:[NSNumber numberWithInt:loadBalancer.identifier]];
+        [objects setObject:loadBalancer forKey:loadBalancer.identifier];
     }
     [parser release];
     return objects;

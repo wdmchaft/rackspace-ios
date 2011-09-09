@@ -16,7 +16,11 @@
 }
 
 - (NSString *)replace:(NSString *)s with:(NSString *)r {
-    return [self stringByReplacingOccurrencesOfString:s withString:r];
+    if ([r isKindOfClass:[NSString class]]) {
+        return [self stringByReplacingOccurrencesOfString:s withString:r];
+    } else {
+        return [self stringByReplacingOccurrencesOfString:s withString:[r description]];
+    }
 }
 
 - (NSString *)replace:(NSString *)s withInt:(NSInteger)i {

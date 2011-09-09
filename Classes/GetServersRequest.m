@@ -40,7 +40,6 @@
 
 - (void)requestFinished {        
     if ([self isSuccess]) {
-        //NSLog(@"servers response: %@", [self responseString]);
         
         account.servers = [NSMutableDictionary dictionaryWithDictionary:[self servers]];
         
@@ -48,12 +47,12 @@
         NSMutableDictionary *fullServers = [[NSMutableDictionary alloc] initWithCapacity:[keys count]];
         for (int i = 0; i < [keys count]; i++) {
             Server *server = [self.account.servers objectForKey:[keys objectAtIndex:i]];            
-            server.image = [self.account.images objectForKey:[NSNumber numberWithInt:server.imageId]];
-            server.flavor = [self.account.flavors objectForKey:[NSNumber numberWithInt:server.flavorId]];
-            if (!server.image) {
+            server.image = [self.account.images objectForKey:server.imageId];
+            server.flavor = [self.account.flavors objectForKey:server.flavorId];
+            if (!server.image && server.imageId) {
                 [self.account.manager getImage:server];
             }
-            [fullServers setObject:server forKey:[NSNumber numberWithInt:server.identifier]];            
+            [fullServers setObject:server forKey:server.identifier];            
         }
         self.account.servers = [NSMutableDictionary dictionaryWithDictionary:fullServers];
         [fullServers release];

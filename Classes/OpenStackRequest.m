@@ -254,33 +254,62 @@ static NSRecursiveLock *accessDetailsLock = nil;
     [super failWithError:theError];
 }
 
-#pragma mark -
-#pragma mark Authentication
+#pragma mark - Authentication
 
-+ (OpenStackRequest *)authenticationRequest:(OpenStackAccount *)account {
- 	//[accessDetailsLock lock];
-	OpenStackRequest *request = [[[OpenStackRequest alloc] initWithURL:account.provider.authEndpointURL] autorelease];
-    
-    
-    //request.didFinishSelector
-    
-    request.account = account;
-    //NSLog(@"auth: %@ %@", account.username, account.apiKey);
-	[request addRequestHeader:@"X-Auth-User" value:account.username];
++ (NSString *)apiVersionForURL:(NSURL *)url {
+    NSArray *components = [[url description] componentsSeparatedByString:@"/"];
+    if ([[components lastObject] isEqualToString:@"2.0"]) {
+        return @"2.0";
+    } else if ([[components lastObject] isEqualToString:@"v1.1"]) {
+        return @"1.1";
+    } else {
+        return @"1.0";
+    }
+}
+
++ (void)setupV1AuthForRequest:(OpenStackRequest *)request account:(OpenStackAccount *)account apiVersion:(NSString *)apiVersion {
+    [request addRequestHeader:@"X-Auth-User" value:account.username];
     if (account.apiKey) {
         [request addRequestHeader:@"X-Auth-Key" value:account.apiKey];
     } else {
         [request addRequestHeader:@"X-Auth-Key" value:@""];
+    }        
+}
+
++ (void)setupAuthForRequest:(OpenStackRequest *)request account:(OpenStackAccount *)account apiVersion:(NSString *)apiVersion {
+
+    if ([apiVersion isEqualToString:@"1.0"]) {
+        
+        [OpenStackRequest setupV1AuthForRequest:request account:account apiVersion:apiVersion];
+        account.apiVersion = @"1.0";
+        
+    } else if ([apiVersion isEqualToString:@"1.1"]) {
+        
+        [OpenStackRequest setupV1AuthForRequest:request account:account apiVersion:apiVersion];
+        if (account.projectId) {
+            [request addRequestHeader:@"X-Auth-Project-Id" value:account.projectId];
+        }
+        account.apiVersion = @"1.1";
+        
+    } else if ([apiVersion isEqualToString:@"2.0"]) {
+        
+        // TODO: support 2.0 auth
+        account.apiVersion = @"1.1";
     }
-    
-    //NSLog(@"Authenticating to %@ with %@/%@", account.provider.authEndpointURL, account.username, account.apiKey);
-    
-	//[accessDetailsLock unlock];
+}
+
++ (OpenStackRequest *)authenticationRequest:(OpenStackAccount *)account {
+
+	OpenStackRequest *request = [[[OpenStackRequest alloc] initWithURL:account.provider.authEndpointURL] autorelease];
+    request.account = account;
+
+    NSString *apiVersion = [OpenStackRequest apiVersionForURL:account.provider.authEndpointURL];
+    [OpenStackRequest setupAuthForRequest:request account:account apiVersion:apiVersion];
+
 	return request;
 }
 
-#pragma mark -
-#pragma mark Rate Limits
+#pragma mark - Rate Limits
 
 + (OpenStackRequest *)getLimitsRequest:(OpenStackAccount *)account {
     return [OpenStackRequest serversRequest:account method:@"GET" path:@"/limits"];
@@ -321,7 +350,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];
         Server *server = [[Server alloc] initWithJSONDict:dict];
-        [objects setObject:server forKey:[NSNumber numberWithInt:server.identifier]];
+        [objects setObject:server forKey:server.identifier];
         [server release];
     }
     
@@ -329,8 +358,8 @@ static NSRecursiveLock *accessDetailsLock = nil;
     return objects;
 }
 
-+ (OpenStackRequest *)getServerRequest:(OpenStackAccount *)account serverId:(NSInteger)serverId {
-    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/servers/%i", serverId]];
++ (OpenStackRequest *)getServerRequest:(OpenStackAccount *)account serverId:(NSString *)serverId {
+    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/servers/%@", serverId]];
 }
 
 + (OpenStackRequest *)getImagesRequest:(OpenStackAccount *)account {
@@ -345,7 +374,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];
         Image *image = [[Image alloc] initWithJSONDict:dict];
-        [objects setObject:image forKey:[NSNumber numberWithInt:image.identifier]];
+        [objects setObject:image forKey:image.identifier];
         [image release];
     }
     
@@ -353,8 +382,8 @@ static NSRecursiveLock *accessDetailsLock = nil;
     return objects;
 }
 
-+ (OpenStackRequest *)getImageRequest:(OpenStackAccount *)account imageId:(NSInteger)imageId {
-    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/images/%i", imageId]];
++ (OpenStackRequest *)getImageRequest:(OpenStackAccount *)account imageId:(NSString *)imageId {
+    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/images/%@", imageId]];
 }
 
 - (Image *)image {
@@ -378,7 +407,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     for (int i = 0; i < [jsonObjects count]; i++) {
         NSDictionary *dict = [jsonObjects objectAtIndex:i];
         Flavor *flavor = [Flavor fromJSON:dict];
-        [objects setObject:flavor forKey:[NSNumber numberWithInt:flavor.identifier]];
+        [objects setObject:flavor forKey:flavor.identifier];
     }
     
     [parser release];
@@ -392,7 +421,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
 
 + (OpenStackRequest *)rebootServerRequest:(OpenStackAccount *)account server:(Server *)server type:(NSInteger)type {
     NSString *body = [NSString stringWithFormat:@"{ \"reboot\": { \"type\": \"%@\" } }", (type == kSoft) ? @"SOFT" : @"HARD"];
-    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%i/action", server.identifier]];	
+    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%@/action", server.identifier]];	
     NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
     [request setPostBody:[NSMutableData dataWithData:data]];
     return request;
@@ -403,7 +432,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
 }
 
 + (RateLimit *)softRebootServerLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i/action", server.identifier] verb:@"POST" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@/action", server.identifier] verb:@"POST" account:account];
 }
 
 + (OpenStackRequest *)hardRebootServerRequest:(OpenStackAccount *)account server:(Server *)server {
@@ -411,43 +440,43 @@ static NSRecursiveLock *accessDetailsLock = nil;
 }
 
 + (RateLimit *)hardRebootServerLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i/action", server.identifier] verb:@"POST" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@/action", server.identifier] verb:@"POST" account:account];
 }
 
 + (OpenStackRequest *)changeServerAdminPasswordRequest:(OpenStackAccount *)account server:(Server *)server password:(NSString *)password {
 	NSString *body = [NSString stringWithFormat:@"{ \"server\": { \"adminPass\": \"%@\" } }", password];
-    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"PUT" path:[NSString stringWithFormat:@"/servers/%i", server.identifier]];	
+    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"PUT" path:[NSString stringWithFormat:@"/servers/%@", server.identifier]];	
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
 }
 
 + (RateLimit *)changeServerAdminPasswordLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i", server.identifier] verb:@"PUT" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@", server.identifier] verb:@"PUT" account:account];
 }
 
 + (OpenStackRequest *)renameServerRequest:(OpenStackAccount *)account server:(Server *)server name:(NSString *)name {
 	NSString *body = [NSString stringWithFormat:@"{ \"server\": { \"name\": \"%@\" } }", name];
-    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"PUT" path:[NSString stringWithFormat:@"/servers/%i", server.identifier]];	
+    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"PUT" path:[NSString stringWithFormat:@"/servers/%@", server.identifier]];	
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
 }
 
 + (RateLimit *)renameServerLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i", server.identifier] verb:@"PUT" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@", server.identifier] verb:@"PUT" account:account];
 }
 
 + (OpenStackRequest *)deleteServerRequest:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest serversRequest:account method:@"DELETE" path:[NSString stringWithFormat:@"/servers/%i", server.identifier]];
+    return [OpenStackRequest serversRequest:account method:@"DELETE" path:[NSString stringWithFormat:@"/servers/%@", server.identifier]];
 }
 
 + (RateLimit *)deleteServerLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i", server.identifier] verb:@"DELETE" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@", server.identifier] verb:@"DELETE" account:account];
 }
 
 + (OpenStackRequest *)createServerRequest:(OpenStackAccount *)account server:(Server *)server {
-	NSString *body = [server toJSON];
+	NSString *body = [server toJSON:account.apiVersion];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/servers", account.serversURL]];
     NSLog(@"create server: %@", body);
     OpenStackRequest *request = [OpenStackRequest request:account method:@"POST" url:url];    
@@ -469,72 +498,77 @@ static NSRecursiveLock *accessDetailsLock = nil;
 }
 
 + (OpenStackRequest *)resizeServerRequest:(OpenStackAccount *)account server:(Server *)server flavor:(Flavor *)flavor {
-	NSString *body = [NSString stringWithFormat:@"{ \"resize\": { \"flavorId\": %i } }", flavor.identifier];
-    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%i/action", server.identifier]];	
+	NSString *body;
+    if ([account.apiVersion isEqualToString:@"1.0"]) {
+        body = [NSString stringWithFormat:@"{ \"resize\": { \"flavorId\": %@ } }", flavor.identifier];
+    } else {
+        body = [NSString stringWithFormat:@"{ \"resize\": { \"flavorRef\": %@ } }", flavor.identifier];
+    }
+    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%@/action", server.identifier]];	
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
 }
 
 + (RateLimit *)resizeServerLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i/action", server.identifier] verb:@"POST" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@/action", server.identifier] verb:@"POST" account:account];
 }
 
 + (OpenStackRequest *)confirmResizeServerRequest:(OpenStackAccount *)account server:(Server *)server {
 	NSString *body = @"{ \"confirmResize\": null }";
-    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%i/action", server.identifier]];	
+    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%@/action", server.identifier]];	
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
 }
 
 + (RateLimit *)confirmResizeServerLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i/action", server.identifier] verb:@"POST" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@/action", server.identifier] verb:@"POST" account:account];
 }
 
 + (OpenStackRequest *)revertResizeServerRequest:(OpenStackAccount *)account server:(Server *)server {
 	NSString *body = @"{ \"revertResize\": null }";
-    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%i/action", server.identifier]];	
+    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%@/action", server.identifier]];	
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
 }
 
 + (RateLimit *)revertResizeServerLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i/action", server.identifier] verb:@"POST" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@/action", server.identifier] verb:@"POST" account:account];
 }
 
 + (OpenStackRequest *)rebuildServerRequest:(OpenStackAccount *)account server:(Server *)server image:(Image *)image {
 	NSString *body = [NSString stringWithFormat:@"{ \"rebuild\": { \"imageId\": %i } }", image.identifier];
-    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%i/action", server.identifier]];	
+    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%@/action", server.identifier]];	
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
 }
 
 + (RateLimit *)rebuildServerLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i/action", server.identifier] verb:@"POST" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@/action", server.identifier] verb:@"POST" account:account];
 }
 
 
 + (OpenStackRequest *)getBackupScheduleRequest:(OpenStackAccount *)account server:(Server *)server {    
-    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/servers/%i/backup_schedule", server.identifier]];
+    return [OpenStackRequest serversRequest:account method:@"GET" path:[NSString stringWithFormat:@"/servers/%@/backup_schedule", server.identifier]];
 }
 
 + (RateLimit *)getBackupScheduleLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i/backup_schedule", server.identifier] verb:@"GET" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@/backup_schedule", server.identifier] verb:@"GET" account:account];
 }
 
 + (OpenStackRequest *)updateBackupScheduleRequest:(OpenStackAccount *)account server:(Server *)server {
 	NSString *body = [NSString stringWithFormat:@"{ \"backupSchedule\": { \"enabled\": true, \"weekly\": \"%@\", \"daily\": \"%@\" } }", server.backupSchedule.weekly, server.backupSchedule.daily];
-    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%i/backup_schedule", server.identifier]];	
+    OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%@/backup_schedule", server.identifier]];	
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];
 	return request;
 }
 
 + (RateLimit *)updateBackupScheduleLimit:(OpenStackAccount *)account server:(Server *)server {
-    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%i/backup_schedule", server.identifier] verb:@"POST" account:account];
+    return [OpenStackRequest limitForPath:[NSString stringWithFormat:@"/servers/%@/backup_schedule", server.identifier] verb:@"POST" account:account];
 }
 
 - (BackupSchedule *)backupSchedule {

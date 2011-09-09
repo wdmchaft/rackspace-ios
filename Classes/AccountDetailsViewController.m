@@ -53,7 +53,6 @@
             account.cdnURL = [NSURL URLWithString:cdnStr];
         }
         [account persist];
-//        [account release];
         [rootViewController.tableView reloadData];
         [account refreshCollections];
         [self.navigationController dismissModalViewControllerAnimated:YES];
@@ -177,8 +176,7 @@
     [self authenticate];
 }
 
-#pragma mark -
-#pragma mark View lifecycle
+#pragma mark - View lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -249,54 +247,63 @@
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (RSTextFieldCell *)textCell:(NSString *)labelText textField:(UITextField **)textField secure:(BOOL)secure returnKeyType:(UIReturnKeyType)returnKeyType {
+
+    RSTextFieldCell *cell = (RSTextFieldCell *)[self.tableView dequeueReusableCellWithIdentifier:labelText];
     
-    static NSString *CellIdentifier = @"Cell";
-    
-    RSTextFieldCell *cell = (RSTextFieldCell *) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        
+        cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:labelText] autorelease];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.modalPresentationStyle = UIModalPresentationFormSheet;
+        cell.textLabel.text = labelText;
+        *textField = cell.textField;
+        ((UITextField *)*textField).delegate = self;
+        ((UITextField *)*textField).secureTextEntry = secure;
+        ((UITextField *)*textField).returnKeyType = returnKeyType;
     }
     
+    return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = nil;
+    
     if (indexPath.section == authenticationSection) {
+        
         if (indexPath.row == kUsername) {
-            cell.textLabel.text = @"Username";
-            usernameTextField = cell.textField;
-            usernameTextField.secureTextEntry = NO;
-            usernameTextField.delegate = self;
-            usernameTextField.returnKeyType = UIReturnKeyNext;
+            
+            cell = [self textCell:@"Username" textField:&usernameTextField secure:NO returnKeyType:UIReturnKeyNext];
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                 CGRect rect = usernameTextField.frame;
                 CGFloat offset = 19.0;
                 usernameTextField.frame = CGRectMake(rect.origin.x + offset, rect.origin.y, rect.size.width - offset, rect.size.height);
             }
+            
         } else if (indexPath.row == kAPIKey) {
-            cell.textLabel.text = @"API Key";
-            apiKeyTextField = cell.textField;
-            apiKeyTextField.secureTextEntry = YES;
-            apiKeyTextField.delegate = self;
-            apiKeyTextField.returnKeyType = UIReturnKeyDone;
+            
+            cell = [self textCell:@"API Key" textField:&apiKeyTextField secure:YES returnKeyType:UIReturnKeyDone];
+            
         }
+        
     } else if (indexPath.section == providerSection) {
+        
         if (indexPath.row == kProviderName) {
-            cell.textLabel.text = @"Name";
-            providerNameTextField = cell.textField;
-            providerNameTextField.secureTextEntry = NO;
-            providerNameTextField.delegate = self;
-            providerNameTextField.returnKeyType = UIReturnKeyNext;
+            
+            cell = [self textCell:@"Name" textField:&providerNameTextField secure:NO returnKeyType:UIReturnKeyNext];
             providerNameTextField.placeholder = @"Ex: Rackspace Cloud";
+            
         } else if (indexPath.row == kAuthEndpoint) {
-            cell.textLabel.text = @"API URL";
-            apiEndpointTextField = cell.textField;
-            apiEndpointTextField.secureTextEntry = NO;
-            apiEndpointTextField.delegate = self;
-            apiEndpointTextField.returnKeyType = UIReturnKeyNext;
+            
+            cell = [self textCell:@"API URL" textField:&apiEndpointTextField secure:NO returnKeyType:UIReturnKeyNext];
+
         }
+        
     }
     
     return cell;
+    
 }
 
 #pragma mark -
@@ -326,7 +333,6 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {    
-    [textField resignFirstResponder];
 
     if ([textField isEqual:providerNameTextField]) {
         [apiEndpointTextField becomeFirstResponder];
@@ -337,6 +343,7 @@
         [apiKeyTextField becomeFirstResponder];
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:kAPIKey inSection:authenticationSection] atScrollPosition:UITableViewScrollPositionNone animated:YES];
     } else {
+        [textField resignFirstResponder];
         self.navigationItem.rightBarButtonItem.enabled = NO;        
         tableShrunk = NO;
         CGRect rect = self.tableView.frame;
