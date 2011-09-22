@@ -40,7 +40,7 @@
     
     [self.activityIndicatorView removeFromSuperview];
     
-    if ([request responseStatusCode] == 204) {        
+    if ([request isSuccess]) {        
         account.authToken = [[request responseHeaders] objectForKey:@"X-Auth-Token"];
         account.serversURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Server-Management-Url"]];
         account.filesURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Storage-Url"]];
