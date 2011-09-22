@@ -389,7 +389,7 @@
             return [NSString stringWithFormat:@"With your current API rate limit, you can create up to %i servers at a time.", maxServers];
         }
     } else if (section == kNodeDetails) {
-        return [self.account.provider isRackspace] ? @"Please refer to rackspacecloud.com for Cloud Servers pricing." : @"";
+        return [self.account.provider isRackspace] ? @"Please refer to rackspace.com/cloud for Cloud Servers pricing." : @"";
     } else {
         id <AddServerPlugin> plugin = [plugins objectAtIndex:section - 2];
         return [plugin tableView:tableView titleForFooterInSection:section];
