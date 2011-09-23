@@ -86,8 +86,8 @@
     
     LoadBalancer *loadBalancer = [self.account.sortedLoadBalancers objectAtIndex:indexPath.row];
     cell.textLabel.text = loadBalancer.name;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i - %@", loadBalancer.protocol.name, loadBalancer.protocol.port, [algorithmNames objectForKey:loadBalancer.algorithm]];
-//    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i - %@", loadBalancer.status, loadBalancer.protocol.port, [algorithmNames objectForKey:loadBalancer.algorithm]];
+//    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i - %@", loadBalancer.protocol.name, loadBalancer.protocol.port, [algorithmNames objectForKey:loadBalancer.algorithm]];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@:%i - %@", loadBalancer.status, loadBalancer.protocol.port, [algorithmNames objectForKey:loadBalancer.algorithm]];
     cell.imageView.image = [UIImage imageNamed:@"load-balancers-icon.png"];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {

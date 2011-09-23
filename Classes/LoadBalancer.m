@@ -73,7 +73,7 @@
 + (LoadBalancer *)fromJSON:(NSDictionary *)dict account:(OpenStackAccount *)account {
     
     LoadBalancer *loadBalancer = [[[LoadBalancer alloc] initWithJSONDict:dict] autorelease];
-
+    
     LoadBalancerProtocol *p = [[[LoadBalancerProtocol alloc] init] autorelease];
     p.name = [dict objectForKey:@"protocol"];
     p.port = [[dict objectForKey:@"port"] intValue];
