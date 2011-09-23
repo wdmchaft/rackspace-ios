@@ -539,7 +539,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
 }
 
 + (OpenStackRequest *)rebuildServerRequest:(OpenStackAccount *)account server:(Server *)server image:(Image *)image {
-	NSString *body = [NSString stringWithFormat:@"{ \"rebuild\": { \"imageId\": %i } }", image.identifier];
+	NSString *body = [NSString stringWithFormat:@"{ \"rebuild\": { \"imageId\": %@ } }", image.identifier];
     OpenStackRequest *request = [OpenStackRequest serversRequest:account method:@"POST" path:[NSString stringWithFormat:@"/servers/%@/action", server.identifier]];	
 	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
 	[request setPostBody:[NSMutableData dataWithData:data]];

@@ -127,15 +127,26 @@
     NSString *json
         = @"{ \"server\": { "
         "        \"name\": \"<name>\","
-        "        \"<flavorType>\": \"<flavor>\","
-        "        \"<imageType>\": \"<image>\""
+        "        \"<flavorType>\": <flavor>,"
+        "        \"<imageType>\": <image>"
         "        <metadata><personality>"
         "  }}";
     json = [json replace:@"<name>" with:self.name];    
     json = [json replace:@"<flavorType>" with:version1 ? @"flavorId" : @"flavorRef"];
-    json = [json replace:@"<flavor>" with:self.flavorId];
+    
+    if (version1) {
+        json = [json replace:@"<flavor>" with:self.flavorId];
+    } else {
+        json = [json replace:@"<flavor>" with:[NSString stringWithFormat:@"\"%@\"", self.flavorId]];
+    }
+    
     json = [json replace:@"<imageType>" with:version1 ? @"imageId" : @"imageRef"];
-    json = [json replace:@"<image>" with:self.imageId];
+
+    if (version1) {
+        json = [json replace:@"<image>" with:self.imageId];
+    } else {
+        json = [json replace:@"<image>" with:[NSString stringWithFormat:@"\"%@\"", self.imageId]];
+    }
     
     if (self.metadata && [self.metadata count] > 0) {
         json = [json replace:@"<metadata>" with:[NSString stringWithFormat:@", \"metadata\": %@", [self.metadata JSONRepresentation]]];

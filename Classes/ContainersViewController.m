@@ -17,6 +17,7 @@
 #import "OpenStackAppDelegate.h"
 #import "RootViewController.h"
 #import "APICallback.h"
+#import "GetCDNContainersRequest.h"
 
 
 @implementation ContainersViewController
@@ -116,6 +117,10 @@
         [self.account persist];
         [self enableRefreshButton];
         [self.tableView reloadData];
+        
+        GetCDNContainersRequest *cdnRequest = [GetCDNContainersRequest request:self.account];
+        [cdnRequest startAsynchronous];
+        
     } failure:^(OpenStackRequest *request) {
         [self enableRefreshButton];
         if (request.responseStatusCode != 0) {

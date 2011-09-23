@@ -949,11 +949,11 @@
 }
 
 - (void)removeServersListRow {
-    if ([self.account.servers count] == 0) {
+//    if ([self.account.servers count] == 0) {
         [self.serversViewController.tableView reloadData];
-    } else {
-        [self.serversViewController.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:selectedServerIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
-    }
+//    } else {
+//        [self.serversViewController.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:selectedServerIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+//    }
 }
 
 - (void)popViewController {
