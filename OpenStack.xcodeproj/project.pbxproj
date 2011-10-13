@@ -723,7 +723,6 @@
 		277D9E7B126E78FD002C69D9 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F740E6125FB44F002C6CB0 /* CFNetwork.framework */; };
 		277D9E7C126E78FD002C69D9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F740F9125FB46A002C6CB0 /* MobileCoreServices.framework */; };
 		277D9E7D126E78FD002C69D9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F740FD125FB476002C6CB0 /* SystemConfiguration.framework */; };
-		277D9E7E126E78FD002C69D9 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F74158125FB66F002C6CB0 /* libz.1.2.3.dylib */; };
 		277D9E7F126E78FD002C69D9 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27869AF31263F22300CE3435 /* MessageUI.framework */; };
 		277D9E99126E7963002C69D9 /* MainWindow-Rackspace.xib in Resources */ = {isa = PBXBuildFile; fileRef = 277D9E98126E7963002C69D9 /* MainWindow-Rackspace.xib */; };
 		277D9EA2126E79A1002C69D9 /* AccountHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2798AA45125E74F800E02475 /* AccountHomeViewController.xib */; };
@@ -991,6 +990,7 @@
 		27E6B6AF12D93D0B00EA623F /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27E6B6AC12D93D0B00EA623F /* AboutViewController.xib */; };
 		27E6B6B112D93D0B00EA623F /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E6B6AB12D93D0B00EA623F /* AboutViewController.m */; };
 		27E6B6B212D93D0B00EA623F /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27E6B6AC12D93D0B00EA623F /* AboutViewController.xib */; };
+		27F08DC51446426C00C6BA78 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F08DC41446426C00C6BA78 /* libz.dylib */; };
 		27F10F4013391C3000F8674C /* NameAndStatusTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F10F3D13391C3000F8674C /* NameAndStatusTitleView.m */; };
 		27F10F4113391C3000F8674C /* NameAndStatusTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F10F3D13391C3000F8674C /* NameAndStatusTitleView.m */; };
 		27F10F4D1339316000F8674C /* DDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F10F4A1339316000F8674C /* DDProgressView.m */; };
@@ -1656,6 +1656,7 @@
 		27E6B6AA12D93D0B00EA623F /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		27E6B6AB12D93D0B00EA623F /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		27E6B6AC12D93D0B00EA623F /* AboutViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
+		27F08DC41446426C00C6BA78 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		27F10F3C13391C3000F8674C /* NameAndStatusTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NameAndStatusTitleView.h; sourceTree = "<group>"; };
 		27F10F3D13391C3000F8674C /* NameAndStatusTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NameAndStatusTitleView.m; sourceTree = "<group>"; };
 		27F10F491339316000F8674C /* DDProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDProgressView.h; sourceTree = "<group>"; };
@@ -1765,13 +1766,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27F08DC51446426C00C6BA78 /* libz.dylib in Frameworks */,
 				277D9E78126E78FD002C69D9 /* Foundation.framework in Frameworks */,
 				277D9E79126E78FD002C69D9 /* CoreGraphics.framework in Frameworks */,
 				277D9E7A126E78FD002C69D9 /* Security.framework in Frameworks */,
 				277D9E7B126E78FD002C69D9 /* CFNetwork.framework in Frameworks */,
 				277D9E7C126E78FD002C69D9 /* MobileCoreServices.framework in Frameworks */,
 				277D9E7D126E78FD002C69D9 /* SystemConfiguration.framework in Frameworks */,
-				277D9E7E126E78FD002C69D9 /* libz.1.2.3.dylib in Frameworks */,
 				277D9E7F126E78FD002C69D9 /* MessageUI.framework in Frameworks */,
 				271B09331279184D00525011 /* QuartzCore.framework in Frameworks */,
 				27F853EA12AEFAE4003327C0 /* UIKit.framework in Frameworks */,
@@ -3148,6 +3149,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				27F08DC41446426C00C6BA78 /* libz.dylib */,
 				27C15CC413A7D81D00A1BB9F /* UIKit.framework */,
 				27828720125A2A4200004D33 /* Tests */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -3309,7 +3311,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0410;
+				LastUpgradeCheck = 0420;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "OpenStack" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -4445,7 +4447,7 @@
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
@@ -4478,7 +4480,7 @@
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
@@ -4503,15 +4505,15 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Eric Johnson (5D9RVMU5AT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eric Johnson (5D9RVMU5AT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rackspace Hosting";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rackspace Hosting";
 				COPY_PHASE_STRIP = NO;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = OpenStack_Prefix.pch;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Rackspace Cloud-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
@@ -4526,8 +4528,8 @@
 					UIKit,
 				);
 				PRODUCT_NAME = "Rackspace Cloud";
-				PROVISIONING_PROFILE = "0B118877-1D4E-4BD0-8B35-40765ABC6B5C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0B118877-1D4E-4BD0-8B35-40765ABC6B5C";
+				PROVISIONING_PROFILE = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4545,7 +4547,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = OpenStack_Prefix.pch;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Rackspace Cloud-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
@@ -4581,7 +4583,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = OpenStack_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Unit Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.2;
 				LIBRARY_SEARCH_PATHS = (
@@ -4615,7 +4617,7 @@
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREFIX_HEADER = OpenStack_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Unit Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.2;
 				LIBRARY_SEARCH_PATHS = (

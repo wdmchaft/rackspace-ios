@@ -380,10 +380,16 @@ static NSMutableDictionary *timers = nil;
 
 - (NSString *)loadBalancerEndpointForRegion:(NSString *)region {
     NSString *accountNumber = [self accountNumber];
-    if ([region isEqualToString:@"DFW"]) {
-        return [NSString stringWithFormat:@"https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
-    } else if ([region isEqualToString:@"ORD"]) {
-        return [NSString stringWithFormat:@"https://ord.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+    if ([self.provider isRackspaceUS]) {
+        if ([region isEqualToString:@"DFW"]) {
+            return [NSString stringWithFormat:@"https://dfw.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+        } else if ([region isEqualToString:@"ORD"]) {
+            return [NSString stringWithFormat:@"https://ord.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
+        } else {
+            return @"";
+        }
+    } else if ([self.provider isRackspaceUK]) {
+        return [NSString stringWithFormat:@"https://lon.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];        
     } else {
         return @"";
     }

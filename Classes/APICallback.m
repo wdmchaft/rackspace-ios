@@ -59,7 +59,7 @@
         successBlock([notification.userInfo objectForKey:@"response"]);
         if (self.request) {
             [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-            [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
+//            [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
         }
     }];
     
