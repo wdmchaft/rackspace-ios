@@ -15,6 +15,9 @@
 #import "AccountManager.h"
 #import "Provider.h"
 
+#define kResizeButton 0
+#define kCancelButton 1
+
 @implementation ResizeServerViewController
 
 @synthesize account, server;
@@ -24,18 +27,32 @@
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark -
-#pragma mark Button Handlers
+#pragma mark - Action Sheet Delegate
 
--(void)saveButtonPressed:(id)sender {
-    [self.account.manager resizeServer:self.server flavor:selectedFlavor];
-    [serverViewController showToolbarActivityMessage:@"Resizing server..."];
-    [self dismissModalViewControllerAnimated:YES];    
-    [serverViewController.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:kResize inSection:kActions] animated:YES];
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (buttonIndex == kResizeButton) {
+        
+        [self.account.manager resizeServer:self.server flavor:selectedFlavor];
+        [serverViewController showToolbarActivityMessage:@"Resizing server..."];
+        [self dismissModalViewControllerAnimated:YES];    
+        [serverViewController.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:kResize inSection:kActions] animated:YES];
+        
+    }
+    
 }
 
-#pragma mark -
-#pragma mark View lifecycle
+#pragma mark - Button Handlers
+
+- (void)saveButtonPressed:(id)sender {
+
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to resize this server?  You may experience downtime while the server is being resized." delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Resize Server" otherButtonTitles:nil];
+    [actionSheet showInView:self.view];
+    [actionSheet release];
+    
+}
+
+#pragma mark - View lifecycle
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -43,8 +60,7 @@
     [tableView reloadData];
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -58,7 +74,6 @@
 	return [self.account.provider isRackspace] ? @"Resizes will be charged or credited a prorated amount based upon the difference in cost and the number of days remaining in your billing cycle." : @"";
 }
 
-// Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *CellIdentifier = @"Cell";
@@ -82,8 +97,7 @@
     return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     selectedFlavor = [self.account.sortedFlavors objectAtIndex:indexPath.row];    
@@ -91,8 +105,7 @@
     [NSTimer scheduledTimerWithTimeInterval:0.35 target:aTableView selector:@selector(reloadData) userInfo:nil repeats:NO];
 }
 
-#pragma mark -
-#pragma mark Memory management
+#pragma mark - Memory management
 
 - (void)dealloc {
 	[account release];

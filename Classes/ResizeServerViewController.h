@@ -10,7 +10,7 @@
 
 @class OpenStackAccount, Server, Flavor;
 
-@interface ResizeServerViewController : ServerActionViewController <UITableViewDelegate, UITableViewDataSource> {
+@interface ResizeServerViewController : ServerActionViewController <UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate> {
     OpenStackAccount *account;
     Server *server;
     Flavor *selectedFlavor;
