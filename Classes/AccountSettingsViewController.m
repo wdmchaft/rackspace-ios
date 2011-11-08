@@ -53,7 +53,7 @@
         [backgroundContainer release];
     }    
     
-    self.validateSSLSwitch = [[UISwitch alloc] init];
+    self.validateSSLSwitch = [[[UISwitch alloc] init] autorelease];
     [self.validateSSLSwitch addTarget:self action:@selector(switchChanged) forControlEvents:UIControlEventValueChanged];
     
 }

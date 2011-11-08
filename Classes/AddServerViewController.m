@@ -29,6 +29,7 @@
 #import "AccountHomeViewController.h"
 #import "ServerViewController.h"
 #import "AccountHomeViewController.h"
+#import "APICallback.h"
 
 #define kNodeCount 0
 #define kNodeDetails 1
@@ -102,18 +103,13 @@
         // TODO: handle plugin validation and check personality file count
         //       perhaps via configureServer throwing an exception?
 
-        [account.manager createServer:server];
-        
-        // now we need to register for the creation success and failure events.
-        id success = [[NSNotificationCenter defaultCenter] addObserverForName:@"createServerSucceeded" object:server 
-                                                                        queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-        {
+        [[account.manager createServer:server] success:^(OpenStackRequest *request) {
+            
             successCount++;
             
             // insert the server into the account's sorted array
             NSMutableDictionary *servers = [[NSMutableDictionary alloc] initWithDictionary:self.account.servers];
             
-            OpenStackRequest *request = [notification.userInfo objectForKey:@"request"];
             Server *createdServer = [request server];
             createdServer.flavor = [self.account.flavors objectForKey:createdServer.flavorId];
             createdServer.image = [self.account.images objectForKey:createdServer.imageId];
@@ -144,23 +140,20 @@
             
             if (failureCount + successCount == nodeCount) {
                 [serversViewController hideToolbarActivityMessage];
-
+                
                 if (failureCount > 0) {
                     if (nodeCount == 1) {                        
-                        [self alert:@"There was a problem creating your Cloud Server." request:[notification.userInfo objectForKey:@"request"]];
+                        [self alert:@"There was a problem creating your Cloud Server." request:request];
                     } else if (failureCount == nodeCount) {
-                        [self alert:@"There was a problem creating your Cloud Servers. To see details for all failures, go to API Logs." request:[notification.userInfo objectForKey:@"request"]];
+                        [self alert:@"There was a problem creating your Cloud Servers." request:request];
                     } else {
-                        [self alert:[NSString stringWithFormat:@"There was a problem creating %i of your Cloud Servers. To see details for all failures, go to API Logs.", failureCount] request:[notification.userInfo objectForKey:@"request"]];
+                        [self alert:[NSString stringWithFormat:@"There was a problem creating %i of your Cloud Servers.", failureCount] request:request];
                     }
                 }
             }
-            
-        }];
-        
-        id failure = [[NSNotificationCenter defaultCenter] addObserverForName:@"createServerFailed" object:server 
-                                                                      queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-        {
+
+        } failure:^(OpenStackRequest *request) {
+
             failureCount++;
             
             // if fail count + success count == node count, show an alert that
@@ -180,23 +173,20 @@
             
             if (failureCount + successCount == nodeCount) {
                 [serversViewController hideToolbarActivityMessage];
-
+                
                 if (failureCount > 0) {
                     if (nodeCount == 1) {
-                        [self alert:@"There was a problem creating your Cloud Server." request:[notification.userInfo objectForKey:@"request"]];
+                        [self alert:@"There was a problem creating your Cloud Server." request:request];
                     } else if (failureCount == nodeCount) {
-                        [self alert:@"There was a problem creating your Cloud Servers. To see details for all failures, go to API Logs." request:[notification.userInfo objectForKey:@"request"]];
+                        [self alert:@"There was a problem creating your Cloud Servers." request:request];
                     } else {
-                        [self alert:[NSString stringWithFormat:@"There was a problem creating %i of your Cloud Server. To see details for all failures, go to API Logs.", failureCount] request:[notification.userInfo objectForKey:@"request"]];
+                        [self alert:[NSString stringWithFormat:@"There was a problem creating %i of your Cloud Server.", failureCount] request:request];
                     }
                 }
             }
             
         }];
-                    
-        [createServerObservers addObject:success];
-        [createServerObservers addObject:failure];
-
+        
         [server release];
     }
     

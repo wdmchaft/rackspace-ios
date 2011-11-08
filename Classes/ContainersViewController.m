@@ -111,7 +111,7 @@
     refreshButton.enabled = NO;
     [self showToolbarActivityMessage:@"Refreshing containers..."];
     
-    [[self.account.manager getContainersWithCallback] success:^(OpenStackRequest *request) {
+    [[self.account.manager getContainers] success:^(OpenStackRequest *request) {
         self.account.containers = [request containers];
         self.account.containerCount = [self.account.containers count];
         [self.account persist];

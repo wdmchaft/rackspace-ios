@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-// this class performs API calls on accounts and broadcasts NSNotifications to any other
-// object that chooses to observe the notification
-
 @class OpenStackAccount, Server, Flavor, Image, Container, StorageObject, OpenStackRequest, ASINetworkQueue, APICallback, LoadBalancer, LoadBalancerNode;
 
 @interface AccountManager : NSObject {
@@ -28,21 +25,21 @@
     
 - (APICallback *)authenticate;
 
-// compute
+#pragma mark - Compute
 
 - (void)getLimits;
-- (void)softRebootServer:(Server *)server;
-- (void)hardRebootServer:(Server *)server;
-- (void)changeAdminPassword:(Server *)server password:(NSString *)password;
+- (APICallback *)softRebootServer:(Server *)server;
+- (APICallback *)hardRebootServer:(Server *)server;
+- (APICallback *)changeAdminPassword:(Server *)server password:(NSString *)password;
 - (APICallback *)renameServer:(Server *)server name:(NSString *)name;
 - (APICallback *)deleteServer:(Server *)server;
-- (void)createServer:(Server *)server;
+- (APICallback *)createServer:(Server *)server;
 - (void)resizeServer:(Server *)server flavor:(Flavor *)flavor;
 - (void)confirmResizeServer:(Server *)server;
 - (void)revertResizeServer:(Server *)server;
 - (void)rebuildServer:(Server *)server image:(Image *)image;
 - (void)getBackupSchedule:(Server *)server;
-- (void)updateBackupSchedule:(Server *)server;
+- (APICallback *)updateBackupSchedule:(Server *)server;
 
 - (void)getServers;
 - (APICallback *)getServersWithCallback;
@@ -50,11 +47,9 @@
 - (APICallback *)getFlavors;
 - (APICallback *)getImage:(Server *)server;
 
-// object storage
+#pragma mark - Object Storage
 
-- (void)getStorageAccountInfo;
-- (void)getContainers;
-- (APICallback *)getContainersWithCallback;
+- (APICallback *)getContainers;
 - (void)createContainer:(Container *)container;
 - (void)deleteContainer:(Container *)container;
 
@@ -67,7 +62,7 @@
   
 - (void)updateCDNContainer:(Container *)container;
 
-// load balancing
+#pragma mark - Load Balancers
 
 - (APICallback *)getLoadBalancers:(NSString *)endpoint;
 - (APICallback *)getLoadBalancerDetails:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
@@ -80,7 +75,6 @@
 - (APICallback *)getLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer;
 - (APICallback *)updateLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer;
 - (APICallback *)deleteLoadBalancerConnectionThrottling:(LoadBalancer *)loadBalancer;
-
 
 - (APICallback *)getLoadBalancerUsage:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 - (APICallback *)addLBNodes:(NSArray *)nodes loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;

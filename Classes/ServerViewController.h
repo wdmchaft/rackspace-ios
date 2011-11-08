@@ -51,9 +51,6 @@
 
     BOOL performingAction;
     
-    id rebootSucceededObserver;
-    id rebootFailedObserver;
-
     id getLimitsSucceededObserver;
     
     id changeAdminPasswordSucceededObserver;
@@ -64,9 +61,6 @@
     
     id getImageSucceededObserver;
     id getImageFailedObserver;
-    
-    id updateBackupScheduleSucceededObserver;
-    id updateBackupScheduleFailedObserver;
     
     id confirmResizeSucceededObserver;
     id confirmResizeFailedObserver;

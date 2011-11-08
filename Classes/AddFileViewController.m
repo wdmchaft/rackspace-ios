@@ -262,6 +262,7 @@
         vc.isFromCamera = (picker.sourceType == UIImagePickerControllerSourceTypeCamera);
         [self.navigationController pushViewController:vc animated:NO];
         [vc release];
+        [image release];
     }
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -271,8 +272,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark Popover Controller Delegate
+#pragma mark - Popover Controller Delegate
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController {
 //    [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:libraryRow inSection:cameraSection] animated:YES];

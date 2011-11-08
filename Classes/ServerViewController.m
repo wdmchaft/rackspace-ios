@@ -359,19 +359,6 @@
             NSLog(@"loading image failed");
         }];
         
-        updateBackupScheduleSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateBackupScheduleSucceeded" object:self.server
-                                                                                                   queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-        }];
-        
-        updateBackupScheduleFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateBackupScheduleFailed" object:self.account
-                                                                                                queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            [self alert:@"There was a problem updating your backup schedule." request:[notification.userInfo objectForKey:@"request"]];
-        }];    
-        
         resizeServerSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"resizeServerSucceeded" identifier:self.server.identifier] object:nil
                                                                                            queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
         {
@@ -462,15 +449,11 @@
     pingButton = nil;
     self.tableView = nil;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:rebootSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:rebootFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:getLimitsSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:getImageSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:getImageFailedObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:updateBackupScheduleSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:updateBackupScheduleFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:resizeServerSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:resizeServerFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:confirmResizeSucceededObserver];
@@ -882,30 +865,21 @@
     performingAction = YES;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
     
-    // handle success
-    changeAdminPasswordSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"changeAdminPasswordSucceeded" object:self.server
-                                                                                 queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-                               {
-                                   [self hideToolbarActivityMessage];
-                                   performingAction = NO;
-                                   [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
-                                   [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordSucceededObserver];
-                                   [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordFailedObserver];
-                               }];
+    [[self.account.manager changeAdminPassword:self.server password:password] success:^(OpenStackRequest *request) {
+        
+        [self hideToolbarActivityMessage];
+        performingAction = NO;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
+
+    } failure:^(OpenStackRequest *request) {
+
+        [self alert:@"There was a problem changing the root password." request:request];
+        [self hideToolbarActivityMessage];
+        performingAction = NO;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
+        
+    }];
     
-    // handle failure
-    changeAdminPasswordFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"changeAdminPasswordFailed" object:self.server 
-                                                                              queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-                            {
-                                [self alert:@"There was a problem changing the root password." request:[notification.userInfo objectForKey:@"request"]];
-                                [self hideToolbarActivityMessage];
-                                performingAction = NO;
-                                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
-                                [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordSucceededObserver];
-                                [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordFailedObserver];
-                            }];
-    
-    [self.account.manager changeAdminPassword:self.server password:password];
 }
 
 - (void)removeServersListRow {
@@ -929,7 +903,7 @@
         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:self.account.servers];
         [dict removeObjectForKey:self.server.identifier];
-        self.account.servers = [[NSMutableDictionary alloc] initWithDictionary:dict];
+        self.account.servers = [[[NSMutableDictionary alloc] initWithDictionary:dict] autorelease];
         [self.account persist];
         [dict release];
         
@@ -1024,35 +998,29 @@
             performingAction = YES;
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
             
-            // handle success
-            rebootSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"rebootSucceeded" object:self.server
-                                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-            {
+            APICallback *callback = nil;
+            
+            if (buttonIndex == 0) {
+                callback = [self.account.manager hardRebootServer:self.server];
+            } else if (buttonIndex == 1) {
+                callback = [self.account.manager softRebootServer:self.server];
+            }
+            
+            [callback success:^(OpenStackRequest *request) {
+                
                 [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(pollServer) userInfo:nil repeats:NO];
                 [self hideToolbarActivityMessage];
                 performingAction = NO;
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
-                [[NSNotificationCenter defaultCenter] removeObserver:rebootSucceededObserver];
-                [[NSNotificationCenter defaultCenter] removeObserver:rebootFailedObserver];
-            }];
-            
-            // handle failure
-            rebootFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"rebootFailed" object:self.server 
-                                                                                      queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-            {
-                [self alert:@"There was a problem rebooting this server." request:[notification.userInfo objectForKey:@"request"]];
+
+            } failure:^(OpenStackRequest *request) {
+                
+                [self alert:@"There was a problem rebooting this server." request:request];
                 [self hideToolbarActivityMessage];
                 performingAction = NO;
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
-                [[NSNotificationCenter defaultCenter] removeObserver:rebootSucceededObserver];
-                [[NSNotificationCenter defaultCenter] removeObserver:rebootFailedObserver];
+
             }];
-            
-            if (buttonIndex == 0) {
-                [self.account.manager hardRebootServer:self.server];
-            } else if (buttonIndex == 1) {
-                [self.account.manager softRebootServer:self.server];
-            }
         }
 
     } else if ([actionSheet isEqual:deleteActionSheet]) {

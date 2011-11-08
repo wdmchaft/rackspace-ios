@@ -14,6 +14,7 @@
 #import "UIViewController+Conveniences.h"
 #import "ActivityIndicatorView.h"
 #import "ServerViewController.h"
+#import "APICallback.h"
 
 #define kWeekly 0
 #define kDaily 1
@@ -66,6 +67,7 @@
     [super viewWillAppear:animated];
     
     [self.view addSubview:picker];
+    
     
     if (!server.backupSchedule) {
         NSString *activityMessage = @"Loading...";
@@ -210,7 +212,18 @@
     [self.serverViewController showToolbarActivityMessage:@"Updating backup schedule..."];
     [self dismissModalViewControllerAnimated:YES];
     [self.serverViewController.tableView deselectRowAtIndexPath:self.actionIndexPath animated:YES];
-    [self.account.manager updateBackupSchedule:self.server];
+    
+    [[self.account.manager updateBackupSchedule:self.server] success:^(OpenStackRequest *request) {
+        
+        [self.serverViewController hideToolbarActivityMessage];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        [self.serverViewController hideToolbarActivityMessage];
+        [self alert:@"There was a problem updating your backup schedule." request:request];        
+        
+    }];
+    
 }
 
 #pragma mark -

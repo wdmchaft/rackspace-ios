@@ -131,51 +131,27 @@
 
 #pragma mark Reboot Server
 
-- (void)softRebootServer:(Server *)server {
+- (APICallback *)softRebootServer:(Server *)server {
     TrackEvent(CATEGORY_SERVER, EVENT_REBOOTED);
     
     __block OpenStackRequest *request = [OpenStackRequest softRebootServerRequest:self.account server:server];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        [self notify:([request isSuccess] ? @"rebootSucceeded" : @"rebootFailed") request:request object:[request.userInfo objectForKey:@"server"]];
-    }];
-    [request setFailedBlock:^{
-        [self notify:@"rebootFailed" request:request object:[request.userInfo objectForKey:@"server"]];
-    }];
-    [request startAsynchronous];    
+    return [self callbackWithRequest:request];
 }
 
-- (void)hardRebootServer:(Server *)server {
+- (APICallback *)hardRebootServer:(Server *)server {
     TrackEvent(CATEGORY_SERVER, EVENT_REBOOTED);
     
     __block OpenStackRequest *request = [OpenStackRequest hardRebootServerRequest:self.account server:server];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        [self notify:([request isSuccess] ? @"rebootSucceeded" : @"rebootFailed") request:request object:[request.userInfo objectForKey:@"server"]];
-    }];
-    [request setFailedBlock:^{
-        [self notify:@"rebootFailed" request:request object:[request.userInfo objectForKey:@"server"]];
-    }];
-    [request startAsynchronous];
+    return [self callbackWithRequest:request];
 }
 
 #pragma mark Change Admin Password
 
-- (void)changeAdminPassword:(Server *)server password:(NSString *)password {
+- (APICallback *)changeAdminPassword:(Server *)server password:(NSString *)password {
     TrackEvent(CATEGORY_SERVER, EVENT_PASSWORD_CHANGED);
     
     __block OpenStackRequest *request = [OpenStackRequest changeServerAdminPasswordRequest:self.account server:server password:password];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        [self notify:([request isSuccess] ? @"changeAdminPasswordSucceeded" : @"changeAdminPasswordFailed") request:request object:[request.userInfo objectForKey:@"server"]];
-    }];
-    [request setFailedBlock:^{
-        [self notify:@"changeAdminPasswordFailed" request:request object:[request.userInfo objectForKey:@"server"]];
-    }];
-    [request startAsynchronous];
+    return [self callbackWithRequest:request];
 }
 
 #pragma mark Rename Server
@@ -198,30 +174,11 @@
 
 #pragma mark Create Server
 
-- (void)createServer:(Server *)server {
+- (APICallback *)createServer:(Server *)server {
     TrackEvent(CATEGORY_SERVER, EVENT_CREATED);
     
     __block OpenStackRequest *request = [OpenStackRequest createServerRequest:self.account server:server];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    
-    // TODO: make these success block and failure block with "response" arg
-    [request setCompletionBlock:^{
-        NSLog(@"create server response: %i - %@", request.responseStatusCode, request.responseStatusMessage);
-        NSLog(@"body: %@", [request responseString]);            
-        [self notify:([request isSuccess] ? @"createServerSucceeded" : @"createServerFailed") request:request object:[request.userInfo objectForKey:@"server"]];        
-        [self notify:([request isSuccess] ? @"createServerSucceeded" : @"createServerFailed") request:request object:self.account];
-    }];    
-    [request setFailedBlock:^{
-        NSLog(@"create server response: %i - %@", request.responseStatusCode, request.responseStatusMessage);
-        NSLog(@"body: %@", [request responseString]);            
-        [self notify:@"createServerFailed" request:request object:[request.userInfo objectForKey:@"server"]];        
-    }];
-    if (![self queue]) {
-        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
-    }
-    [queue addOperation:request];
-
+    return [self callbackWithRequest:request];
 }
 
 #pragma mark Resize Server
@@ -309,21 +266,11 @@
     [request startAsynchronous];
 }
 
-- (void)updateBackupSchedule:(Server *)server {
+- (APICallback *)updateBackupSchedule:(Server *)server {
     TrackEvent(CATEGORY_SERVER, EVENT_BACKUP_SCHEDULE_CHANGED);
     
     __block OpenStackRequest *request = [OpenStackRequest updateBackupScheduleRequest:self.account server:server];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        [self notify:([request isSuccess] ? @"updateBackupScheduleSucceeded" : @"updateBackupScheduleFailed") request:request object:[request.userInfo objectForKey:@"server"]];
-        [self notify:([request isSuccess] ? @"updateBackupScheduleSucceeded" : @"updateBackupScheduleFailed") request:request object:self.account];
-    }];
-    [request setFailedBlock:^{
-        [self notify:@"updateBackupScheduleFailed" request:request object:[request.userInfo objectForKey:@"server"]];        
-        [self notify:@"updateBackupScheduleFailed" request:request object:self.account];        
-    }];
-    [request startAsynchronous];
+    return [self callbackWithRequest:request];
 }
 
 #pragma mark Get Image
@@ -383,41 +330,9 @@
     return callback;
 }
 
-#pragma mark -
-#pragma mark Object Storage
+#pragma mark - Object Storage
 
-- (void)getStorageAccountInfo {
-    __block OpenStackRequest *request = [OpenStackRequest getStorageAccountInfoRequest:self.account];
-    
-    request.delegate = self;
-    [request setCompletionBlock:^{
-        if ([request isSuccess]) {
-            self.account.containerCount = [[[request responseHeaders] objectForKey:@"X-Account-Container-Count"] intValue];
-            NSString *numStr = [[request responseHeaders] objectForKey:@"X-Account-Bytes-Used"];
-            self.account.totalBytesUsed = strtoull([numStr UTF8String], NULL, 0);
-            [self.account persist];
-            [self notify:@"getStorageAccountInfoSucceeded" request:request object:self.account];
-        } else {
-            [self notify:@"getStorageAccountInfoFailed" request:request object:self.account];
-        }
-    }];
-    [request setFailedBlock:^{
-        [self notify:@"getStorageAccountInfoFailed" request:request object:self.account];
-    }];
-    [request startAsynchronous];
-}
-
-- (void)getContainers {
-    if (![self queue]) {
-        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
-    }
-    
-    GetContainersRequest *request = [GetContainersRequest request:self.account];
-    //[request startAsynchronous];
-    [queue addOperation:request];
-}
-
-- (APICallback *)getContainersWithCallback {
+- (APICallback *)getContainers {
     __block OpenStackRequest *request = [OpenStackRequest filesRequest:self.account method:@"GET" path:@""];
     return [self callbackWithRequest:request];    
 }
@@ -669,15 +584,11 @@
             self.account.loadBalancers = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
         }
         
-        NSLog(@"%@", self.account.loadBalancers);
-        NSLog(@"%@", [(LoadBalancerRequest *)request loadBalancers:self.account]);
-        NSLog(@"%@", endpoint);
         NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers:self.account];
         
         for (NSString *identifier in lbs) {
             LoadBalancer *lb = [lbs objectForKey:identifier];
             lb.region = [self.account loadBalancerRegionForEndpoint:endpoint];
-            NSLog(@"lb.region = %@", lb.region);
         }
         
         [self.account.loadBalancers setObject:lbs forKey:endpoint];
@@ -694,22 +605,6 @@
         loadBalancer.nodes = newLB.nodes;
         loadBalancer.connectionLoggingEnabled = newLB.connectionLoggingEnabled;
         
-//        if (!self.account.loadBalancers) {
-//            self.account.loadBalancers = [[NSMutableDictionary alloc] initWithCapacity:2];
-//        }
-//        
-//        NSLog(@"%@", self.account.loadBalancers);
-//        NSLog(@"%@", [(LoadBalancerRequest *)request loadBalancers]);
-//        NSLog(@"%@", endpoint);
-//        NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers];
-//        
-//        for (NSString *identifier in lbs) {
-//            LoadBalancer *lb = [lbs objectForKey:identifier];
-//            lb.region = [self.account loadBalancerRegionForEndpoint:endpoint];
-//            NSLog(@"lb.region = %@", lb.region);
-//        }
-//        
-//        [self.account.loadBalancers setObject:lbs forKey:endpoint];
         [self.account persist];
     }];
 }
@@ -748,7 +643,6 @@
 - (APICallback *)deleteLoadBalancer:(LoadBalancer *)loadBalancer {
     TrackEvent(CATEGORY_LOAD_BALANCER, EVENT_DELETED);
     NSString *endpoint = [self.account loadBalancerEndpointForRegion:loadBalancer.region];
-    NSLog(@"endpoint: %@", endpoint);
     __block LoadBalancerRequest *request = [LoadBalancerRequest deleteLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
     return [self callbackWithRequest:request];
 }

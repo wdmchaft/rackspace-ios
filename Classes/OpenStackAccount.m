@@ -127,7 +127,7 @@ static NSMutableDictionary *timers = nil;
 
 - (void)refreshCollections {
     if (!self.manager) {
-        self.manager = [[AccountManager alloc] init];
+        self.manager = [[[AccountManager alloc] init] autorelease];
         self.manager.account = self;
     }
 
@@ -172,8 +172,8 @@ static NSMutableDictionary *timers = nil;
     copy.apiKey = self.apiKey;
     copy.authToken = self.authToken;
     
-    copy.images = [[NSMutableDictionary alloc] initWithDictionary:self.images];
-    copy.flavors = [[NSDictionary alloc] initWithDictionary:self.flavors];
+    copy.images = [[[NSMutableDictionary alloc] initWithDictionary:self.images] autorelease];
+    copy.flavors = [[[NSDictionary alloc] initWithDictionary:self.flavors] autorelease];
     /*
     copy.servers = [[NSMutableDictionary alloc] initWithDictionary:self.servers];
     copy.containers = self.containers;
@@ -184,7 +184,7 @@ static NSMutableDictionary *timers = nil;
     copy.serversURL = self.serversURL;
     copy.filesURL = self.filesURL;
     copy.cdnURL = self.cdnURL;
-    copy.rateLimits = [[NSArray alloc] initWithArray:self.rateLimits];
+    copy.rateLimits = [[[NSArray alloc] initWithArray:self.rateLimits] autorelease];
     copy.lastUsedFlavorId = self.lastUsedFlavorId;
     copy.lastUsedImageId = self.lastUsedImageId;
     copy.containerCount = self.containerCount;

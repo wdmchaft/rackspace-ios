@@ -193,7 +193,7 @@
     authenticationSection = 0;
     [self addSaveButton];
     
-    self.validateSSLSwitch = [[UISwitch alloc] init];
+    self.validateSSLSwitch = [[[UISwitch alloc] init] autorelease];
     
 }
 

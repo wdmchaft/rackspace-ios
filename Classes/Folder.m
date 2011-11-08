@@ -17,8 +17,8 @@
 
 + (id)folder {
 	Folder *folder = [[[self alloc] init] autorelease];
-	folder.folders = [[NSMutableDictionary alloc] init];
-	folder.objects = [[NSMutableDictionary alloc] init];
+	folder.folders = [[[NSMutableDictionary alloc] init] autorelease];
+	folder.objects = [[[NSMutableDictionary alloc] init] autorelease];
 	return folder;
 }
 
@@ -27,8 +27,8 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.folders = [[NSMutableDictionary alloc] init];
-        self.objects = [[NSMutableDictionary alloc] init];
+        self.folders = [[[NSMutableDictionary alloc] init] autorelease];
+        self.objects = [[[NSMutableDictionary alloc] init] autorelease];
     }
     return self;
 }
