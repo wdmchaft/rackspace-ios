@@ -136,29 +136,32 @@
                            [[NSNotificationCenter defaultCenter] removeObserver:[renameServerSucceededObservers objectForKey:server.identifier]];
                        }];
         [renameServerSucceededObservers setObject:observer forKey:key];
+        
+        if (!server.image && server.imageId) {
+
+            [[self.account.manager getImage:server] success:^(OpenStackRequest *request) {
+                
+                NSArray *sortedServers = [self.account sortedServers];
+                for (Server *server in sortedServers) {
+                    BOOL updated = NO;
+                    if (!server.image) {
+                        server.image = [self.account.images objectForKey:server.imageId];
+                        updated = YES;
+                    }
+                    if (updated) {
+                        [self.tableView reloadData];
+                    }
+                }                
+                
+            } failure:^(OpenStackRequest *request) {
+                
+                NSLog(@"loading image for server %@ failed", server.name);
+                
+            }];
+            
+        }
+        
     }
-    
-    getImageSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageSucceeded" object:nil
-                                                                                   queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-      {
-          NSArray *sortedServers = [self.account sortedServers];
-          for (Server *server in sortedServers) {
-              BOOL updated = NO;
-              if (!server.image) {
-                  server.image = [self.account.images objectForKey:server.imageId];
-                  updated = YES;
-              }
-              if (updated) {
-                  [self.tableView reloadData];
-              }
-          }         
-      }];
-    
-    getImageFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageFailed" object:nil
-                                                                                queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-      {
-          NSLog(@"loading image failed");
-      }];
     
     if ([self.account.servers count] == 0) {
         self.tableView.allowsSelection = NO;

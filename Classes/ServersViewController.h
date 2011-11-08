@@ -16,9 +16,6 @@
     NSMutableDictionary *renameServerSucceededObservers;
     AccountHomeViewController *accountHomeViewController;
     
-    id getImageSucceededObserver;
-    id getImageFailedObserver;
-    
     IBOutlet UIBarButtonItem *refreshButton;
 
     BOOL loaded;

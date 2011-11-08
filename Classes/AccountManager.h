@@ -46,9 +46,9 @@
 
 - (void)getServers;
 - (APICallback *)getServersWithCallback;
-- (void)getImages;
-- (void)getFlavors;
-- (void)getImage:(Server *)server;
+- (APICallback *)getImages;
+- (APICallback *)getFlavors;
+- (APICallback *)getImage:(Server *)server;
 
 // object storage
 

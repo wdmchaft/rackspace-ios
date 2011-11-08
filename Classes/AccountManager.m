@@ -339,27 +339,19 @@
 
 #pragma mark Get Image
 
-- (void)getImage:(Server *)server {
-    __block OpenStackRequest *request = [OpenStackRequest getImageRequest:self.account imageId:server.imageId];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server.imageId forKey:@"imageId"];
-    [request setCompletionBlock:^{
-        if ([request isSuccess]) {
-            Image *image = [request image];
-            if ([image isKindOfClass:[Image class]]) {
-                image.canBeLaunched = NO;
-                [self.account.images setObject:image forKey:image.identifier];        
-                [self.account persist];        
-            }
-            [self notify:@"getImageSucceeded" request:request];
-        } else {
-            [self notify:@"getImageFailed" request:request object:[request.userInfo objectForKey:@"imageId"]];
+- (APICallback *)getImage:(Server *)server {
+    __block OpenStackRequest *request = [OpenStackRequest getImageRequest:self.account imageId:server.imageId];    
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+
+        Image *image = [request image];
+        if ([image isKindOfClass:[Image class]]) {
+            image.canBeLaunched = NO;
+            [self.account.images setObject:image forKey:image.identifier];        
+            [self.account persist];        
         }
+        
     }];
-    [request setFailedBlock:^{
-        [self notify:@"getImageFailed" request:request object:[request.userInfo objectForKey:@"imageId"]];
-    }];
-    [request startAsynchronous];
+    
 }
 
 #pragma mark Get Servers
@@ -382,26 +374,24 @@
 
 #pragma mark Get Flavors
 
-- (void)getFlavors {
+- (APICallback *)getFlavors {
+    APICallback *callback = nil;
     if (self.account.serversURL) {
-        if (![self queue]) {
-            [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
-        }
         GetFlavorsRequest *request = [GetFlavorsRequest request:self.account];
-        [queue addOperation:request];
+        callback = [self callbackWithRequest:request];
     }
+    return callback;
 }
 
 #pragma mark Get Images
 
-- (void)getImages {
+- (APICallback *)getImages {
+    APICallback *callback = nil;
     if (self.account.serversURL) {
-        if (![self queue]) {
-            [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
-        }
         GetImagesRequest *request = [GetImagesRequest request:self.account];
-        [queue addOperation:request];
+        callback = [self callbackWithRequest:request];
     }
+    return callback;
 }
 
 #pragma mark -
