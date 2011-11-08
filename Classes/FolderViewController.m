@@ -20,6 +20,7 @@
 #import "AddObjectViewController.h"
 #import "OpenStackAppDelegate.h"
 #import "RootViewController.h"
+#import "APICallback.h"
 
 
 @implementation FolderViewController
@@ -56,28 +57,23 @@
         activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Loading..."] text:@"Loading..."];
         [activityIndicatorView addToView:self.view];
         
-        [self.account.manager getObjects:self.container];
+        [[self.account.manager getObjects:self.container] success:^(OpenStackRequest *request) {
+            
+            self.folder = self.container.rootFolder;
+            contentsLoaded = YES;
+            [self.tableView reloadData];                           
+            [activityIndicatorView removeFromSuperviewAndRelease];
+            
+        } failure:^(OpenStackRequest *request) {
+            
+            [self.tableView reloadData];                           
+            [activityIndicatorView removeFromSuperviewAndRelease];
+
+        }];
+        
         
     }
 
-    successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getObjectsSucceeded" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-       {           
-           self.folder = self.container.rootFolder;
-           contentsLoaded = YES;
-           [self.tableView reloadData];                           
-           [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-           [activityIndicatorView removeFromSuperviewAndRelease];
-       }];
-
-    failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"renameServerSucceeded" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-       {
-           [self.tableView reloadData];                           
-           [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
-           [activityIndicatorView removeFromSuperviewAndRelease];
-       }];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -255,22 +251,18 @@
         activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
         [activityIndicatorView addToView:self.view scrollOffset:self.tableView.contentOffset.y];    
 
-        [self.account.manager deleteObject:self.container object:object];
-        
-        
-        successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteObjectSucceeded" object:object
-                                                                             queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
+        [[self.account.manager deleteObject:self.container object:object] success:^(OpenStackRequest *request) {
+            
             if (self.folder.parent) {
                 [self.folder.parent.folders removeObjectForKey:self.folder.name];
             } else {
                 [self.container.rootFolder.folders removeObjectForKey:self.folder.name];
             }
             [self.account persist];
-
+            
             [activityIndicatorView removeFromSuperviewAndRelease];
             [self.navigationController popViewControllerAnimated:YES];
-
+            
             if (self.folder.parent) {
                 if ([self.folder.parent.folders count] + [self.folder.parent.objects count] == 0) {
                     [self.parentFolderViewController.tableView reloadData];
@@ -287,20 +279,16 @@
                 }
             }
             
-            
-            
-            [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
             [object release];
-        }];
-        
-        failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteObjectFailed" object:object
-                                                                             queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
+
+        } failure:^(OpenStackRequest *request) {
+            
             [activityIndicatorView removeFromSuperviewAndRelease];
-            [self alert:@"There was a problem deleting this folder." request:[notification.userInfo objectForKey:@"request"]];
-            [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
+            [self alert:@"There was a problem deleting this folder." request:request];
             [object release];
+
         }];
+                
     }
 }
 

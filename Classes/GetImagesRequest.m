@@ -21,6 +21,8 @@
 	[request addRequestHeader:@"X-Auth-Token" value:[account authToken]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setTimeOutSeconds:40];
+    request.validatesSecureCertificate = !account.ignoresSSLValidation;
+    
 	return request;
 }
 
@@ -33,6 +35,7 @@
 + (GetImagesRequest *)request:(OpenStackAccount *)account {
     GetImagesRequest *request = [GetImagesRequest serversRequest:account method:@"GET" path:@"/images/detail"];
     request.account = account;
+    request.validatesSecureCertificate = !account.ignoresSSLValidation;
     return request;
 }
 

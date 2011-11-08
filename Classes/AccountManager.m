@@ -110,21 +110,23 @@
 #pragma mark Get Limits
 
 - (void)getLimits {
-    __block OpenStackRequest *request = [OpenStackRequest getLimitsRequest:self.account];
-    request.delegate = self;
-    [request setCompletionBlock:^{
-        if ([request isSuccess] && [request limits]) {
-            self.account.rateLimits = [request rateLimits];
-            [self.account persist];
-            [self notify:@"getLimitsSucceeded" request:request object:self.account];
-        } else {
+    if (self.account.serversURL) {
+        __block OpenStackRequest *request = [OpenStackRequest getLimitsRequest:self.account];
+        request.delegate = self;
+        [request setCompletionBlock:^{
+            if ([request isSuccess] && [request limits]) {
+                self.account.rateLimits = [request rateLimits];
+                [self.account persist];
+                [self notify:@"getLimitsSucceeded" request:request object:self.account];
+            } else {
+                [self notify:@"getLimitsFailed" request:request object:self.account];
+            }
+        }];
+        [request setFailedBlock:^{
             [self notify:@"getLimitsFailed" request:request object:self.account];
-        }
-    }];
-    [request setFailedBlock:^{
-        [self notify:@"getLimitsFailed" request:request object:self.account];
-    }];    
-    [request startAsynchronous];
+        }];    
+        [request startAsynchronous];
+    }
 }
 
 #pragma mark Reboot Server
@@ -201,7 +203,7 @@
         [self notify:@"deleteServerFailed" request:request object:[request.userInfo objectForKey:@"server"]];        
     }];
     if (![self queue]) {
-        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
+        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
     }
     [queue addOperation:request];    
 }
@@ -228,7 +230,7 @@
         [self notify:@"createServerFailed" request:request object:[request.userInfo objectForKey:@"server"]];        
     }];
     if (![self queue]) {
-        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
+        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
     }
     [queue addOperation:request];
 }
@@ -363,11 +365,13 @@
 #pragma mark Get Servers
 
 - (void)getServers {
-    if (![self queue]) {
-        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
+    if (self.account.serversURL) {
+        if (![self queue]) {
+            [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
+        }
+        GetServersRequest *request = [GetServersRequest request:self.account];
+        [queue addOperation:request];
     }
-    GetServersRequest *request = [GetServersRequest request:self.account];
-    [queue addOperation:request];
 }
 
 - (APICallback *)getServersWithCallback {
@@ -379,21 +383,25 @@
 #pragma mark Get Flavors
 
 - (void)getFlavors {
-    if (![self queue]) {
-        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
+    if (self.account.serversURL) {
+        if (![self queue]) {
+            [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
+        }
+        GetFlavorsRequest *request = [GetFlavorsRequest request:self.account];
+        [queue addOperation:request];
     }
-    GetFlavorsRequest *request = [GetFlavorsRequest request:self.account];
-    [queue addOperation:request];
 }
 
 #pragma mark Get Images
 
 - (void)getImages {
-    if (![self queue]) {
-        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
+    if (self.account.serversURL) {
+        if (![self queue]) {
+            [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
+        }
+        GetImagesRequest *request = [GetImagesRequest request:self.account];
+        [queue addOperation:request];
     }
-    GetImagesRequest *request = [GetImagesRequest request:self.account];
-    [queue addOperation:request];
 }
 
 #pragma mark -
@@ -422,7 +430,7 @@
 
 - (void)getContainers {
     if (![self queue]) {
-        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
+        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
     }
     
     GetContainersRequest *request = [GetContainersRequest request:self.account];
@@ -491,19 +499,16 @@
     [self notify:@"deleteContainerFailed" request:request object:[request.userInfo objectForKey:@"container"]];
 }
 
-- (void)getObjects:(Container *)container {
-    if (![self queue]) {
-        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
-    }    
-    GetObjectsRequest *request = [GetObjectsRequest request:self.account container:container];
-    [queue addOperation:request];
+- (APICallback *)getObjects:(Container *)container {
+    __block GetObjectsRequest *request = [GetObjectsRequest request:self.account container:container];
+    return [self callbackWithRequest:request];
 }
 
 - (void)updateCDNContainer:(Container *)container {
     TrackEvent(CATEGORY_CONTAINERS, EVENT_UPDATED);
     
     if (![self queue]) {
-        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
+        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
     }
     UpdateCDNContainerRequest *request = [UpdateCDNContainerRequest request:self.account container:container];
     [queue addOperation:request];
@@ -648,7 +653,7 @@
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
-- (void)deleteObject:(Container *)container object:(StorageObject *)object {
+- (APICallback *)deleteObject:(Container *)container object:(StorageObject *)object {
     TrackEvent(CATEGORY_FILES, EVENT_DELETED);
     
     OpenStackRequest *request = [OpenStackRequest deleteObjectRequest:self.account container:container object:object];
@@ -656,7 +661,8 @@
     request.didFinishSelector = @selector(deleteObjectSucceeded:);
     request.didFailSelector = @selector(deleteObjectFailed:);
     request.userInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:container, object, nil] forKeys:[NSArray arrayWithObjects:@"container", @"object", nil]];
-    [request startAsynchronous];
+    
+    return [self callbackWithRequest:request];
 }
 
 - (void)deleteObjectSucceeded:(OpenStackRequest *)request {

@@ -23,6 +23,7 @@
 	[request addRequestHeader:@"X-Auth-Token" value:[account authToken]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setTimeOutSeconds:40];
+    request.validatesSecureCertificate = !account.ignoresSSLValidation;
 	return request;
 }
 

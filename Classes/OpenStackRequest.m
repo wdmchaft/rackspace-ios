@@ -150,6 +150,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setTimeOutSeconds:60];
     request.retriedCount = 0;
+    request.validatesSecureCertificate = !account.ignoresSSLValidation;
 	return request;
 }
 
@@ -243,6 +244,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     } else if (responseStatusCode == 0) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         if (![defaults boolForKey:@"already_failed_on_connection"]) {
+            NSLog(@"failing request: %@", [self.url description]);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Connection Error" message:@"Please check your connection or API URL and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
             [alert release];
@@ -302,6 +304,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
 
 	OpenStackRequest *request = [[[OpenStackRequest alloc] initWithURL:account.provider.authEndpointURL] autorelease];
     request.account = account;
+    request.validatesSecureCertificate = !account.ignoresSSLValidation;
 
     NSString *apiVersion = [OpenStackRequest apiVersionForURL:account.provider.authEndpointURL];
     [OpenStackRequest setupAuthForRequest:request account:account apiVersion:apiVersion];

@@ -15,8 +15,6 @@
     Container *container;
     Folder *folder;
     ActivityIndicatorView *activityIndicatorView;
-    id successObserver;
-    id failureObserver;
     
     ContainersViewController *containersViewController;
     FolderViewController *parentFolderViewController;

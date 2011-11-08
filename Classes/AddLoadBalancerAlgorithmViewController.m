@@ -133,18 +133,13 @@
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         loadBalancerIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"load-balancers-icon.png"]];
         loadBalancerIcon.center = cell.center;
         CGRect r = loadBalancerIcon.frame;
         r.origin.y += 10;
         loadBalancerIcon.frame = r;
-//        loadBalancerIcon.clipsToBounds = NO;
-//        [loadBalancerIcon.layer setShadowColor:[[UIColor blackColor] CGColor]];
-//        [loadBalancerIcon.layer setShadowRadius:1.0f];
-//        [loadBalancerIcon.layer setShadowOffset:CGSizeMake(1, 1)];
-//        [loadBalancerIcon.layer setShadowOpacity:0.8f];
         
         [cell addSubview:loadBalancerIcon];
         
@@ -157,11 +152,6 @@
             dot.backgroundColor = [UIColor redColor];
             dot.layer.cornerRadius = 3.5;
             server.frame = CGRectMake(20 + (61 * i), 80, 35, 35);
-//            server.clipsToBounds = NO;
-//            [server.layer setShadowColor:[[UIColor blackColor] CGColor]];
-//            [server.layer setShadowRadius:1.0f];
-//            [server.layer setShadowOffset:CGSizeMake(1, 1)];
-//            [server.layer setShadowOpacity:0.8f];
             [cell addSubview:server];
             [cell addSubview:dot];
             [cell sendSubviewToBack:dot];

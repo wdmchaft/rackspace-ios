@@ -24,10 +24,11 @@
 
 #define kProviderName 0
 #define kAuthEndpoint 1
+#define kValidateSSL 2
 
 @implementation AccountDetailsViewController
 
-@synthesize provider, rootViewController, providersViewController, activityIndicatorView;
+@synthesize provider, rootViewController, providersViewController, activityIndicatorView, validateSSLSwitch;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
@@ -52,6 +53,7 @@
         if (cdnStr) {
             account.cdnURL = [NSURL URLWithString:cdnStr];
         }
+        account.ignoresSSLValidation = !self.validateSSLSwitch.on;
         [account persist];
         [rootViewController.tableView reloadData];
         [account refreshCollections];
@@ -127,6 +129,11 @@
                             
                             OpenStackRequest *request = [OpenStackRequest authenticationRequest:account];
                             request.delegate = self;
+                            if (self.validateSSLSwitch && !self.validateSSLSwitch.on) {
+                                request.validatesSecureCertificate = NO;
+                            } else {
+                                request.validatesSecureCertificate = YES;
+                            }
                             request.didFinishSelector = @selector(authenticationSucceded:);
                             request.didFailSelector = @selector(authenticationFailed:);
                             [request startAsynchronous];
@@ -185,6 +192,9 @@
     providerSection = -1;
     authenticationSection = 0;
     [self addSaveButton];
+    
+    self.validateSSLSwitch = [[UISwitch alloc] init];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -222,7 +232,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    if (section == authenticationSection) {
+        return 2;
+    } else {
+        return customProvider ? 3 : 2;
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -298,6 +312,18 @@
             
             cell = [self textCell:@"API URL" textField:&apiEndpointTextField secure:NO returnKeyType:UIReturnKeyNext];
 
+        } else if (indexPath.row == kValidateSSL) {
+            
+            static NSString *sslID = @"SSLCell";
+            cell = [self.tableView dequeueReusableCellWithIdentifier:sslID];
+            if (cell == nil) {
+                cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:sslID] autorelease];
+                cell.textLabel.text = @"Validate SSL Certificate";
+                self.validateSSLSwitch.on = YES;
+                cell.accessoryView = self.validateSSLSwitch;
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+            
         }
         
     }
@@ -362,6 +388,7 @@
     [rootViewController release];
     [providersViewController release];
     [activityIndicatorView release];
+    [validateSSLSwitch release];
     [super dealloc];
 }
 

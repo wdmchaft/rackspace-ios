@@ -118,8 +118,10 @@
         [self enableRefreshButton];
         [self.tableView reloadData];
         
-        GetCDNContainersRequest *cdnRequest = [GetCDNContainersRequest request:self.account];
-        [cdnRequest startAsynchronous];
+        if (self.account.cdnURL) {
+            GetCDNContainersRequest *cdnRequest = [GetCDNContainersRequest request:self.account];
+            [cdnRequest startAsynchronous];
+        }
         
     } failure:^(OpenStackRequest *request) {
         [self enableRefreshButton];

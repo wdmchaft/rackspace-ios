@@ -4509,8 +4509,8 @@
 					armv6,
 				);
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rackspace Hosting";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rackspace Hosting";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Michael Mayo (YJR8C239H4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Mayo (YJR8C239H4)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -4533,8 +4533,8 @@
 					UIKit,
 				);
 				PRODUCT_NAME = "Rackspace Cloud";
-				PROVISIONING_PROFILE = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
+				PROVISIONING_PROFILE = "2A40042A-033F-41CE-9A2E-C40ABA281587";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2A40042A-033F-41CE-9A2E-C40ABA281587";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4548,8 +4548,8 @@
 					armv6,
 				);
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rackspace Hosting";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rackspace Hosting";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Michael Mayo (YJR8C239H4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Mayo (YJR8C239H4)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -4572,8 +4572,8 @@
 					UIKit,
 				);
 				PRODUCT_NAME = "Rackspace Cloud";
-				PROVISIONING_PROFILE = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
+				PROVISIONING_PROFILE = "2A40042A-033F-41CE-9A2E-C40ABA281587";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2A40042A-033F-41CE-9A2E-C40ABA281587";
 				SDKROOT = iphoneos;
 				ZERO_LINK = NO;
 			};

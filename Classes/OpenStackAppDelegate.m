@@ -109,7 +109,7 @@
     [self loadSettingsDefaults];
         
     rootViewController = [navigationController.viewControllers objectAtIndex:0];
-    OpenStackAppDelegate <UINavigationControllerDelegate> *delegate = self;
+    OpenStackAppDelegate <UINavigationControllerDelegate> *delegate = (OpenStackAppDelegate <UINavigationControllerDelegate> *)self;
     navigationController.delegate = delegate;
         
     // Add the navigation controller's view to the window and display.

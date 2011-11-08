@@ -13,8 +13,11 @@
 @interface AccountSettingsViewController : UITableViewController <UITextFieldDelegate> {
     UITextField *usernameTextField;
     UITextField *apiKeyTextField;
+    UITextField *providerNameTextField;
+    UITextField *authURLTextField;    
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;
+@property (nonatomic, retain) UISwitch *validateSSLSwitch;
 
 @end

@@ -21,6 +21,7 @@
 	[request setRequestMethod:method];
 	[request addRequestHeader:@"X-Auth-Token" value:[account authToken]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    request.validatesSecureCertificate = !account.ignoresSSLValidation;
 	return request;
 }
 
@@ -44,8 +45,10 @@
         [self.account persist];
         [self.account.manager notify:@"getContainersSucceeded" request:self object:self.account];
         
-        GetCDNContainersRequest *cdnRequest = [GetCDNContainersRequest request:self.account];
-        [cdnRequest startAsynchronous];
+        if (self.account.cdnURL) {
+            GetCDNContainersRequest *cdnRequest = [GetCDNContainersRequest request:self.account];
+            [cdnRequest startAsynchronous];
+        }
 
     } else {
         [self.account.manager notify:@"getContainersFailed" request:self object:self.account];

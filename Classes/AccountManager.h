@@ -58,12 +58,12 @@
 - (void)createContainer:(Container *)container;
 - (void)deleteContainer:(Container *)container;
 
-- (void)getObjects:(Container *)container;
+- (APICallback *)getObjects:(Container *)container;
 - (void)getObjectInfo:(Container *)container object:(StorageObject *)object;
 - (void)getObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
 - (void)writeObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
 - (void)writeObjectMetadata:(Container *)container object:(StorageObject *)object;
-- (void)deleteObject:(Container *)container object:(StorageObject *)object;
+- (APICallback *)deleteObject:(Container *)container object:(StorageObject *)object;
   
 - (void)updateCDNContainer:(Container *)container;
 

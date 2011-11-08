@@ -44,6 +44,7 @@
 @property (nonatomic, retain) NSMutableDictionary *containers;
 @property (nonatomic, assign) BOOL flaggedForDelete;
 @property (nonatomic, retain) NSString *apiVersion;
+@property (nonatomic, assign) BOOL ignoresSSLValidation;
 
 // this is a dictionary of dictionaries:
 // { "endpoint1": { "123": { ... }, "456": { ... } },

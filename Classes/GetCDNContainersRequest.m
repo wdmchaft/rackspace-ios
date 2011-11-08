@@ -22,6 +22,7 @@
         [request addRequestHeader:@"X-Auth-Token" value:[account authToken]];
     }
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    request.validatesSecureCertificate = !account.ignoresSSLValidation;
 	return request;
 }
 

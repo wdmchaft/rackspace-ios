@@ -32,6 +32,7 @@
 @property (nonatomic, retain) RootViewController *rootViewController;
 @property (nonatomic, retain) ProvidersViewController *providersViewController;
 @property (nonatomic, retain) ActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, retain) UISwitch *validateSSLSwitch;
 
 - (void)saveButtonPressed:(id)sender;
 

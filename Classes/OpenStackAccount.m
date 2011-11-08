@@ -28,7 +28,7 @@ static NSMutableDictionary *timers = nil;
 @synthesize uuid, provider, username, projectId, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
             lastUsedFlavorId, lastUsedImageId,
             containerCount, totalBytesUsed, containers, hasBeenRefreshed, flaggedForDelete,
-            loadBalancers, lbProtocols, serversByPublicIP, apiVersion;
+            loadBalancers, lbProtocols, serversByPublicIP, apiVersion, ignoresSSLValidation;
 
 + (void)initialize {
     accounts = [Archiver retrieve:@"accounts"];
@@ -190,6 +190,7 @@ static NSMutableDictionary *timers = nil;
     copy.containerCount = self.containerCount;
     copy.totalBytesUsed = self.totalBytesUsed;
     copy.apiVersion = self.apiVersion;
+    copy.ignoresSSLValidation = self.ignoresSSLValidation;
     manager = [[AccountManager alloc] init];
     manager.account = copy;
     return copy;
@@ -211,6 +212,9 @@ static NSMutableDictionary *timers = nil;
     
     [coder encodeObject:images forKey:@"images"];
     [coder encodeObject:flavors forKey:@"flavors"];
+    
+    [coder encodeBool:ignoresSSLValidation forKey:@"ignoresSSLValidation"];
+    
     /*
     [coder encodeObject:servers forKey:@"servers"];
     [coder encodeObject:serversByPublicIP forKey:@"serversByPublicIP"];
@@ -277,6 +281,8 @@ static NSMutableDictionary *timers = nil;
                 self.apiVersion = component;
             }
         }
+        
+        ignoresSSLValidation = [coder decodeBoolForKey:@"ignoresSSLValidation"];
         
         manager = [[AccountManager alloc] init];
         manager.account = self;

@@ -131,7 +131,11 @@
         "        \"<imageType>\": <image>"
         "        <metadata><personality>"
         "  }}";
-    json = [json replace:@"<name>" with:self.name];    
+    if (self.name) {
+        json = [json replace:@"<name>" with:self.name];    
+    } else {
+        json = [json replace:@"<name>" with:@"slice"];
+    }
     json = [json replace:@"<flavorType>" with:version1 ? @"flavorId" : @"flavorRef"];
     
     if (version1) {
@@ -162,7 +166,7 @@
             NSString *path = [paths objectAtIndex:i];
             personalityJSON = [personalityJSON stringByAppendingString:[NSString stringWithFormat:@"{ \"path\": \"%@\", \"contents\": \"%@\" }", path, [Base64 encode:[[self.personality objectForKey:path] dataUsingEncoding:NSUTF8StringEncoding]]]];
             if (i < [paths count] - 1) {
-                personalityJSON = [json stringByAppendingString:@", "];
+                personalityJSON = [personalityJSON stringByAppendingString:@", "];
             }
         }
         personalityJSON = [personalityJSON stringByAppendingString:@" ]"];
@@ -172,6 +176,8 @@
     } else {
         json = [json replace:@"<personality>" with:@""];
     }
+    
+    NSLog(@"server json: %@", json);
     
     return json;
     
