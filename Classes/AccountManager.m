@@ -189,23 +189,11 @@
 
 #pragma mark Delete Server
 
-- (void)deleteServer:(Server *)server {
+- (APICallback *)deleteServer:(Server *)server {
     TrackEvent(CATEGORY_SERVER, EVENT_DELETED);
     
     __block OpenStackRequest *request = [OpenStackRequest deleteServerRequest:self.account server:server];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        [self notify:([request isSuccess] ? @"deleteServerSucceeded" : @"deleteServerFailed") request:request object:[request.userInfo objectForKey:@"server"]];        
-        [self notify:([request isSuccess] ? @"deleteServerSucceeded" : @"deleteServerFailed") request:request object:self.account];
-    }];
-    [request setFailedBlock:^{
-        [self notify:@"deleteServerFailed" request:request object:[request.userInfo objectForKey:@"server"]];        
-    }];
-    if (![self queue]) {
-        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
-    }
-    [queue addOperation:request];    
+    return [self callbackWithRequest:request];
 }
 
 #pragma mark Create Server
@@ -233,6 +221,7 @@
         [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
     }
     [queue addOperation:request];
+
 }
 
 #pragma mark Resize Server

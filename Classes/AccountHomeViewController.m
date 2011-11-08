@@ -33,22 +33,10 @@
 
 @synthesize account, rootViewController, rootViewIndexPath, tableView;
 
-#pragma mark -
-#pragma mark View lifecycle
-
-- (void)incrementRefreshCount {
-    refreshCount++;
-    //if (refreshCount == 2) {
-        self.account.hasBeenRefreshed = YES;
-        [self hideToolbarActivityMessage];
-        refreshButton.enabled = YES;
-    //}
-}
+#pragma mark - View lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // observe getImagesFailed?
     
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     if ([reachability currentReachabilityStatus] == kNotReachable) {
@@ -57,69 +45,6 @@
         refreshButton.enabled = YES;
         [self failOnBadConnection];
     }
-    
-    authRetryFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"authRetryFailed" identifier:0] object:nil
-                                                                               queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self hideToolbarActivityMessage];
-        [self alert:@"Authentication failed.  Please check your username and API key." request:[notification.userInfo objectForKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] removeObserver:authRetryFailedObserver];
-    }];    
-    
-    id getServersObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getServersSucceeded" object:self.account 
-                                                                           queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:computeRow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-        [self incrementRefreshCount];
-    }];
-    
-    id getServersFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getServersFailed" object:self.account 
-                                                                               queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self incrementRefreshCount];
-    }];
-
-    id getContainersObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getContainersSucceeded" object:self.account 
-                                                                              queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:storageRow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-        [self incrementRefreshCount];
-    }];
-    id getContainersFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getContainersFailed" object:self.account 
-                                                                                  queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self incrementRefreshCount];
-    }];
-    id getLoadBalancersObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getLoadBalancersSucceeded" object:self.account 
-                                                                                     queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        if (loadBalancingRow > 0) {
-            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:loadBalancingRow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-            [self incrementRefreshCount];
-        }
-    }];
-    id createServerObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"createServerSucceeded" object:self.account 
-                                                                           queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:computeRow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    }];
-    id createContainerObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"createContainerSucceeded" object:self.account 
-                                                                              queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:storageRow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    }];
-    id deleteServerObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteServerSucceeded" object:self.account 
-                                                                                 queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:computeRow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    }];
-    id deleteContainerObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteContainerSucceeded" object:self.account 
-                                                                                    queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-    {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:storageRow inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    }];
-    
-    observers = [[NSArray alloc] initWithObjects:getServersObserver, getServersFailedObserver, getContainersObserver, getContainersFailedObserver, createServerObserver, createContainerObserver, deleteServerObserver, deleteContainerObserver, getLoadBalancersObserver, nil];
     
 }
 
@@ -154,35 +79,15 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if (!self.account.hasBeenRefreshed) {
-        //[self showToolbarActivityMessage:@"Refreshing data..."];
         [self.account refreshCollections];
     }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-//    [rootViewController.tableView deselectRowAtIndexPath:rootViewIndexPath animated:YES];
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidUnload {
-    for (id observer in observers) {
-        [[NSNotificationCenter defaultCenter] removeObserver:observer];
-    }
-    [[NSNotificationCenter defaultCenter] removeObserver:authRetryFailedObserver];
-
-    [super viewDidUnload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark -
-#pragma mark Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
+#pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return totalRows;
@@ -201,30 +106,39 @@
     cell.imageView.image = nil;
     
     if (indexPath.row == computeRow) {
+        
         cell.textLabel.text = [self.account.provider isRackspace] ? @"Cloud Servers" : @"Compute";
         cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:kCloudServersIcon] : [UIImage imageNamed:@"openstack-icon.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
     } else if (indexPath.row == storageRow) {
+        
         cell.textLabel.text = [self.account.provider isRackspace] ? @"Cloud Files" : @"Object Storage";
         cell.imageView.image = [self.account.provider isRackspace] ? [UIImage imageNamed:@"cloud-files-icon.png"] : [UIImage imageNamed:@"openstack-icon.png"];
+        
     } else if (indexPath.row == loadBalancingRow) {
+        
         cell.textLabel.text = @"Load Balancers";
         cell.imageView.image = [UIImage imageNamed:@"load-balancers-icon.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
     } else if (indexPath.row == rssFeedsRow) {
+        
         cell.textLabel.text = @"System Status";
         cell.imageView.image = [UIImage imageNamed:@"rss-feeds-icon.png"];
+        
     } else if (indexPath.row == contactRow) {
-        cell.textLabel.text = @"Fanatical Support"; // @"Contact Information";
+        
+        cell.textLabel.text = @"Fanatical Support";
         cell.imageView.image = [UIImage imageNamed:@"contact-rackspace-icon.png"];
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             cell.accessoryType = UITableViewCellAccessoryNone;
         } else {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
-//    } else if (indexPath.row == kAPILogs) {
-//        cell.textLabel.text = @"API Logs";
+        
     } else if (indexPath.row == limitsRow) {
+        
         cell.textLabel.text = @"API Rate Limits";
         cell.imageView.image = [UIImage imageNamed:@"api-rate-limits-icon.png"];
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -232,7 +146,9 @@
         } else {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
+        
     } else if (indexPath.row == accountSettingsRow) {
+        
         cell.textLabel.text = @"API Account Info";
         cell.imageView.image = [UIImage imageNamed:@"account-settings-icon.png"];
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -240,13 +156,13 @@
         } else {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
+        
     }
     
     return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:aTableView didSelectRowAtIndexPath:indexPath];
@@ -286,11 +202,6 @@
             [self.navigationController pushViewController:vc animated:YES];
         }
         [vc release];
-//    } else if (indexPath.row == kAPILogs) {
-//        APILogsViewController *vc = [[APILogsViewController alloc] initWithNibName:@"APILogsViewController" bundle:nil];
-//        vc.account = account;
-//        [self.navigationController pushViewController:vc animated:YES];
-//        [vc release];
     } else if (indexPath.row == limitsRow) {
         LimitsViewController *vc = [[LimitsViewController alloc] initWithNibName:@"LimitsViewController" bundle:nil];
         vc.account = account;
@@ -329,9 +240,7 @@
 #pragma mark Button Handlers
 
 - (void)refreshButtonPressed:(id)sender {
-    //refreshButton.enabled = NO;
     refreshCount = 0;
-    //[self showToolbarActivityMessage:@"Refreshing data..."];
     [self.account refreshCollections];    
 }
 
@@ -341,7 +250,6 @@
 - (void)dealloc {
     [account release];
     [rootViewController release];
-    [observers release];
     [tableView release];
     [super dealloc];
 }

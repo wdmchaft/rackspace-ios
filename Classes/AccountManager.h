@@ -35,7 +35,7 @@
 - (void)hardRebootServer:(Server *)server;
 - (void)changeAdminPassword:(Server *)server password:(NSString *)password;
 - (APICallback *)renameServer:(Server *)server name:(NSString *)name;
-- (void)deleteServer:(Server *)server;
+- (APICallback *)deleteServer:(Server *)server;
 - (void)createServer:(Server *)server;
 - (void)resizeServer:(Server *)server flavor:(Flavor *)flavor;
 - (void)confirmResizeServer:(Server *)server;

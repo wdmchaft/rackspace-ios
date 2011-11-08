@@ -41,15 +41,7 @@
 @synthesize server, account, tableView, selectedIPAddressIndexPath, serversViewController, selectedServerIndexPath, accountHomeViewController;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //CGPoint point = scrollView.contentOffset;
-    //CGRect tr = titleView.frame;
-    //CGRect ar = actionView.frame;
-    /*
-    if (previousScrollPoint.y - point.y < 0) {
-        titleView.frame = CGRectMake(tr.origin.x, (previousScrollPoint.y - point.y) / 3.0, tr.size.width, tr.size.height);
-        actionView.frame = CGRectMake(ar.origin.x, 64 + ((previousScrollPoint.y - point.y) / 2.0), ar.size.width, ar.size.height);
-    }
-    */
+
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowUserInteraction animations:^{
         CGRect tr = titleView.frame;
         CGRect ar = actionView.frame;
@@ -95,16 +87,6 @@
     [actionView.layer setShadowOffset:CGSizeMake(1, 1)];
     [actionView.layer setShadowOpacity:0.8f];
     
-    /*
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        // line up the action buttons with the table view on iPad
-        CGRect rebootFrame = rebootButton.frame;
-        rebootFrame.origin.x += 14;
-        rebootButton.frame = rebootFrame;
-    }
-     */
-    
-    
     [self scrollViewDidScroll:self.tableView];
 }
 
@@ -135,14 +117,6 @@
             
         } else { 
             self.tableView.backgroundView = nil;
-            /*
-            NSString *logoFilename = [[server.image logoPrefix] stringByAppendingString:@"-large.png"];    
-            UIImageView *osLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:logoFilename]];
-            osLogo.contentMode = UIViewContentModeScaleAspectFit;
-            osLogo.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-            tableView.backgroundView = osLogo;
-            [osLogo release];
-             */
         }
     } else {
         UIView *container = [[UIView alloc] init];
@@ -376,15 +350,6 @@
         {
             Image *image = [self.account.images objectForKey:self.server.imageId];
             self.server.image = image;
-
-            /*
-            NSString *logoFilename = [[server.image logoPrefix] stringByAppendingString:@"-large.png"];    
-            UIImageView *osLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:logoFilename]];
-            osLogo.contentMode = UIViewContentModeScaleAspectFit;
-            osLogo.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-            tableView.backgroundView = osLogo;
-            [osLogo release];
-             */
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:kImage inSection:kDetails]] withRowAnimation:UITableViewRowAnimationNone];
         }];
         
@@ -502,8 +467,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:getLimitsSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordFailedObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:deleteServerSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:deleteServerFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:getImageSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:getImageFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:updateBackupScheduleSucceededObserver];
@@ -531,8 +494,7 @@
     countdownTimer = nil;
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     //return self.server ? 5 : 0;
@@ -762,8 +724,7 @@
     return cell;
 }
 
-#pragma mark -
-#pragma mark Table view delegate
+#pragma mark - Table view delegate
 
 - (void)reloadActionsTitleRow {
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:kActions]] withRowAnimation:UITableViewRowAnimationNone];
@@ -914,8 +875,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark Action Sheet Delegate
+#pragma mark - Action Sheet Delegate
 
 - (void)changeAdminPassword:(NSString *)password {
     [self showToolbarActivityMessage:@"Changing password..."];        
@@ -949,11 +909,7 @@
 }
 
 - (void)removeServersListRow {
-//    if ([self.account.servers count] == 0) {
-        [self.serversViewController.tableView reloadData];
-//    } else {
-//        [self.serversViewController.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:selectedServerIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
-//    }
+    [self.serversViewController.tableView reloadData];
 }
 
 - (void)popViewController {
@@ -965,50 +921,39 @@
     performingAction = YES;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
 
-    // handle success
-    deleteServerSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteServerSucceeded" object:self.server
-                                                                                              queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            performingAction = NO;
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
-            
-            NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:self.account.servers];
-            [dict removeObjectForKey:self.server.identifier];
-            self.account.servers = [[NSMutableDictionary alloc] initWithDictionary:dict]; // TODO: release
-            [self.account persist];
-            [dict release];
-             
-            self.serversViewController.account.servers = self.account.servers;
-            
-            if ([self.account.servers count] == 0 && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-                // on ipad, delete needs to get rid of the server on the main view
-                self.server = nil;
-                [self setBackgroundView];
-                [self.tableView reloadData];
-            } else {
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-            [self.serversViewController.tableView selectRowAtIndexPath:selectedServerIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
-            [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(removeServersListRow) userInfo:nil repeats:NO];
+    [[self.account.manager deleteServer:self.server] success:^(OpenStackRequest *request) {
 
-            [[NSNotificationCenter defaultCenter] removeObserver:deleteServerSucceededObserver];
-            [[NSNotificationCenter defaultCenter] removeObserver:deleteServerFailedObserver];
-        }];
-    
-    // handle failure
-    deleteServerFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteServerFailed" object:self.server 
-                                                                                           queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-         {
-             [self alert:@"There was a problem deleting this server." request:[notification.userInfo objectForKey:@"request"]];
-             [self hideToolbarActivityMessage];
-             performingAction = NO;
-             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
-             [[NSNotificationCenter defaultCenter] removeObserver:deleteServerFailedObserver];
-             [[NSNotificationCenter defaultCenter] removeObserver:deleteServerSucceededObserver];
-         }];
-    
-    [self.account.manager deleteServer:self.server];
+        [self hideToolbarActivityMessage];
+        performingAction = NO;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
+        
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:self.account.servers];
+        [dict removeObjectForKey:self.server.identifier];
+        self.account.servers = [[NSMutableDictionary alloc] initWithDictionary:dict];
+        [self.account persist];
+        [dict release];
+        
+        self.serversViewController.account.servers = self.account.servers;
+        
+        if ([self.account.servers count] == 0 && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            // on ipad, delete needs to get rid of the server on the main view
+            self.server = nil;
+            [self setBackgroundView];
+            [self.tableView reloadData];
+        } else {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        [self.serversViewController.tableView selectRowAtIndexPath:selectedServerIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(removeServersListRow) userInfo:nil repeats:NO];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        [self alert:@"There was a problem deleting this server." request:request];
+        [self hideToolbarActivityMessage];
+        performingAction = NO;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kActions] withRowAnimation:UITableViewRowAnimationFade];
+
+    }];
 }
 
 - (void)showAction:(NSString *)name {
@@ -1118,8 +1063,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark Resize Alert Delegate
+#pragma mark - Resize Alert Delegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {

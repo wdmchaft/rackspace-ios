@@ -14,13 +14,10 @@
     OpenStackAccount *account;
     RootViewController *rootViewController;
     NSIndexPath *rootViewIndexPath;
-    NSArray *observers;
     IBOutlet UITableView *tableView;
     
     NSInteger refreshCount;
-    
-    id authRetryFailedObserver;
-    
+        
     NSInteger totalRows;
     NSInteger computeRow;
     NSInteger storageRow;

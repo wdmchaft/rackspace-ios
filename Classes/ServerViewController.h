@@ -62,9 +62,6 @@
     id resizeServerSucceededObserver;
     id resizeServerFailedObserver;
     
-    id deleteServerSucceededObserver;
-    id deleteServerFailedObserver;
-    
     id getImageSucceededObserver;
     id getImageFailedObserver;
     
