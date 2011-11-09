@@ -337,6 +337,7 @@
     
     // handle success
     if (!getLimitsSucceededObserver) {
+        
         getLimitsSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getLimitsSucceeded" object:self.account
                                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
         {
@@ -358,53 +359,7 @@
         {
             NSLog(@"loading image failed");
         }];
-        
-        resizeServerSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"resizeServerSucceeded" identifier:self.server.identifier] object:nil
-                                                                                           queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            self.server.status = @"QUEUE_RESIZE";
-            if (kOverview >= 0) {
-                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:kStatus inSection:kOverview]] withRowAnimation:UITableViewRowAnimationNone];
-            }
-            [self pollServer];        
-        }];
-        
-        resizeServerFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"resizeServerFailed" identifier:self.server.identifier] object:nil
-                                                                                        queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            [self alert:@"There was a problem resizing this server." request:[notification.userInfo objectForKey:@"request"]];
-        }];
-        
-        confirmResizeSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"confirmResizeServerSucceeded" identifier:self.server.identifier] object:nil
-                                                                                            queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            [self pollServer];        
-        }];
-        
-        confirmResizeFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"confirmResizeServerFailed" identifier:self.server.identifier] object:nil
-                                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            [self alert:@"There was a problem confirming the resize." request:[notification.userInfo objectForKey:@"request"]];
-        }];
-        
-        revertResizeSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"revertResizeServerSucceeded" identifier:self.server.identifier] object:nil
-                                                                                           queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            [self pollServer];        
-        }];
-        
-        revertResizeFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"revertResizeServerFailed" identifier:self.server.identifier] object:nil
-                                                                                        queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            [self alert:@"There was a problem reverting the resize." request:[notification.userInfo objectForKey:@"request"]];
-        }];
-        
+                
         rebuildSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"rebuildServerSucceeded" identifier:self.server.identifier] object:nil
                                                                                       queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
         {
@@ -450,16 +405,8 @@
     self.tableView = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:getLimitsSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:changeAdminPasswordFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:getImageSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:getImageFailedObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:resizeServerSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:resizeServerFailedObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:confirmResizeSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:confirmResizeFailedObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:revertResizeSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:revertResizeFailedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:rebuildSucceededObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:rebuildFailedObserver];
 }
@@ -1035,11 +982,37 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        [self.account.manager confirmResizeServer:self.server];
+        
+        [[self.account.manager confirmResizeServer:self.server] success:^(OpenStackRequest *request) {
+        
+            [self hideToolbarActivityMessage];
+            [self pollServer];        
+
+        } failure:^(OpenStackRequest *request) {
+        
+            [self hideToolbarActivityMessage];
+            [self alert:@"There was a problem confirming the resize." request:request];
+
+        }];
+        
         [self showToolbarActivityMessage:@"Confirming resize..."];
+        
     } else if (buttonIndex == 2) {
-        [self.account.manager revertResizeServer:self.server];
+        
+        [[self.account.manager revertResizeServer:self.server] success:^(OpenStackRequest *request) {
+
+            [self hideToolbarActivityMessage];
+            [self pollServer];        
+
+        } failure:^(OpenStackRequest *request) {
+        
+            [self hideToolbarActivityMessage];
+            [self alert:@"There was a problem reverting the resize." request:request];
+
+        }];
+        
         [self showToolbarActivityMessage:@"Reverting resize..."];
+        
     }
 }
 

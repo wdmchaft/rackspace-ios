@@ -53,20 +53,8 @@
     
     id getLimitsSucceededObserver;
     
-    id changeAdminPasswordSucceededObserver;
-    id changeAdminPasswordFailedObserver;
-    
-    id resizeServerSucceededObserver;
-    id resizeServerFailedObserver;
-    
     id getImageSucceededObserver;
     id getImageFailedObserver;
-    
-    id confirmResizeSucceededObserver;
-    id confirmResizeFailedObserver;
-    
-    id revertResizeSucceededObserver;
-    id revertResizeFailedObserver;
     
     id rebuildSucceededObserver;
     id rebuildFailedObserver;
@@ -108,6 +96,7 @@
 @property (nonatomic, retain) AccountHomeViewController *accountHomeViewController;
 
 - (void)refreshLimitStrings;
+- (void)pollServer;
 
 - (void)changeAdminPassword:(NSString *)password;
 - (void)renameServer:(NSString *)name;

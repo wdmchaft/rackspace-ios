@@ -183,55 +183,21 @@
 
 #pragma mark Resize Server
 
-- (void)resizeServer:(Server *)server flavor:(Flavor *)flavor {
+- (APICallback *)resizeServer:(Server *)server flavor:(Flavor *)flavor {
     TrackEvent(CATEGORY_SERVER, EVENT_RESIZED);
     
     __block OpenStackRequest *request = [OpenStackRequest resizeServerRequest:self.account server:server flavor:flavor];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        NSString *name = [request isSuccess] ? @"resizeServerSucceeded" : @"resizeServerFailed";
-        NSNotification *notification = [NSNotification notificationWithName:[self notificationName:name identifier:server.identifier] object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }];
-    [request setFailedBlock:^{
-        NSNotification *notification = [NSNotification notificationWithName:[self notificationName:@"resizeServerFailed" identifier:server.identifier] object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }];
-    [request startAsynchronous];
+    return [self callbackWithRequest:request];
 }
 
-- (void)confirmResizeServer:(Server *)server {
+- (APICallback *)confirmResizeServer:(Server *)server {
     __block OpenStackRequest *request = [OpenStackRequest confirmResizeServerRequest:self.account server:server];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        NSString *name = [request isSuccess] ? @"confirmResizeServerSucceeded" : @"confirmResizeServerFailed";
-        NSNotification *notification = [NSNotification notificationWithName:[self notificationName:name identifier:server.identifier] object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }];
-    [request setFailedBlock:^{
-        NSNotification *notification = [NSNotification notificationWithName:[self notificationName:@"confirmResizeServerFailed" identifier:server.identifier] object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-        
-    }];
-    [request startAsynchronous];
+    return [self callbackWithRequest:request];
 }
 
-- (void)revertResizeServer:(Server *)server {
+- (APICallback *)revertResizeServer:(Server *)server {
     __block OpenStackRequest *request = [OpenStackRequest revertResizeServerRequest:self.account server:server];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        NSString *name = [request isSuccess] ? @"revertResizeServerSucceeded" : @"revertResizeServerFailed";
-        NSNotification *notification = [NSNotification notificationWithName:[self notificationName:name identifier:server.identifier] object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }];
-    [request setFailedBlock:^{
-        NSNotification *notification = [NSNotification notificationWithName:[self notificationName:@"revertResizeServerFailed" identifier:server.identifier] object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }];
-    [request startAsynchronous];
+    return [self callbackWithRequest:request];
 }
 
 - (void)rebuildServer:(Server *)server image:(Image *)image {

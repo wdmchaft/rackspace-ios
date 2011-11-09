@@ -14,6 +14,7 @@
 #import "Flavor.h"
 #import "AccountManager.h"
 #import "Provider.h"
+#import "APICallback.h"
 
 #define kResizeButton 0
 #define kCancelButton 1
@@ -33,7 +34,20 @@
     
     if (buttonIndex == kResizeButton) {
         
-        [self.account.manager resizeServer:self.server flavor:selectedFlavor];
+        [[self.account.manager resizeServer:self.server flavor:selectedFlavor] success:^(OpenStackRequest *request) {
+            
+            [self.serverViewController hideToolbarActivityMessage];
+            self.serverViewController.server.status = @"QUEUE_RESIZE";
+            [self.serverViewController pollServer];        
+            
+        } failure:^(OpenStackRequest *request) {
+            
+            [self.serverViewController hideToolbarActivityMessage];
+            [self alert:@"There was a problem resizing this server." request:request];
+
+        }];
+        
+        
         [serverViewController showToolbarActivityMessage:@"Resizing server..."];
         [self dismissModalViewControllerAnimated:YES];    
         [serverViewController.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:kResize inSection:kActions] animated:YES];

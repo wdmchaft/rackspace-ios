@@ -34,9 +34,9 @@
 - (APICallback *)renameServer:(Server *)server name:(NSString *)name;
 - (APICallback *)deleteServer:(Server *)server;
 - (APICallback *)createServer:(Server *)server;
-- (void)resizeServer:(Server *)server flavor:(Flavor *)flavor;
-- (void)confirmResizeServer:(Server *)server;
-- (void)revertResizeServer:(Server *)server;
+- (APICallback *)resizeServer:(Server *)server flavor:(Flavor *)flavor;
+- (APICallback *)confirmResizeServer:(Server *)server;
+- (APICallback *)revertResizeServer:(Server *)server;
 - (void)rebuildServer:(Server *)server image:(Image *)image;
 - (void)getBackupSchedule:(Server *)server;
 - (APICallback *)updateBackupSchedule:(Server *)server;
