@@ -21,8 +21,6 @@
     UIActionSheet *deleteActionSheet;
     ContainersViewController *containersViewController;
     ActivityIndicatorView *activityIndicatorView;
-    id successObserver;
-    id failureObserver;
     NSInteger deleteSection;
     NSIndexPath *selectedContainerIndexPath;
     NSUInteger originalTTL;

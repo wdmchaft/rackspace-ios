@@ -136,24 +136,19 @@
     activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
     [activityIndicatorView addToView:self.view scrollOffset:self.tableView.contentOffset.y];
     
-    [self.account.manager updateCDNContainer:self.container];
+    [[self.account.manager updateCDNContainer:self.container] success:^(OpenStackRequest *request) {
+       
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        container.ttl = originalTTL;
+        [self.tableView reloadData];
+        [self alert:@"There was a problem updating this container." request:request];
+
+    }];
     
-    successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateCDNContainerSucceeded" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-       {
-           [activityIndicatorView removeFromSuperviewAndRelease];
-           [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-       }];
-    
-    failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateCDNContainerFailed" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-       {
-           [activityIndicatorView removeFromSuperviewAndRelease];
-           container.ttl = originalTTL;
-           [self.tableView reloadData];
-           [self alert:@"There was a problem updating this container." request:[notification.userInfo objectForKey:@"request"]];
-           [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
-       }];
 }
 
 - (void)ttlSliderMoved:(id)sender {
@@ -437,11 +432,9 @@
     activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
     [activityIndicatorView addToView:self.view scrollOffset:self.tableView.contentOffset.y];    
     container.cdnEnabled = !container.cdnEnabled;
-    [self.account.manager updateCDNContainer:container];
     
-    successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateCDNContainerSucceeded" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-    {
+    [[self.account.manager updateCDNContainer:container] success:^(OpenStackRequest *request) {
+        
         [activityIndicatorView removeFromSuperviewAndRelease];
         
         NSIndexSet *sections = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(3, 4)];
@@ -459,19 +452,16 @@
             transitioning = NO;
             [self.tableView deleteSections:sections withRowAnimation:UITableViewRowAnimationTop];
         }
+
+    } failure:^(OpenStackRequest *request) {
         
-        [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-    }];
-    
-    failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateCDNContainerFailed" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-    {
         [activityIndicatorView removeFromSuperviewAndRelease];
         container.cdnEnabled = !container.cdnEnabled;
         cdnEnabledSwitch.on = !cdnEnabledSwitch.on;
-        [self alert:@"There was a problem updating this container." request:[notification.userInfo objectForKey:@"request"]];           
-        [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
+        [self alert:@"There was a problem updating this container." request:request];  
+
     }];
+    
 }
 
 - (void)logRetentionSwitchChanged:(id)sender {
@@ -484,28 +474,23 @@
     [activityIndicatorView addToView:self.view scrollOffset:self.tableView.contentOffset.y];    
 
     container.logRetention = !container.logRetention;
-    [self.account.manager updateCDNContainer:container];
     
-    successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateCDNContainerSucceeded" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-       {
-           [activityIndicatorView removeFromSuperviewAndRelease];
-           [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-       }];
+    [[self.account.manager updateCDNContainer:container] success:^(OpenStackRequest *request) {
+        
+        [activityIndicatorView removeFromSuperviewAndRelease];
+
+    } failure:^(OpenStackRequest *request) {
+        
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        container.logRetention = !container.logRetention;
+        logRetentionSwitch.on = !logRetentionSwitch.on;
+        [self alert:@"There was a problem updating this container." request:request];
+
+    }];
     
-    failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateCDNContainerFailed" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-       {
-           [activityIndicatorView removeFromSuperviewAndRelease];
-           container.logRetention = !container.logRetention;
-           logRetentionSwitch.on = !logRetentionSwitch.on;
-           [self alert:@"There was a problem updating this container." request:[notification.userInfo objectForKey:@"request"]];
-           [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
-       }];
 }
 
-#pragma mark -
-#pragma mark Action Sheet
+#pragma mark - Action Sheet
 
 - (void)deleteContainerRow {
     if ([self.account.containers count] == 0) {
@@ -529,16 +514,9 @@
             activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
             [activityIndicatorView addToView:self.view scrollOffset:self.tableView.contentOffset.y];    
             
-            [self.account.manager deleteContainer:self.container];
-            
-            successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteContainerSucceeded" object:self.container
-                                                                                 queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-            {
-                [activityIndicatorView removeFromSuperviewAndRelease];
-
-                [self.account.containers removeObjectForKey:self.container.name];
-                [self.account persist];
+            [[self.account.manager deleteContainer:self.container] success:^(OpenStackRequest *request) {
                 
+                [activityIndicatorView removeFromSuperviewAndRelease];
                 
                 if ([self.account.containers count] == 0 && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                     // on ipad, delete needs to get rid of the container on the main view
@@ -551,18 +529,14 @@
                 
                 [self.containersViewController.tableView selectRowAtIndexPath:selectedContainerIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
                 [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(deleteContainerRow) userInfo:nil repeats:NO];
+
+            } failure:^(OpenStackRequest *request) {
                 
-                [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-            }];
-            
-            failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteContainerFailed" object:self.container
-                                                                                 queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-            {
                 [activityIndicatorView removeFromSuperviewAndRelease];
-                [self alert:@"There was a problem deleting this container." request:[notification.userInfo objectForKey:@"request"]];
-                [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
+                [self alert:@"There was a problem deleting this container." request:request];
+
             }];
-            
+                        
         }
         
         [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:deleteSection] animated:YES];

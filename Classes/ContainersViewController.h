@@ -12,16 +12,8 @@
 
 @interface ContainersViewController : OpenStackViewController <UITableViewDelegate, UITableViewDataSource> {
     IBOutlet UITableView *tableView;
-    OpenStackAccount *account;
-    
-    id successObserver;
-    id failureObserver;
-    
+    OpenStackAccount *account;    
     IBOutlet UIBarButtonItem *refreshButton;
-    
-    id getContainersSucceededObserver;
-    id getContainersFailedObserver;
-    
     BOOL containersLoaded;
 }
 

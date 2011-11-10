@@ -228,36 +228,31 @@
     object.data = data;
     object.bytes = [data length];
     
-    [self.account.manager writeObject:self.container object:object downloadProgressDelegate:activityIndicatorView.progressView];
+    [[self.account.manager writeObject:self.container object:object downloadProgressDelegate:activityIndicatorView.progressView] success:^(OpenStackRequest *request) {
+        
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        object.data = nil;
+        [folder.objects setObject:object forKey:object.name];
+        [folderViewController.tableView reloadData];
+        [self dismissModalViewControllerAnimated:YES];
+
+    } failure:^(OpenStackRequest *request) {
+        
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        [self alert:@"There was a problem uploading the file." request:request];
+
+    }];
     
-    successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"writeObjectSucceeded" object:object queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-                       {
-                           [activityIndicatorView removeFromSuperviewAndRelease];
-                           object.data = nil;
-                           [folder.objects setObject:object forKey:object.name];
-                           [folderViewController.tableView reloadData];
-                           [self dismissModalViewControllerAnimated:YES];
-                           [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-                       }];
-    
-    failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"writeObjectFailed" object:object queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-                       {
-                           [activityIndicatorView removeFromSuperviewAndRelease];
-                           [self alert:@"There was a problem uploading the file." request:[notification.userInfo objectForKey:@"request"]];
-                           [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
-                       }];
 }
 
-#pragma mark -
-#pragma mark Text Field Delegate
+#pragma mark - Text Field Delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return NO;
 }
 
-#pragma mark -
-#pragma mark Memory management
+#pragma mark - Memory management
 
 - (void)dealloc {
     [account release];

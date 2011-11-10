@@ -42,27 +42,18 @@
 }
 
 - (void)requestFinished {
+    
     if ([self isSuccess]) {        
+        
         Container *aContainer = self.container;  //[self.userInfo objectForKey:@"container"];
         NSMutableDictionary *objects = [self objects];
         aContainer.rootFolder = [Folder folder];
         aContainer.rootFolder.objects = objects;
         [self.account persist];
         
-        NSNotification *notification = [NSNotification notificationWithName:@"getObjectsSucceeded" object:self.container userInfo:[NSDictionary dictionaryWithObject:aContainer forKey:@"container"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"getObjectsFailed" object:self.container userInfo:[NSDictionary dictionaryWithObject:self forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
     }
     
     [super requestFinished];
-}
-
-- (void)failWithError:(NSError *)theError {
-    NSNotification *notification = [NSNotification notificationWithName:@"getObjectsFailed" object:self.container userInfo:[NSDictionary dictionaryWithObject:self forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-    [super failWithError:theError];
 }
 
 - (void)dealloc {

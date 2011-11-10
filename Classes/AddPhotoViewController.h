@@ -17,8 +17,6 @@
     Folder *folder;
     FolderViewController *folderViewController;
     ActivityIndicatorView *activityIndicatorView;
-    id successObserver;
-    id failureObserver;
 
     UIImage *image;
     NSData *data;

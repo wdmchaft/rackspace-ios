@@ -13,7 +13,6 @@
 @interface ServersViewController : OpenStackViewController <UITableViewDelegate, UITableViewDataSource> {
     IBOutlet UITableView *tableView;
     OpenStackAccount *account;
-    NSMutableDictionary *renameServerSucceededObservers;
     AccountHomeViewController *accountHomeViewController;
     
     IBOutlet UIBarButtonItem *refreshButton;

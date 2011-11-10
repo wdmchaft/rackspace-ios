@@ -205,10 +205,9 @@ static NSRecursiveLock *accessDetailsLock = nil;
 }
 
 - (void)authRetryFailed:(OpenStackRequest *)retryRequest {
-    // if it fails due to bad connection, try again?
+
     NSLog(@"auth retry failed with status %i", retryRequest.responseStatusCode);
-    NSNotification *notification = [NSNotification notificationWithName:[self.account.manager notificationName:@"authRetryFailed" identifier:0] object:nil userInfo:[NSDictionary dictionaryWithObject:retryRequest forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
 }
 
 #pragma mark -

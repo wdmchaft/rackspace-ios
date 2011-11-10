@@ -43,24 +43,15 @@
         self.account.containers = [self containers];
         self.account.containerCount = [self.account.containers count];
         [self.account persist];
-        [self.account.manager notify:@"getContainersSucceeded" request:self object:self.account];
         
         if (self.account.cdnURL) {
             GetCDNContainersRequest *cdnRequest = [GetCDNContainersRequest request:self.account];
             [cdnRequest startAsynchronous];
         }
 
-    } else {
-        [self.account.manager notify:@"getContainersFailed" request:self object:self.account];
     }
     
     [super requestFinished];
 }
-
-- (void)failWithError:(NSError *)theError {
-    [self.account.manager notify:@"getContainersFailed" request:self object:self.account];
-    [super failWithError:theError];
-}
-
 
 @end

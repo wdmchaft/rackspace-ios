@@ -19,10 +19,8 @@
 @property (nonatomic, retain) ASINetworkQueue *queue;
 @property (nonatomic, assign) OpenStackAccount *account;
 
-- (NSString *)notificationName:(NSString *)key identifier:(NSString *)identifier;
-- (void)notify:(NSString *)name request:(OpenStackRequest *)request;
-- (void)notify:(NSString *)name request:(OpenStackRequest *)request object:(id)object;
-    
+#pragma mark - Authentication
+
 - (APICallback *)authenticate;
 
 #pragma mark - Compute
@@ -49,16 +47,15 @@
 #pragma mark - Object Storage
 
 - (APICallback *)getContainers;
-- (void)createContainer:(Container *)container;
-- (void)deleteContainer:(Container *)container;
+- (APICallback *)createContainer:(Container *)container;
+- (APICallback *)deleteContainer:(Container *)container;
 
 - (APICallback *)getObjects:(Container *)container;
-- (void)getObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
-- (void)writeObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
-- (void)writeObjectMetadata:(Container *)container object:(StorageObject *)object;
+- (APICallback *)getObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
+- (APICallback *)writeObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
 - (APICallback *)deleteObject:(Container *)container object:(StorageObject *)object;
   
-- (void)updateCDNContainer:(Container *)container;
+- (APICallback *)updateCDNContainer:(Container *)container;
 
 #pragma mark - Load Balancers
 

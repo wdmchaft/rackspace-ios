@@ -55,17 +55,8 @@
         self.account.servers = [NSMutableDictionary dictionaryWithDictionary:fullServers];
         [fullServers release];
         [self.account persist];
-        [self.account.manager notify:@"getServersSucceeded" request:self object:self.account];
-    } else {
-        [self.account.manager notify:@"getServersFailed" request:self object:self.account];
     }
     [super requestFinished];
 }
-
-- (void)failWithError:(NSError *)theError {
-    [self.account.manager notify:@"getServersFailed" request:self object:self.account];
-    [super failWithError:theError];
-}
-
 
 @end

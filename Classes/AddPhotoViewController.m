@@ -365,24 +365,21 @@
     object.data = data;
     object.bytes = [data length];
     
-    [self.account.manager writeObject:self.container object:object downloadProgressDelegate:activityIndicatorView.progressView];
+    [[self.account.manager writeObject:self.container object:object downloadProgressDelegate:activityIndicatorView.progressView] success:^(OpenStackRequest *request) {
+        
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        object.data = nil;
+        [folder.objects setObject:object forKey:object.name];
+        [folderViewController.tableView reloadData];
+        [self dismissModalViewControllerAnimated:YES];
 
-    successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"writeObjectSucceeded" object:object queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [activityIndicatorView removeFromSuperviewAndRelease];
-            object.data = nil;
-            [folder.objects setObject:object forKey:object.name];
-            [folderViewController.tableView reloadData];
-            [self dismissModalViewControllerAnimated:YES];
-            [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-        }];
+    } failure:^(OpenStackRequest *request) {
+        
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        [self alert:@"There was a problem uploading this file." request:request];
 
-    failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"writeObjectFailed" object:object queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [activityIndicatorView removeFromSuperviewAndRelease];
-            [self alert:@"There was a problem uploading this file." request:[notification.userInfo objectForKey:@"request"]];            
-            [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
-        }];
+    }];
+
 }
 
 #pragma mark -

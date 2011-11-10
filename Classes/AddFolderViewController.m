@@ -67,12 +67,8 @@
             object.data = [NSData data];
             object.contentType = @"application/directory";
 
-            [self.account.manager writeObject:self.container object:object downloadProgressDelegate:nil];
-            
-            // observe completion and remove activity view and dismiss the modal view controller
-            successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"writeObjectSucceeded" object:object 
-                                                                                 queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-            {
+            [[self.account.manager writeObject:self.container object:object downloadProgressDelegate:nil] success:^(OpenStackRequest *request) {
+                
                 Folder *newFolder = [[Folder alloc] init];
                 newFolder.name = [[object.name componentsSeparatedByString:@"/"] lastObject];
                 newFolder.parent = folder;
@@ -81,28 +77,19 @@
                 [activityIndicatorView removeFromSuperviewAndRelease];
                 [self dismissModalViewControllerAnimated:YES];
                 [newFolder release];
-                [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-            }];
-            
-            failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"writeObjectFailed" object:object 
-                                                                                 queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-            {
-                [activityIndicatorView removeFromSuperviewAndRelease];
-                [self alert:@"There was a problem creating this folder." request:[notification.userInfo objectForKey:@"request"]];
+
+            } failure:^(OpenStackRequest *request) {
                 
-                [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
+                [activityIndicatorView removeFromSuperviewAndRelease];
+                [self alert:@"There was a problem creating this folder." request:request];
+
             }];
             
         }
     }
 }
 
-#pragma mark -
-#pragma mark Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
+#pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 1;
@@ -126,16 +113,14 @@
     return cell;
 }
 
-#pragma mark -
-#pragma mark Text Field Delegate
+#pragma mark - Text Field Delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self saveButtonPressed:nil];
     return NO;
 }
 
-#pragma mark -
-#pragma mark Memory management
+#pragma mark - Memory management
 
 - (void)dealloc {
     [account release];

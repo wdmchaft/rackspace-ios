@@ -38,20 +38,13 @@
 
 
 - (void)requestFinished { 
+
     if ([self isSuccess]) {
         self.account.flavors = [self flavors];
         [self.account persist];
-        [self.account.manager notify:@"getFlavorsSucceeded" request:self object:self.account];
-    } else {
-        [self.account.manager notify:@"getFlavorsFailed" request:self object:self.account];
     }
     
     [super requestFinished];
-}
-
-- (void)failWithError:(NSError *)theError {
-    [self.account.manager notify:@"getFlavorsFailed" request:self object:self.account];
-    [super failWithError:theError];
 }
 
 @end

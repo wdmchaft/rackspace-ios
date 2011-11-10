@@ -63,48 +63,6 @@
     return [self callbackWithRequest:request success:^(OpenStackRequest *request){} failure:^(OpenStackRequest *request){}];
 }
 
-#pragma mark - Notification
-
-- (NSString *)notificationName:(NSString *)key identifier:(NSString *)identifier {
-    return [NSString stringWithFormat:@"%@-%@-%i", key, self.account.uuid, identifier];
-}
-
-- (void)requestFinished:(OpenStackRequest *)request {
-    NSString *notificationName = [request.userInfo objectForKey:@"notificationName"];
-    id notificationObject = [request.userInfo objectForKey:@"notificationObject"];
-    
-    if ([request isSuccess]) {
-        NSNotification *notification = [NSNotification notificationWithName:[NSString stringWithFormat:@"%@Succeeded", notificationName] object:notificationObject];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:[NSString stringWithFormat:@"%@Failed", notificationName] object:notificationObject userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }
-}
-
-- (void)requestFailed:(OpenStackRequest *)request {
-    NSString *notificationName = [request.userInfo objectForKey:@"notificationName"];
-    id notificationObject = [request.userInfo objectForKey:@"notificationObject"];
-    NSNotification *notification = [NSNotification notificationWithName:[NSString stringWithFormat:@"%@Failed", notificationName] object:notificationObject userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-}
-
-- (void)sendRequest:(OpenStackRequest *)request name:(NSString *)name object:(id)notificationObject {
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:name, notificationObject, nil] forKeys:[NSArray arrayWithObjects:@"notificationName", @"notificationObject", nil]];
-    [request startAsynchronous];
-}
-
-- (void)notify:(NSString *)name request:(OpenStackRequest *)request {
-    NSNotification *notification = [NSNotification notificationWithName:name object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-}
-
-- (void)notify:(NSString *)name request:(OpenStackRequest *)request object:(id)object {
-    NSNotification *notification = [NSNotification notificationWithName:name object:object userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-}
-
 #pragma mark - API Calls
 
 #pragma mark Get Limits
@@ -274,192 +232,101 @@
     return [self callbackWithRequest:request];    
 }
 
-- (void)createContainer:(Container *)container {
+- (APICallback *)createContainer:(Container *)container {
     TrackEvent(CATEGORY_CONTAINERS, EVENT_CREATED);
     
-    OpenStackRequest *request = [OpenStackRequest createContainerRequest:self.account container:container];
-    request.delegate = self;
-    request.didFinishSelector = @selector(createContainerSucceeded:);
-    request.didFailSelector = @selector(createContainerFailed:);
-    request.userInfo = [NSDictionary dictionaryWithObject:container forKey:@"container"];
-    [request startAsynchronous];
-}
-
-- (void)createContainerSucceeded:(OpenStackRequest *)request {
-    if ([request isSuccess]) {        
+    __block OpenStackRequest *request = [OpenStackRequest createContainerRequest:self.account container:container];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        
         Container *container = [request.userInfo objectForKey:@"container"];
         [self.account.containers setObject:container forKey:container.name];        
         [self.account persist];
         self.account.containerCount = [self.account.containers count];
-        [self notify:@"createContainerSucceeded" request:request object:self.account];
-    } else {
-        [self notify:@"createContainerFailed" request:request object:self.account];
-    }
+
+    }];
 }
 
-- (void)createContainerFailed:(OpenStackRequest *)request {
-    [self notify:@"createContainerFailed" request:request object:self.account];
-}
-
-- (void)deleteContainer:(Container *)container {
+- (APICallback *)deleteContainer:(Container *)container {
     TrackEvent(CATEGORY_CONTAINERS, EVENT_DELETED);
     
-    OpenStackRequest *request = [OpenStackRequest deleteContainerRequest:self.account container:container];
-    request.delegate = self;
-    request.didFinishSelector = @selector(deleteContainerSucceeded:);
-    request.didFailSelector = @selector(deleteContainerFailed:);
-    request.userInfo = [NSDictionary dictionaryWithObject:container forKey:@"container"];
-    [request startAsynchronous];
-}
+    __block OpenStackRequest *request = [OpenStackRequest deleteContainerRequest:self.account container:container];
 
-- (void)deleteContainerSucceeded:(OpenStackRequest *)request {
-    if ([request isSuccess] || [request responseStatusCode] == 404) {
-        Container *container = [request.userInfo objectForKey:@"container"];
-        [self.account.containers setObject:container forKey:container.name];                
-        [self.account persist];        
-        [self notify:@"deleteContainerSucceeded" request:request object:self.account];
-        [self notify:@"deleteContainerSucceeded" request:request object:[request.userInfo objectForKey:@"container"]];
-    } else {
-        [self notify:@"deleteContainerFailed" request:request object:self.account];
-        [self notify:@"deleteContainerFailed" request:request object:[request.userInfo objectForKey:@"container"]];
-    }
-}
-
-- (void)deleteContainerFailed:(OpenStackRequest *)request {
-    [self notify:@"deleteContainerFailed" request:request object:self.account];
-    [self notify:@"deleteContainerFailed" request:request object:[request.userInfo objectForKey:@"container"]];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        
+        [self.account.containers removeObjectForKey:container.name];
+        [self.account persist];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        // 404 Not Found means it's not there, so we can show the user that it's deleted
+        if ([request responseStatusCode] == 404) {
+            
+            [self.account.containers removeObjectForKey:container.name];
+            [self.account persist];
+            
+        }
+        
+    }];
+    
 }
 
 - (APICallback *)getObjects:(Container *)container {
     __block GetObjectsRequest *request = [GetObjectsRequest request:self.account container:container];
-    return [self callbackWithRequest:request];
-}
-
-- (void)updateCDNContainer:(Container *)container {
-    TrackEvent(CATEGORY_CONTAINERS, EVENT_UPDATED);
-    
-    if (![self queue]) {
-        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
-    }
-    UpdateCDNContainerRequest *request = [UpdateCDNContainerRequest request:self.account container:container];
-    [queue addOperation:request];
-}
-
-- (void)getObjectsSucceeded:(OpenStackRequest *)request {
-    if ([request isSuccess]) {
-        Container *container = [request.userInfo objectForKey:@"container"];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        
         NSMutableDictionary *objects = [request objects];
         container.rootFolder = [Folder folder];
         container.rootFolder.objects = objects;
         [self.account persist];
 
-        NSNotification *notification = [NSNotification notificationWithName:@"getObjectsSucceeded" object:self.account userInfo:[NSDictionary dictionaryWithObject:container forKey:@"container"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"getObjectsFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
+    }];
+}
+
+- (APICallback *)updateCDNContainer:(Container *)container {
+    TrackEvent(CATEGORY_CONTAINERS, EVENT_UPDATED);
+    
+    if (![self queue]) {
+        [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
     }
+    __block UpdateCDNContainerRequest *request = [UpdateCDNContainerRequest request:self.account container:container];
+    return [self callbackWithRequest:request];
+
 }
 
-- (void)getObjectsFailed:(OpenStackRequest *)request {
-    NSNotification *notification = [NSNotification notificationWithName:@"getObjectsFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-}
+- (APICallback *)getObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate {
 
-- (void)getObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate {
-    OpenStackRequest *request = [OpenStackRequest getObjectRequest:self.account container:container object:object];
+    __block OpenStackRequest *request = [OpenStackRequest getObjectRequest:self.account container:container object:object];
     request.delegate = self;
     request.downloadProgressDelegate = downloadProgressDelegate;
     request.showAccurateProgress = YES;    
-    request.didFinishSelector = @selector(getObjectSucceeded:);
-    request.didFailSelector = @selector(getObjectFailed:);
-    request.userInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:container, object, nil] forKeys:[NSArray arrayWithObjects:@"container", @"object", nil]];
-    [request startAsynchronous];
-}
-
-- (void)getObjectSucceeded:(OpenStackRequest *)request {
-    if ([request isSuccess]) {
-        Container *container = [request.userInfo objectForKey:@"container"];
-        StorageObject *object = [request.userInfo objectForKey:@"object"];
+    
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];        
         NSString *shortPath = [NSString stringWithFormat:@"/%@/%@", container.name, object.fullPath];
         NSString *filePath = [documentsDirectory stringByAppendingString:shortPath];
         NSString *directoryPath = [filePath stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"/%@", object.name] withString:@""];
-
+        
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if ([fileManager createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:nil]) {
-            NSData *data = [request responseData];
-            if ([data writeToFile:filePath atomically:YES]) {
-                NSNotification *notification = [NSNotification notificationWithName:@"getObjectSucceeded" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-                [[NSNotificationCenter defaultCenter] postNotification:notification];
-            } else {
-                NSNotification *notification = [NSNotification notificationWithName:@"getObjectFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-                [[NSNotificationCenter defaultCenter] postNotification:notification];
-            }
-        } else {
-            NSNotification *notification = [NSNotification notificationWithName:@"getObjectFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-            [[NSNotificationCenter defaultCenter] postNotification:notification];
+            
+            [[request responseData] writeToFile:filePath atomically:YES];
+            
         }
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"getObjectFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }
+
+    }];
 }
 
-- (void)getObjectFailed:(OpenStackRequest *)request {
-    NSNotification *notification = [NSNotification notificationWithName:@"getObjectFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-}
-
-- (void)writeObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate {
+- (APICallback *)writeObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate {
     TrackEvent(CATEGORY_FILES, EVENT_CREATED);
     
-    OpenStackRequest *request = [OpenStackRequest writeObjectRequest:self.account container:container object:object];
+    __block OpenStackRequest *request = [OpenStackRequest writeObjectRequest:self.account container:container object:object];
     request.delegate = self;
-    request.didFinishSelector = @selector(writeObjectSucceeded:);
-    request.didFailSelector = @selector(writeObjectFailed:);
     request.uploadProgressDelegate = downloadProgressDelegate;
     request.showAccurateProgress = YES;
-    request.userInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:container, object, nil] forKeys:[NSArray arrayWithObjects:@"container", @"object", nil]];
-    [request startAsynchronous];
-}
-
-- (void)writeObjectSucceeded:(OpenStackRequest *)request {
-    if ([request isSuccess]) {
-        NSNotification *notification = [NSNotification notificationWithName:@"writeObjectSucceeded" object:[request.userInfo objectForKey:@"object"] userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"writeObjectFailed" object:[request.userInfo objectForKey:@"object"] userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }
-}
-
-- (void)writeObjectFailed:(OpenStackRequest *)request {
-    NSNotification *notification = [NSNotification notificationWithName:@"writeObjectFailed" object:[request.userInfo objectForKey:@"object"] userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-}
-
-- (void)writeObjectMetadata:(Container *)container object:(StorageObject *)object {
-    OpenStackRequest *request = [OpenStackRequest writeObjectMetadataRequest:self.account container:container object:object];
-    request.delegate = self;
-    request.didFinishSelector = @selector(writeObjectMetadataSucceeded:);
-    request.didFailSelector = @selector(writeObjectMetadataFailed:);
-    request.userInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:container, object, nil] forKeys:[NSArray arrayWithObjects:@"container", @"object", nil]];
-    [request startAsynchronous];
-}
-
-- (void)writeObjectMetadataSucceeded:(OpenStackRequest *)request {
-    if ([request isSuccess]) {
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"getObjectsFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }
-}
-
-- (void)writeObjectMetadataFailed:(OpenStackRequest *)request {
-    NSNotification *notification = [NSNotification notificationWithName:@"writeObjectMetadataFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
+    
+    return [self callbackWithRequest:request];
 }
 
 - (APICallback *)deleteObject:(Container *)container object:(StorageObject *)object {

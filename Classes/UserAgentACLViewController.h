@@ -16,8 +16,6 @@
     Container *container;
 	UITextField *textField;
     ActivityIndicatorView *activityIndicatorView;
-    id successObserver;
-    id failureObserver;
 }
 
 @property (nonatomic, retain) ContainerDetailViewController *containerDetailViewController;

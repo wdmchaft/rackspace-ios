@@ -24,8 +24,7 @@
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark -
-#pragma mark View lifecycle
+#pragma mark - View lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -47,12 +46,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
+#pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 1;
@@ -81,16 +75,14 @@
     return cell;
 }
 
-#pragma mark -
-#pragma mark TextFieldDelegate
+#pragma mark - TextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self saveButtonPressed:nil];
     return NO;
 }
 
-#pragma mark -
-#pragma mark Save Button
+#pragma mark - Save Button
 
 - (void)saveButtonPressed:(id)sender {
     NSString *oldACL = container.referrerACL;
@@ -98,31 +90,26 @@
     activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
     [activityIndicatorView addToView:self.view];
     container.referrerACL = textField.text;
-    [self.account.manager updateCDNContainer:container];
+
+    [[self.account.manager updateCDNContainer:container] success:^(OpenStackRequest *request) {
+        
+        [containerDetailViewController.tableView reloadData];
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        [textField resignFirstResponder];
+        [self.navigationController popViewControllerAnimated:YES];
+
+    } failure:^(OpenStackRequest *request) {
+        
+        [activityIndicatorView removeFromSuperviewAndRelease];
+        container.referrerACL = oldACL;
+        textField.text = oldACL;
+        [self alert:@"There was a problem updating this container." request:request];
+
+    }];
     
-    successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateCDNContainerSucceeded" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-       {
-           [containerDetailViewController.tableView reloadData];
-           [activityIndicatorView removeFromSuperviewAndRelease];
-           [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-           [textField resignFirstResponder];
-           [self.navigationController popViewControllerAnimated:YES];
-       }];
-    
-    failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"updateCDNContainerFailed" object:self.container
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-       {
-           [activityIndicatorView removeFromSuperviewAndRelease];
-           container.referrerACL = oldACL;
-           textField.text = oldACL;
-           [self alert:@"There was a problem updating this container." request:[notification.userInfo objectForKey:@"request"]];
-           [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
-       }];
 }
 
-#pragma mark -
-#pragma mark Memory management
+#pragma mark - Memory management
 
 - (void)dealloc {
     [account release];

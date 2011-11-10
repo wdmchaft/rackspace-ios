@@ -61,24 +61,13 @@
 
 - (void)requestFinished {  
     
-    NSLog(@"update CDN container response: %i", [self responseStatusCode]);
-    
     if ([self isSuccess]) {
         self.container.cdnURL = [self.responseHeaders objectForKey:@"X-Cdn-Uri"];
         self.container.hasEverBeenCDNEnabled = YES;
-        
-        
         [self.account persist];
-        [self.account.manager notify:@"updateCDNContainerSucceeded" request:self object:self.container];
-    } else {
-        [self.account.manager notify:@"updateCDNContainerFailed" request:self object:self.container];
     }
     [super requestFinished];
-}
-
-- (void)failWithError:(NSError *)theError {
-    [self.account.manager notify:@"updateCDNContainerFailed" request:self object:self.container];
-    [super failWithError:theError];
+    
 }
 
 - (void)dealloc {

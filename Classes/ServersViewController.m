@@ -117,25 +117,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    //[self showToolbarActivityMessage:@"This is a test..."];
         
-    // Let's register for server rename notifications so we can keep the names fresh.
-    // We'll only register for successful renames since a failure isn't relevant in the
-    // list context.
-    renameServerSucceededObservers = [[NSMutableDictionary alloc] initWithCapacity:[account.servers count]];
-    
     NSEnumerator *enumerator = [account.servers keyEnumerator];
     id key;
     while ((key = [enumerator nextObject])) {
         Server *server = [account.servers objectForKey:key];
-        id observer = [[NSNotificationCenter defaultCenter] addObserverForName:@"renameServerSucceeded" object:server
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-                       {
-                           [self.tableView reloadData];                           
-                           [[NSNotificationCenter defaultCenter] removeObserver:[renameServerSucceededObservers objectForKey:server.identifier]];
-                       }];
-        [renameServerSucceededObservers setObject:observer forKey:key];
         
         if (!server.image && server.imageId) {
 
@@ -176,25 +162,7 @@
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
-    // remove rename observers
-    NSEnumerator *enumerator = [renameServerSucceededObservers keyEnumerator];
-    id key;
-    while ((key = [enumerator nextObject])) {
-        [[NSNotificationCenter defaultCenter] removeObserver:[renameServerSucceededObservers objectForKey:key]];
-    }    
-
-    // TODO: unregister for "createServerSucceeded"
-}
-
-#pragma mark -
-#pragma mark Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
+#pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ([self.account.servers count] == 0) {

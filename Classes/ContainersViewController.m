@@ -28,8 +28,7 @@
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark -
-#pragma mark View lifecycle
+#pragma mark - View lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -39,20 +38,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"createContainerSucceeded" object:self.account 
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-       {
-           [self hideToolbarActivityMessage];
-           [self.tableView reloadData];
-       }];
-    
-    failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"createContainerFailed" object:self.account 
-                                                                         queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-       {
-           [self hideToolbarActivityMessage];
-           [self alert:@"There was a problem creating your container." request:[notification.userInfo objectForKey:@"request"]];
-       }];
     
     if ([self.account.containers count] == 0) {
         self.tableView.allowsSelection = NO;
@@ -72,14 +57,7 @@
     
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
-}
-
-#pragma mark -
-#pragma mark Button Handlers
+#pragma mark - Button Handlers
 
 - (void)addButtonPressed:(id)sender {
     AddContainerViewController *vc = [[AddContainerViewController alloc] initWithNibName:@"AddContainerViewController" bundle:nil];

@@ -39,6 +39,7 @@
 }
 
 - (void)requestFinished {
+    
     if ([self isSuccess]) {        
         NSDictionary *cdnContainers = [self containers];
         
@@ -58,17 +59,10 @@
         }
         
         [self.account persist];
-        [self.account.manager notify:@"getCDNContainersSucceeded" request:self object:self.account];
-    } else {
-        [self.account.manager notify:@"getCDNContainersFailed" request:self object:self.account];
+
     }
     
     [super requestFinished];
-}
-
-- (void)failWithError:(NSError *)theError {
-    [self.account.manager notify:@"getCDNContainersFailed" request:self object:self.account];
-    [super failWithError:theError];
 }
 
 @end

@@ -18,8 +18,6 @@
     Folder *folder;
     FolderViewController *folderViewController;
     BOOL saving;
-    id successObserver;
-    id failureObserver;
 }
 
 @property (nonatomic, retain) OpenStackAccount *account;

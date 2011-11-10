@@ -79,9 +79,20 @@
 
         Container *container = [[Container alloc] init];
         container.name = nameTextField.text;
-        [self.account.manager createContainer:container];
-        [container release];
         
+        [[self.account.manager createContainer:container] success:^(OpenStackRequest *request) {
+            
+            [self.containersViewController hideToolbarActivityMessage];
+            [self.containersViewController.tableView reloadData];
+
+        } failure:^(OpenStackRequest *request) {
+            
+            [self.containersViewController hideToolbarActivityMessage];
+            [self.containersViewController alert:@"There was a problem creating your container." request:request];
+
+        }];
+        
+        [container release];        
         [self dismissModalViewControllerAnimated:YES];
     }
 }
