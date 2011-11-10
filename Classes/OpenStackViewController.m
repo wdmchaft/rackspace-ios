@@ -132,15 +132,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    selectedIndexPath = indexPath;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-//    if (selectedIndexPath && [self respondsToSelector:@selector(tableView)]) {
-//        UITableView *tv = [self performSelector:@selector(tableView)];
-//        [tv deselectRowAtIndexPath:selectedIndexPath animated:YES];        
-//    }
+    self.selectedIndexPath = indexPath;
 }
 
 - (void)dealloc {
