@@ -170,7 +170,7 @@ static UIFont *statusFont = nil;
         self.statusLabel.text = [self.entity status];
     }
     
-    [self.progressView setProgress:[self.entity progress] / 100.0 animated:YES];
+    [self.progressView setProgress:[(Server *)self.entity progress] / 100.0 animated:YES];
     
     if (![@"ACTIVE" isEqualToString:[self.entity status]]) {        
 
