@@ -51,14 +51,6 @@
 
     BOOL performingAction;
     
-    id getLimitsSucceededObserver;
-    
-    id getImageSucceededObserver;
-    id getImageFailedObserver;
-    
-    id rebuildSucceededObserver;
-    id rebuildFailedObserver;
-    
     NSTimer *countdownTimer;
     NSString *rebootCountdown;
     NSString *renameCountdown;
@@ -74,8 +66,6 @@
     
     OpenStackRequest *pollRequest;
     BOOL polling;
-    
-    //NSString *previousStatus;
     
     AccountHomeViewController *accountHomeViewController;
     

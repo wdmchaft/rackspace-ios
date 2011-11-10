@@ -73,39 +73,24 @@
         NSString *activityMessage = @"Loading...";
         activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
         [activityIndicatorView addToView:self.view];
-        [self.account.manager getBackupSchedule:self.server];
 
-        successObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getBackupScheduleSucceeded" object:server 
-                                                                             queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-        {
+        [[self.account.manager getBackupSchedule:self.server] success:^(OpenStackRequest *request) {
+            
             [activityIndicatorView removeFromSuperviewAndRelease];
             scheduleLoaded = YES;
             [self.picker reloadAllComponents];
             [self.tableView reloadData];
             [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(selectFirstRow) userInfo:nil repeats:NO];
-            [[NSNotificationCenter defaultCenter] removeObserver:successObserver];
-        }];
 
-        failureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getBackupScheduleFailed" object:server 
-                                                                             queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notification)
-        {
+        } failure:^(OpenStackRequest *request) {
+            
             [self alert:@"Error" message:@"There was a problem retrieving the backup schedule."];
             [activityIndicatorView removeFromSuperviewAndRelease];
-            [[NSNotificationCenter defaultCenter] removeObserver:failureObserver];
-        }];  
+
+        }];
+
     }
 }
-
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
 
 - (void)viewDidDisappear:(BOOL)animated {
     self.server.backupSchedule = nil;

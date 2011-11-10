@@ -109,24 +109,23 @@
 
 #pragma mark Get Limits
 
-- (void)getLimits {
+- (APICallback *)getLimits {
+    APICallback *callback = nil;
+    
     if (self.account.serversURL) {
+        
         __block OpenStackRequest *request = [OpenStackRequest getLimitsRequest:self.account];
-        request.delegate = self;
-        [request setCompletionBlock:^{
-            if ([request isSuccess] && [request limits]) {
+        callback = [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+
+            if ([request limits]) {
                 self.account.rateLimits = [request rateLimits];
                 [self.account persist];
-                [self notify:@"getLimitsSucceeded" request:request object:self.account];
-            } else {
-                [self notify:@"getLimitsFailed" request:request object:self.account];
             }
+            
         }];
-        [request setFailedBlock:^{
-            [self notify:@"getLimitsFailed" request:request object:self.account];
-        }];    
-        [request startAsynchronous];
+        
     }
+    return callback;
 }
 
 #pragma mark Reboot Server
@@ -200,36 +199,18 @@
     return [self callbackWithRequest:request];
 }
 
-- (void)rebuildServer:(Server *)server image:(Image *)image {
+- (APICallback *)rebuildServer:(Server *)server image:(Image *)image {
     TrackEvent(CATEGORY_SERVER, EVENT_REBUILT);
     
     __block OpenStackRequest *request = [OpenStackRequest rebuildServerRequest:self.account server:server image:image];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
-        NSString *name = [request isSuccess] ? @"rebuildServerSucceeded" : @"rebuildServerFailed";
-        NSNotification *notification = [NSNotification notificationWithName:[self notificationName:name identifier:server.identifier] object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }];
-    [request setFailedBlock:^{
-        NSNotification *notification = [NSNotification notificationWithName:[self notificationName:@"rebuildServerFailed" identifier:server.identifier] object:nil userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }];
-    [request startAsynchronous];
+    return [self callbackWithRequest:request];
 }
 
-- (void)getBackupSchedule:(Server *)server {
+- (APICallback *)getBackupSchedule:(Server *)server {
     __block OpenStackRequest *request = [OpenStackRequest getBackupScheduleRequest:self.account server:server];
-    request.delegate = self;
-    request.userInfo = [NSDictionary dictionaryWithObject:server forKey:@"server"];
-    [request setCompletionBlock:^{
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
         server.backupSchedule = [request backupSchedule];
-        [self notify:([request isSuccess] ? @"getBackupScheduleSucceeded" : @"getBackupScheduleFailed") request:request object:[request.userInfo objectForKey:@"server"]];
     }];
-    [request setFailedBlock:^{
-        [self notify:@"getBackupScheduleFailed" request:request object:[request.userInfo objectForKey:@"server"]];        
-    }];
-    [request startAsynchronous];
 }
 
 - (APICallback *)updateBackupSchedule:(Server *)server {
@@ -258,17 +239,7 @@
 
 #pragma mark Get Servers
 
-- (void)getServers {
-    if (self.account.serversURL) {
-        if (![self queue]) {
-            [self setQueue:[[[ASINetworkQueue alloc] init] autorelease]];
-        }
-        GetServersRequest *request = [GetServersRequest request:self.account];
-        [queue addOperation:request];
-    }
-}
-
-- (APICallback *)getServersWithCallback {
+- (APICallback *)getServers {
     __block OpenStackRequest *request = [OpenStackRequest serversRequest:self.account method:@"GET" path:@"/servers/detail"];
     return [self callbackWithRequest:request];
 }
@@ -395,28 +366,6 @@
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
-- (void)getObjectInfo:(Container *)container object:(StorageObject *)object {
-    OpenStackRequest *request = [OpenStackRequest getObjectInfoRequest:self.account container:container object:object];
-    request.delegate = self;
-    request.didFinishSelector = @selector(getObjectInfoSucceeded:);
-    request.didFailSelector = @selector(getObjectInfoFailed:);
-    request.userInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:container, object, nil] forKeys:[NSArray arrayWithObjects:@"container", @"object", nil]];
-    [request startAsynchronous];
-}
-
-- (void)getObjectInfoSucceeded:(OpenStackRequest *)request {
-    if ([request isSuccess]) {
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"getObjectsFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }
-}
-
-- (void)getObjectInfoFailed:(OpenStackRequest *)request {
-    NSNotification *notification = [NSNotification notificationWithName:@"getObjectInfoFailed" object:self.account userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
-}
-
 - (void)getObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate {
     OpenStackRequest *request = [OpenStackRequest getObjectRequest:self.account container:container object:object];
     request.delegate = self;
@@ -540,8 +489,7 @@
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
-#pragma mark -
-#pragma mark Load Balancing
+#pragma mark - Load Balancing
 
 - (APICallback *)getLoadBalancers:(NSString *)endpoint {
     __block LoadBalancerRequest *request = [LoadBalancerRequest getLoadBalancersRequest:self.account endpoint:endpoint];
@@ -595,8 +543,7 @@
     }
     
     __block LoadBalancerRequest *request = [LoadBalancerRequest createLoadBalancerRequest:self.account loadBalancer:loadBalancer endpoint:endpoint];
-    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
-    }];
+    return [self callbackWithRequest:request];
 }
 
 - (APICallback *)updateLoadBalancer:(LoadBalancer *)loadBalancer {
@@ -689,10 +636,10 @@
     }];
 }
 
-#pragma mark -
-#pragma mark Memory Management
+#pragma mark - Memory Management
 
 - (void)dealloc {
+    [queue release];
     [super dealloc];
 }
 

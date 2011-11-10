@@ -27,8 +27,6 @@
     UIActionSheet *deleteActionSheet;
     UIActionSheet *cdnURLActionSheet;
     IBOutlet UITableView *tableView;
-    id deleteSuccessObserver;
-    id deleteFailureObserver;
     FolderViewController *folderViewController;
     
     NSInteger cdnURLSection;

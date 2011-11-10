@@ -16,9 +16,6 @@
     Server *server;
     ActivityIndicatorView *activityIndicatorView;
     
-    id successObserver;
-    id failureObserver;
-    
     IBOutlet UIPickerView *picker;
     
     BOOL scheduleLoaded;

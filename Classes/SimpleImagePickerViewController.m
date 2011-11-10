@@ -12,6 +12,7 @@
 #import "UIViewController+Conveniences.h"
 #import "ServerViewController.h"
 #import "AccountManager.h"
+#import "APICallback.h"
 
 @implementation SimpleImagePickerViewController
 
@@ -248,9 +249,22 @@
 
 - (void)saveButtonPressed:(id)sender {
     [self.serverViewController showToolbarActivityMessage:@"Rebuilding server..."];
-    [self.account.manager rebuildServer:self.serverViewController.server image:[self.account.images objectForKey:self.selectedImageId]];
     [self dismissModalViewControllerAnimated:YES];
     [serverViewController.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:kRebuild inSection:kActions] animated:YES];
+    
+    Image *image = [self.account.images objectForKey:self.selectedImageId];
+    [[self.account.manager rebuildServer:self.serverViewController.server image:image] success:^(OpenStackRequest *request) {
+        
+        [self.serverViewController hideToolbarActivityMessage];
+        [self.serverViewController pollServer];        
+
+    } failure:^(OpenStackRequest *request) {
+        
+        [self.serverViewController hideToolbarActivityMessage];
+        [self.serverViewController alert:@"There was a problem rebuilding this server." request:request];
+
+    }];
+    
 }
 
 -(void)cancelButtonPressed:(id)sender {

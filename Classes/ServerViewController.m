@@ -334,47 +334,7 @@
     deleteCountdown = @"";
     
     [self refreshLimitStrings];
-    
-    // handle success
-    if (!getLimitsSucceededObserver) {
         
-        getLimitsSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getLimitsSucceeded" object:self.account
-                                                                                        queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            OpenStackRequest *request = [notification.userInfo objectForKey:@"request"];
-            self.account.rateLimits = [request rateLimits];
-            [[NSNotificationCenter defaultCenter] removeObserver:getLimitsSucceededObserver];
-        }];
-        
-        getImageSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageSucceeded" object:nil
-                                                                                       queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            Image *image = [self.account.images objectForKey:self.server.imageId];
-            self.server.image = image;
-            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:kImage inSection:kDetails]] withRowAnimation:UITableViewRowAnimationNone];
-        }];
-        
-        getImageFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getImageFailed" object:self.server.imageId
-                                                                                    queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            NSLog(@"loading image failed");
-        }];
-                
-        rebuildSucceededObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"rebuildServerSucceeded" identifier:self.server.identifier] object:nil
-                                                                                      queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            [self pollServer];        
-        }];
-        
-        rebuildFailedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:[self.account.manager notificationName:@"rebuildServerFailed" identifier:self.server.identifier] object:nil
-                                                                                   queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-        {
-            [self hideToolbarActivityMessage];
-            [self alert:@"There was a problem rebuilding this server." request:[notification.userInfo objectForKey:@"request"]];
-        }];
-    }
-    
     // if the server has less than 100% progress, we need to poll it.
     // normally, we would do this through the account manager, but this is the only
     // place we'll need the information.  the downside to this is that we may
@@ -402,13 +362,7 @@
     actionView = nil;
     rebootButton = nil;
     pingButton = nil;
-    self.tableView = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:getLimitsSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:getImageSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:getImageFailedObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:rebuildSucceededObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:rebuildFailedObserver];
+    self.tableView = nil;    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

@@ -117,13 +117,7 @@ static NSMutableDictionary *timers = nil;
     }
 }
 
-#pragma mark -
-#pragma mark Collections API Management
-
-- (void)observeGetLimits:(OpenStackRequest *)request {
-    self.rateLimits = [request rateLimits];
-    [[NSNotificationCenter defaultCenter] removeObserver:getLimitsObserver];
-}
+#pragma mark - Collections API Management
 
 - (void)refreshCollections {
     if (!self.manager) {
@@ -135,15 +129,18 @@ static NSMutableDictionary *timers = nil;
         
         [self.manager getImages];
         [self.manager getFlavors];
-        [self.manager getLimits];
         [self.manager getServers];
+
+        [[self.manager getLimits] success:^(OpenStackRequest *request) {
+            
+            self.rateLimits = [request rateLimits];
+
+        } failure:^(OpenStackRequest *request) {
+            
+           // failure isn't a big deal, so don't worry about it
+            
+        }];
         
-        // handle success; don't worry about failure
-        getLimitsObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"getLimitsSucceeded" object:self
-                                                                               queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-                             {
-                                 [self performSelectorOnMainThread:@selector(observeGetLimits:) withObject:[notification.userInfo objectForKey:@"request"] waitUntilDone:NO];
-                             }];
     } failure:^(OpenStackRequest *request){
     }];
 }

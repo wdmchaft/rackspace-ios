@@ -402,11 +402,8 @@
             // delete the file and pop out
             [self showToolbarActivityMessage:@"Deleting file..."];
             
-            [self.account.manager deleteObject:self.container object:self.object];
-            
-            deleteSuccessObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteObjectSucceeded" object:self.object
-                                                                                               queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-            {
+            [[self.account.manager deleteObject:self.container object:self.object] success:^(OpenStackRequest *request) {
+                
                 [self hideToolbarActivityMessage];
                 performingAction = NO;
                 [self.folder.objects removeObjectForKey:self.object.name];
@@ -417,18 +414,13 @@
                     [self.folderViewController.tableView selectRowAtIndexPath:selectedIndexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
                     [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(deleteObjectRow) userInfo:nil repeats:NO];
                 }
-                [[NSNotificationCenter defaultCenter] removeObserver:deleteSuccessObserver];
-            }];
-
-            deleteFailureObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"deleteObjectFailed" object:self.object
-                                                                                       queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification* notification) 
-            {
+                
+            } failure:^(OpenStackRequest *request) {
+                
                 [self hideToolbarActivityMessage];
                 performingAction = NO;
-                [self alert:@"There was a problem deleting this file." request:[notification.userInfo objectForKey:@"request"]];
-
-                [[NSNotificationCenter defaultCenter] removeObserver:deleteFailureObserver];
-
+                [self alert:@"There was a problem deleting this file." request:request];
+                
             }];
             
         }

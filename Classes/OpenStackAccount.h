@@ -13,10 +13,6 @@
 @class AccountManager;
 
 @interface OpenStackAccount : NSObject <NSCoding, NSCopying> {
-    id getLimitsObserver;
-    id getServersObserver;
-    id getImagesObserver;
-    id getFlavorsObserver;
     @private
     BOOL serversUnarchived;
 }

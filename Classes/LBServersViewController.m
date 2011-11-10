@@ -64,7 +64,7 @@
         ActivityIndicatorView *activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
         [activityIndicatorView addToView:self.view];
         
-        [[self.account.manager getServersWithCallback] success:^(OpenStackRequest *request) {
+        [[self.account.manager getServers] success:^(OpenStackRequest *request) {
             [activityIndicatorView removeFromSuperviewAndRelease];
             [self.tableView reloadData];
         } failure:^(OpenStackRequest *request) {

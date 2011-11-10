@@ -72,7 +72,7 @@
     refreshButton.enabled = NO;
     [self showToolbarActivityMessage:@"Refreshing servers..."];
 
-    [[self.account.manager getServersWithCallback] success:^(OpenStackRequest *request) {
+    [[self.account.manager getServers] success:^(OpenStackRequest *request) {
         
         NSLog(@"get servers response: %@", [request responseString]);
         

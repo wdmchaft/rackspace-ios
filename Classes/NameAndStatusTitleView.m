@@ -154,7 +154,7 @@ static UIFont *statusFont = nil;
         self.statusLabel.text = @"Resize Complete";
     } else if ([[self.entity status] isEqualToString:@"REBUILD"]) {
         self.progressView.alpha = 1;
-        self.statusLabel.text = @"Rebuilding";
+        self.statusLabel.text = @"Rebuild";
         self.progressView.frame = CGRectMake(70 + logoXOffset + iPadXOffset, 37, 100, 20);
     } else if ([[self.entity status] isEqualToString:@"REBOOT"]) {
         self.progressView.alpha = 0;

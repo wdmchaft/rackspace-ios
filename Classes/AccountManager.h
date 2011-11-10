@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "APICallback.h"
 
-@class OpenStackAccount, Server, Flavor, Image, Container, StorageObject, OpenStackRequest, ASINetworkQueue, APICallback, LoadBalancer, LoadBalancerNode;
+@class OpenStackAccount, Server, Flavor, Image, Container, StorageObject, OpenStackRequest, ASINetworkQueue, LoadBalancer, LoadBalancerNode;
 
 @interface AccountManager : NSObject {
     OpenStackAccount *account;
@@ -16,7 +17,6 @@
 }
 
 @property (nonatomic, retain) ASINetworkQueue *queue;
-
 @property (nonatomic, assign) OpenStackAccount *account;
 
 - (NSString *)notificationName:(NSString *)key identifier:(NSString *)identifier;
@@ -27,7 +27,7 @@
 
 #pragma mark - Compute
 
-- (void)getLimits;
+- (APICallback *)getLimits;
 - (APICallback *)softRebootServer:(Server *)server;
 - (APICallback *)hardRebootServer:(Server *)server;
 - (APICallback *)changeAdminPassword:(Server *)server password:(NSString *)password;
@@ -37,12 +37,11 @@
 - (APICallback *)resizeServer:(Server *)server flavor:(Flavor *)flavor;
 - (APICallback *)confirmResizeServer:(Server *)server;
 - (APICallback *)revertResizeServer:(Server *)server;
-- (void)rebuildServer:(Server *)server image:(Image *)image;
-- (void)getBackupSchedule:(Server *)server;
+- (APICallback *)rebuildServer:(Server *)server image:(Image *)image;
+- (APICallback *)getBackupSchedule:(Server *)server;
 - (APICallback *)updateBackupSchedule:(Server *)server;
 
-- (void)getServers;
-- (APICallback *)getServersWithCallback;
+- (APICallback *)getServers;
 - (APICallback *)getImages;
 - (APICallback *)getFlavors;
 - (APICallback *)getImage:(Server *)server;
@@ -54,7 +53,6 @@
 - (void)deleteContainer:(Container *)container;
 
 - (APICallback *)getObjects:(Container *)container;
-- (void)getObjectInfo:(Container *)container object:(StorageObject *)object;
 - (void)getObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
 - (void)writeObject:(Container *)container object:(StorageObject *)object downloadProgressDelegate:(id)downloadProgressDelegate;
 - (void)writeObjectMetadata:(Container *)container object:(StorageObject *)object;
