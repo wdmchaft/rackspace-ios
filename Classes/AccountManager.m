@@ -238,7 +238,6 @@
     __block OpenStackRequest *request = [OpenStackRequest createContainerRequest:self.account container:container];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
         
-        Container *container = [request.userInfo objectForKey:@"container"];
         [self.account.containers setObject:container forKey:container.name];        
         [self.account persist];
         self.account.containerCount = [self.account.containers count];
@@ -332,28 +331,8 @@
 - (APICallback *)deleteObject:(Container *)container object:(StorageObject *)object {
     TrackEvent(CATEGORY_FILES, EVENT_DELETED);
     
-    OpenStackRequest *request = [OpenStackRequest deleteObjectRequest:self.account container:container object:object];
-    request.delegate = self;
-    request.didFinishSelector = @selector(deleteObjectSucceeded:);
-    request.didFailSelector = @selector(deleteObjectFailed:);
-    request.userInfo = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:container, object, nil] forKeys:[NSArray arrayWithObjects:@"container", @"object", nil]];
-    
+    __block OpenStackRequest *request = [OpenStackRequest deleteObjectRequest:self.account container:container object:object];
     return [self callbackWithRequest:request];
-}
-
-- (void)deleteObjectSucceeded:(OpenStackRequest *)request {
-    if ([request isSuccess] || [request responseStatusCode] == 404) {
-        NSNotification *notification = [NSNotification notificationWithName:@"deleteObjectSucceeded" object:[request.userInfo objectForKey:@"object"] userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"deleteObjectFailed" object:[request.userInfo objectForKey:@"object"] userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-        [[NSNotificationCenter defaultCenter] postNotification:notification];
-    }
-}
-
-- (void)deleteObjectFailed:(OpenStackRequest *)request {
-    NSNotification *notification = [NSNotification notificationWithName:@"deleteObjectFailed" object:[request.userInfo objectForKey:@"object"] userInfo:[NSDictionary dictionaryWithObject:request forKey:@"request"]];
-    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 #pragma mark - Load Balancing
