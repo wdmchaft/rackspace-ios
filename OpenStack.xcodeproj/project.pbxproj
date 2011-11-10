@@ -828,6 +828,9 @@
 		27AE16F5128361CB003DFBE8 /* ChefValidationKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE16EF128361CB003DFBE8 /* ChefValidationKeyViewController.m */; };
 		27AE16F6128361CB003DFBE8 /* ChefValidationKeyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27AE16F0128361CB003DFBE8 /* ChefValidationKeyViewController.xib */; };
 		27B0A1D91278047900A31CED /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B0A1D81278047900A31CED /* QuartzCore.framework */; };
+		27B1BBC2146C32B700FAC8E5 /* GANTracker.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B1BBC0146C32B700FAC8E5 /* GANTracker.h */; };
+		27B1BBC3146C32B700FAC8E5 /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B1BBC1146C32B700FAC8E5 /* libGoogleAnalytics.a */; };
+		27B1BBC4146C32C000FAC8E5 /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B1BBC1146C32B700FAC8E5 /* libGoogleAnalytics.a */; };
 		27B8ECCC132FC8BD00A1EE08 /* puppet_plugin_client_template in Resources */ = {isa = PBXBuildFile; fileRef = 27B8ECC9132FC8BD00A1EE08 /* puppet_plugin_client_template */; };
 		27B8ECCD132FC8BD00A1EE08 /* puppet_plugin_client_template in Resources */ = {isa = PBXBuildFile; fileRef = 27B8ECC9132FC8BD00A1EE08 /* puppet_plugin_client_template */; };
 		27B8ECCE132FC8BD00A1EE08 /* puppet_plugin_crontab in Resources */ = {isa = PBXBuildFile; fileRef = 27B8ECCA132FC8BD00A1EE08 /* puppet_plugin_crontab */; };
@@ -1062,9 +1065,6 @@
 		7F9351B913845AC80097720F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9351B813845AC80097720F /* libsqlite3.0.dylib */; };
 		7F9351BA13845B370097720F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9351B813845AC80097720F /* libsqlite3.0.dylib */; };
 		7F9351BB13845B380097720F /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9351B813845AC80097720F /* libsqlite3.0.dylib */; };
-		7F9351C213846B620097720F /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9351C113846B620097720F /* libGoogleAnalytics.a */; };
-		7F9351C313846B620097720F /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9351C113846B620097720F /* libGoogleAnalytics.a */; };
-		7F9351C413846B620097720F /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9351C113846B620097720F /* libGoogleAnalytics.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1487,6 +1487,8 @@
 		27AE16EF128361CB003DFBE8 /* ChefValidationKeyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChefValidationKeyViewController.m; sourceTree = "<group>"; };
 		27AE16F0128361CB003DFBE8 /* ChefValidationKeyViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChefValidationKeyViewController.xib; sourceTree = "<group>"; };
 		27B0A1D81278047900A31CED /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		27B1BBC0146C32B700FAC8E5 /* GANTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = GANTracker.h; sourceTree = "<group>"; };
+		27B1BBC1146C32B700FAC8E5 /* libGoogleAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalytics.a; sourceTree = "<group>"; };
 		27B8ECC9132FC8BD00A1EE08 /* puppet_plugin_client_template */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = puppet_plugin_client_template; sourceTree = "<group>"; };
 		27B8ECCA132FC8BD00A1EE08 /* puppet_plugin_crontab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = puppet_plugin_crontab; sourceTree = "<group>"; };
 		27B8ECCB132FC8BD00A1EE08 /* puppet_plugin_install_script */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = puppet_plugin_install_script; sourceTree = "<group>"; };
@@ -1731,10 +1733,8 @@
 		7F8F372413859EDA0034710B /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringAdditions.m; sourceTree = "<group>"; };
 		7F8F374813859F190034710B /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		7F9351A613843B950097720F /* Analytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
-		7F9351AF138455290097720F /* GANTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GANTracker.h; sourceTree = "<group>"; };
 		7F9351B3138457D80097720F /* Analytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Analytics.m; sourceTree = "<group>"; };
 		7F9351B813845AC80097720F /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		7F9351C113846B620097720F /* libGoogleAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalytics.a; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* OpenStack-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OpenStack-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1756,9 +1756,9 @@
 				27B0A1D91278047900A31CED /* QuartzCore.framework in Frameworks */,
 				27C0510F12B00D3F00CB21C7 /* UIKit.framework in Frameworks */,
 				275B3E3E12D99B86003DF100 /* MediaPlayer.framework in Frameworks */,
-				7F9351C213846B620097720F /* libGoogleAnalytics.a in Frameworks */,
 				27C15CB713A7C50700A1BB9F /* libobjc.A.dylib in Frameworks */,
 				27C15CB913A7C50E00A1BB9F /* AVFoundation.framework in Frameworks */,
+				27B1BBC3146C32B700FAC8E5 /* libGoogleAnalytics.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1780,8 +1780,8 @@
 				27C5D1D012D690790085648A /* MediaPlayer.framework in Frameworks */,
 				277F29221321A9DA001F8685 /* libobjc.A.dylib in Frameworks */,
 				7F9351BA13845B370097720F /* libsqlite3.0.dylib in Frameworks */,
-				7F9351C413846B620097720F /* libGoogleAnalytics.a in Frameworks */,
 				7F8F374B1385A0160034710B /* libxml2.dylib in Frameworks */,
+				27B1BBC4146C32C000FAC8E5 /* libGoogleAnalytics.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1791,7 +1791,6 @@
 			files = (
 				27C15CC513A7D81F00A1BB9F /* UIKit.framework in Frameworks */,
 				7F9351BB13845B380097720F /* libsqlite3.0.dylib in Frameworks */,
-				7F9351C313846B620097720F /* libGoogleAnalytics.a in Frameworks */,
 				7F8F374A1385A0160034710B /* libxml2.dylib in Frameworks */,
 				27C15CAC13A7C4BD00A1BB9F /* Foundation.framework in Frameworks */,
 				27C15CAD13A7C4C100A1BB9F /* CoreGraphics.framework in Frameworks */,
@@ -3244,8 +3243,8 @@
 		7F99691013843611005B490D /* Analytics */ = {
 			isa = PBXGroup;
 			children = (
-				7F9351AF138455290097720F /* GANTracker.h */,
-				7F9351C113846B620097720F /* libGoogleAnalytics.a */,
+				27B1BBC0146C32B700FAC8E5 /* GANTracker.h */,
+				27B1BBC1146C32B700FAC8E5 /* libGoogleAnalytics.a */,
 			);
 			name = Analytics;
 			sourceTree = "<group>";
@@ -4187,6 +4186,7 @@
 				2726C64E13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m in Sources */,
 				27DADC1613B94D6C00F9E906 /* LBNodeViewController.m in Sources */,
 				27DC5DD813CB8F0F00091902 /* LoadBalancerConnectionThrottle.m in Sources */,
+				27B1BBC2146C32B700FAC8E5 /* GANTracker.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4509,8 +4509,8 @@
 					armv6,
 				);
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rackspace Hosting";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rackspace Hosting";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Michael Mayo (YJR8C239H4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Mayo (YJR8C239H4)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -4533,8 +4533,8 @@
 					UIKit,
 				);
 				PRODUCT_NAME = "Rackspace Cloud";
-				PROVISIONING_PROFILE = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
+				PROVISIONING_PROFILE = "2A40042A-033F-41CE-9A2E-C40ABA281587";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2A40042A-033F-41CE-9A2E-C40ABA281587";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4548,8 +4548,8 @@
 					armv6,
 				);
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rackspace Hosting";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rackspace Hosting";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Michael Mayo (YJR8C239H4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Mayo (YJR8C239H4)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -4572,8 +4572,8 @@
 					UIKit,
 				);
 				PRODUCT_NAME = "Rackspace Cloud";
-				PROVISIONING_PROFILE = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
+				PROVISIONING_PROFILE = "2A40042A-033F-41CE-9A2E-C40ABA281587";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2A40042A-033F-41CE-9A2E-C40ABA281587";
 				SDKROOT = iphoneos;
 				ZERO_LINK = NO;
 			};
