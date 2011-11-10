@@ -288,23 +288,31 @@
         cell.textLabel.text = @"Delete Container";
     }
     
-    if (self.container.rootFolder) {
-        if (self.container.count == 0 || ([self.container.rootFolder.folders count] + [self.container.rootFolder.objects count] == 0)) {
-            cell.textLabel.textColor = [UIColor blackColor];
-            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        } else {
-            cell.textLabel.textColor = [UIColor grayColor];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        }
+    if (self.container.count == 0 && ([self.container.rootFolder.folders count] + [self.container.rootFolder.objects count] == 0)) {
+        cell.textLabel.textColor = [UIColor blackColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     } else {
-        if (self.container.count == 0) {
-            cell.textLabel.textColor = [UIColor blackColor];
-            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        } else {
-            cell.textLabel.textColor = [UIColor grayColor];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        }
+        cell.textLabel.textColor = [UIColor grayColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+    
+//    if (self.container.rootFolder) {
+//        if (self.container.count == 0 || ([self.container.rootFolder.folders count] + [self.container.rootFolder.objects count] == 0)) {
+//            cell.textLabel.textColor = [UIColor blackColor];
+//            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+//        } else {
+//            cell.textLabel.textColor = [UIColor grayColor];
+//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        }
+//    } else {
+//        if (self.container.count == 0) {
+//            cell.textLabel.textColor = [UIColor blackColor];
+//            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+//        } else {
+//            cell.textLabel.textColor = [UIColor grayColor];
+//            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        }
+//    }
     
     return cell;
 }
@@ -388,9 +396,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == deleteSection) {
-        if (self.container.count == 0 || ([self.container.rootFolder.folders count] + [self.container.rootFolder.objects count] == 0)) {
+
+        // you can only delete empty containers
+        if (self.container.count == 0 && ([self.container.rootFolder.folders count] + [self.container.rootFolder.objects count] == 0)) {
             [deleteActionSheet showInView:self.view];
         }
+        
     } else if (indexPath.section == kCDNAttributes && indexPath.row == 0) {
         [cdnURLActionSheet showInView:self.view];
     } else if (indexPath.section == kReferrerACL) {
