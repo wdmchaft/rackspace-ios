@@ -112,8 +112,18 @@
 
 - (void)alert:(NSString *)message request:(OpenStackRequest *)request {
     ErrorAlerter *alerter = [[ErrorAlerter alloc] init];
+
+    if (request.responseStatusCode == 401) {
+        
+        message = [message stringByAppendingString:@"  Authorization failed.  Please check your User Name and API Key."];
+        
+    } else if (request.responseStatusCode == 503) {
+        
+        message = [message stringByAppendingString:@"  Service is currently unavailable.  Please try again later."];
+    
+    }    
+    
     [alerter alert:message request:request viewController:self];
-    //[alerter release]; // TODO: restore this 
 }
 
 - (void)failOnBadConnection {    
