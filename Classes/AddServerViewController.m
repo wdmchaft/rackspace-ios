@@ -113,6 +113,8 @@
             Server *createdServer = [request server];
             createdServer.flavor = [self.account.flavors objectForKey:createdServer.flavorId];
             createdServer.image = [self.account.images objectForKey:createdServer.imageId];
+                        
+            [[UIPasteboard generalPasteboard] setString:createdServer.rootPassword];
             
             [servers setObject:createdServer forKey:createdServer.identifier];
             

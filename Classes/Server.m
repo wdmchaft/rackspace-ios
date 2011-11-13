@@ -105,6 +105,8 @@
     if ([dict objectForKey:@"progress"]) {
         self.progress = [[dict objectForKey:@"progress"] intValue];
     }
+    
+    self.rootPassword = [dict objectForKey:@"adminPass"];
 }
 
 - (id)initWithJSONDict:(NSDictionary *)dict {
