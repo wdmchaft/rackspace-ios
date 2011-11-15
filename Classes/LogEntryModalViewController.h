@@ -13,11 +13,6 @@
 @class APILogEntry;
 
 @interface LogEntryModalViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate> {
-    APILogEntry *logEntry;
-    NSString *requestDescription;
-    NSString *responseDescription;
-    NSString *requestMethod;
-    NSString *url;
 }
 
 @property (nonatomic, retain) APILogEntry *logEntry;

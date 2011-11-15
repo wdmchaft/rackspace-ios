@@ -16,7 +16,6 @@
 #import "UIViewController+Conveniences.h"
 #import "NSString+Conveniences.h"
 #import "ActivityIndicatorView.h"
-#import "APILogger.h"
 
 
 #define kUsername 0

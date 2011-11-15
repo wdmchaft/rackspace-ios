@@ -16,7 +16,6 @@
 #import "Archiver.h"
 #import "RootViewController.h"
 #import "OpenStackAccount.h"
-#import "APILogger.h"
 #import "AccountHomeViewController.h"
 #import "OpenStackAppDelegate.h"
 
@@ -87,7 +86,6 @@
     
     if (failedAttemptsCount == 10 && eraseData) {
         [Archiver deleteEverything];
-        [APILogger eraseAllLogs];
         [OpenStackAccount persist:[NSMutableArray array]];        
         if ([Keychain setString:@"NO" forKey:@"passcode_lock_passcode_on"]) {
             [Keychain setString:@"" forKey:@"passcode_lock_passcode"];

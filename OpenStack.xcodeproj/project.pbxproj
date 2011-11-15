@@ -707,11 +707,9 @@
 		277D9E61126E78DF002C69D9 /* ProvidersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27828B3C125A858E00004D33 /* ProvidersViewController.m */; };
 		277D9E62126E78DF002C69D9 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 27828449125A18E100004D33 /* SBJsonParser.m */; };
 		277D9E63126E78DF002C69D9 /* ContactInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2798ACFC125E9D3000E02475 /* ContactInformationViewController.m */; };
-		277D9E64126E78DF002C69D9 /* APILogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2786960B1263A43300CE3435 /* APILogsViewController.m */; };
 		277D9E67126E78DF002C69D9 /* NSObject+Conveniences.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F7446112611341002C6CB0 /* NSObject+Conveniences.m */; };
 		277D9E68126E78DF002C69D9 /* TextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 278699381263DF7A00CE3435 /* TextViewCell.m */; };
 		277D9E6A126E78DF002C69D9 /* AddServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F73E08125F73B9002C6CB0 /* AddServerViewController.m */; };
-		277D9E6C126E78DF002C69D9 /* LogEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 278698F91263DCA500CE3435 /* LogEntryViewController.m */; };
 		277D9E6D126E78DF002C69D9 /* UIViewController+Conveniences.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F7445A1261130F002C6CB0 /* UIViewController+Conveniences.m */; };
 		277D9E6E126E78DF002C69D9 /* AccountDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2798AAA3125E77F600E02475 /* AccountDetailsViewController.m */; };
 		277D9E6F126E78DF002C69D9 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 27828453125A18E100004D33 /* NSObject+SBJSON.m */; };
@@ -726,10 +724,8 @@
 		277D9E7F126E78FD002C69D9 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27869AF31263F22300CE3435 /* MessageUI.framework */; };
 		277D9E99126E7963002C69D9 /* MainWindow-Rackspace.xib in Resources */ = {isa = PBXBuildFile; fileRef = 277D9E98126E7963002C69D9 /* MainWindow-Rackspace.xib */; };
 		277D9EA2126E79A1002C69D9 /* AccountHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2798AA45125E74F800E02475 /* AccountHomeViewController.xib */; };
-		277D9EA3126E79A5002C69D9 /* APILogsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2786960C1263A43300CE3435 /* APILogsViewController.xib */; };
 		277D9EA4126E79A5002C69D9 /* AccountDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2798AAA4125E77F600E02475 /* AccountDetailsViewController.xib */; };
 		277D9EA5126E79A5002C69D9 /* ServersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27F73E03125F73B2002C6CB0 /* ServersViewController.xib */; };
-		277D9EA6126E79A5002C69D9 /* LogEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 278698FA1263DCA500CE3435 /* LogEntryViewController.xib */; };
 		277D9EA7126E79A5002C69D9 /* ContactInformationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2798ACFD125E9D3000E02475 /* ContactInformationViewController.xib */; };
 		277D9EA8126E79A5002C69D9 /* ProvidersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27828B3D125A858E00004D33 /* ProvidersViewController.xib */; };
 		277D9EA9126E79A5002C69D9 /* ServerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2798AD84125EA4CB00E02475 /* ServerViewController.xib */; };
@@ -770,10 +766,6 @@
 		27828B9C125A86EF00004D33 /* ProvidersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27828B3D125A858E00004D33 /* ProvidersViewController.xib */; };
 		278694591263956700CE3435 /* APILogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 278694571263956700CE3435 /* APILogger.m */; };
 		278694911263971200CE3435 /* APILogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 2786948F1263971200CE3435 /* APILogEntry.m */; };
-		2786960E1263A43300CE3435 /* APILogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2786960B1263A43300CE3435 /* APILogsViewController.m */; };
-		2786960F1263A43300CE3435 /* APILogsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2786960C1263A43300CE3435 /* APILogsViewController.xib */; };
-		278698FC1263DCA500CE3435 /* LogEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 278698F91263DCA500CE3435 /* LogEntryViewController.m */; };
-		278698FD1263DCA500CE3435 /* LogEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 278698FA1263DCA500CE3435 /* LogEntryViewController.xib */; };
 		2786993A1263DF7A00CE3435 /* TextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 278699381263DF7A00CE3435 /* TextViewCell.m */; };
 		27869AF41263F22300CE3435 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27869AF31263F22300CE3435 /* MessageUI.framework */; };
 		2787C13E12F0D26A009EAD7C /* text-file.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2787C13D12F0D26A009EAD7C /* text-file.txt */; };
@@ -1427,12 +1419,6 @@
 		278694571263956700CE3435 /* APILogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APILogger.m; sourceTree = "<group>"; };
 		2786948E1263971200CE3435 /* APILogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APILogEntry.h; sourceTree = "<group>"; };
 		2786948F1263971200CE3435 /* APILogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APILogEntry.m; sourceTree = "<group>"; };
-		2786960A1263A43300CE3435 /* APILogsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APILogsViewController.h; sourceTree = "<group>"; };
-		2786960B1263A43300CE3435 /* APILogsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APILogsViewController.m; sourceTree = "<group>"; };
-		2786960C1263A43300CE3435 /* APILogsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = APILogsViewController.xib; sourceTree = "<group>"; };
-		278698F81263DCA500CE3435 /* LogEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogEntryViewController.h; sourceTree = "<group>"; };
-		278698F91263DCA500CE3435 /* LogEntryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogEntryViewController.m; sourceTree = "<group>"; };
-		278698FA1263DCA500CE3435 /* LogEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogEntryViewController.xib; sourceTree = "<group>"; };
 		278699371263DF7A00CE3435 /* TextViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewCell.h; sourceTree = "<group>"; };
 		278699381263DF7A00CE3435 /* TextViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewCell.m; sourceTree = "<group>"; };
 		27869AF31263F22300CE3435 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -2417,12 +2403,6 @@
 		278696091263A41C00CE3435 /* API Logs */ = {
 			isa = PBXGroup;
 			children = (
-				2786960A1263A43300CE3435 /* APILogsViewController.h */,
-				2786960B1263A43300CE3435 /* APILogsViewController.m */,
-				2786960C1263A43300CE3435 /* APILogsViewController.xib */,
-				278698F81263DCA500CE3435 /* LogEntryViewController.h */,
-				278698F91263DCA500CE3435 /* LogEntryViewController.m */,
-				278698FA1263DCA500CE3435 /* LogEntryViewController.xib */,
 				272836B91270F32D00F8CCDD /* LogEntryModalViewController.h */,
 				272836BA1270F32D00F8CCDD /* LogEntryModalViewController.m */,
 				272836BB1270F32D00F8CCDD /* LogEntryModalViewController.xib */,
@@ -3354,8 +3334,6 @@
 				2798AD87125EA4CB00E02475 /* ServerViewController.xib in Resources */,
 				27F73E06125F73B2002C6CB0 /* ServersViewController.xib in Resources */,
 				27F73E0C125F73B9002C6CB0 /* AddServerViewController.xib in Resources */,
-				2786960F1263A43300CE3435 /* APILogsViewController.xib in Resources */,
-				278698FD1263DCA500CE3435 /* LogEntryViewController.xib in Resources */,
 				2748C584126E90FD00A24941 /* PingIPAddressViewController.xib in Resources */,
 				275287CC126F84F70024E553 /* RenameServerViewController.xib in Resources */,
 				27528867126F899F0024E553 /* ResetServerAdminPasswordViewController.xib in Resources */,
@@ -3678,10 +3656,8 @@
 				277F71051386EC20009377AD /* Constants.plist in Resources */,
 				277D9E99126E7963002C69D9 /* MainWindow-Rackspace.xib in Resources */,
 				277D9EA2126E79A1002C69D9 /* AccountHomeViewController.xib in Resources */,
-				277D9EA3126E79A5002C69D9 /* APILogsViewController.xib in Resources */,
 				277D9EA4126E79A5002C69D9 /* AccountDetailsViewController.xib in Resources */,
 				277D9EA5126E79A5002C69D9 /* ServersViewController.xib in Resources */,
-				277D9EA6126E79A5002C69D9 /* LogEntryViewController.xib in Resources */,
 				277D9EA7126E79A5002C69D9 /* ContactInformationViewController.xib in Resources */,
 				277D9EA8126E79A5002C69D9 /* ProvidersViewController.xib in Resources */,
 				277D9EA9126E79A5002C69D9 /* ServerViewController.xib in Resources */,
@@ -4066,8 +4042,6 @@
 				27F7456D12612C49002C6CB0 /* ActivityIndicatorView.m in Sources */,
 				278694591263956700CE3435 /* APILogger.m in Sources */,
 				278694911263971200CE3435 /* APILogEntry.m in Sources */,
-				2786960E1263A43300CE3435 /* APILogsViewController.m in Sources */,
-				278698FC1263DCA500CE3435 /* LogEntryViewController.m in Sources */,
 				2786993A1263DF7A00CE3435 /* TextViewCell.m in Sources */,
 				2748C583126E90FD00A24941 /* PingIPAddressViewController.m in Sources */,
 				27528799126F84E40024E553 /* ServerActionViewController.m in Sources */,
@@ -4221,11 +4195,9 @@
 				277D9E61126E78DF002C69D9 /* ProvidersViewController.m in Sources */,
 				277D9E62126E78DF002C69D9 /* SBJsonParser.m in Sources */,
 				277D9E63126E78DF002C69D9 /* ContactInformationViewController.m in Sources */,
-				277D9E64126E78DF002C69D9 /* APILogsViewController.m in Sources */,
 				277D9E67126E78DF002C69D9 /* NSObject+Conveniences.m in Sources */,
 				277D9E68126E78DF002C69D9 /* TextViewCell.m in Sources */,
 				277D9E6A126E78DF002C69D9 /* AddServerViewController.m in Sources */,
-				277D9E6C126E78DF002C69D9 /* LogEntryViewController.m in Sources */,
 				277D9E6D126E78DF002C69D9 /* UIViewController+Conveniences.m in Sources */,
 				277D9E6E126E78DF002C69D9 /* AccountDetailsViewController.m in Sources */,
 				277D9E6F126E78DF002C69D9 /* NSObject+SBJSON.m in Sources */,

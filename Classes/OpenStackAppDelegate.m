@@ -17,7 +17,6 @@
 #import "Provider.h"
 #import "Image.h"
 
-#import "APILogger.h"
 #import "SettingsPluginHandler.h"
 #import "AddServerPluginHandler.h"
 #import "OpenStackAccount.h"
@@ -216,7 +215,6 @@
      */
     // TODO: perhaps this is a good place to release all the stuff allocated in
     // +(void)initialize methods all over the place
-//    [[APILogger loggerEntries] release];
 //    [[SettingsPluginHandler plugins] release];
 //    [[AddServerPluginHandler plugins] release];
 //    [[OpenStackAccount accounts] release];

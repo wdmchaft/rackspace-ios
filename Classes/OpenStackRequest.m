@@ -12,7 +12,6 @@
 #import "Server.h"
 #import "Image.h"
 #import "Flavor.h"
-#import "APILogger.h"
 #import "JSON.h"
 #import "RateLimit.h"
 #import "Container.h"
@@ -210,20 +209,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
     
 }
 
-#pragma mark -
-#pragma mark ASIHTTPRequest Overrides
-// overriding to log API calls
-
-- (void)requestFinished {
-    //NSLog(@"request finished: %i %@", self.responseStatusCode, self.url);
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *loggingLevel = [defaults valueForKey:@"api_logging_level"];    
-    if ([loggingLevel isEqualToString:@"all"] || ([loggingLevel isEqualToString:@"errors"] && ![self isSuccess])) {
-        [APILogger log:self];
-    }
-    
-    [super requestFinished];
-}
+#pragma mark - ASIHTTPRequest Overrides
 
 - (void)failWithError:(NSError *)theError {
 

@@ -10,7 +10,6 @@
 #import "OpenStackAccount.h"
 #import "Provider.h"
 #import "ContactInformationViewController.h"
-#import "APILogsViewController.h"
 #import "ServersViewController.h"
 #import "NSObject+Conveniences.h"
 #import "RootViewController.h"
