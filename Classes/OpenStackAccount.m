@@ -31,7 +31,7 @@ static NSMutableDictionary *timers = nil;
             loadBalancers, lbProtocols, serversByPublicIP, apiVersion, ignoresSSLValidation;
 
 + (void)initialize {
-    accounts = [Archiver retrieve:@"accounts"];
+    accounts = [[Archiver retrieve:@"accounts"] retain];
     if (accounts == nil) {
         accounts = [[NSArray alloc] init];
         [Archiver persist:accounts key:@"accounts"];
@@ -45,7 +45,7 @@ static NSMutableDictionary *timers = nil;
 
 - (NSMutableDictionary *)servers {
     if (!serversUnarchived) {
-        servers = [Archiver retrieve:[self serversKey]];
+        servers = [[Archiver retrieve:[self serversKey]] retain];
         serversUnarchived = YES;
     }
     return servers;
