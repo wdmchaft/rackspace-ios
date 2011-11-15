@@ -31,8 +31,7 @@
     NSInteger successCount;
     NSInteger failureCount;
     
-    OpenStackRequest *failedRequest;
-    LogEntryModalViewController *logEntryModalViewController;    
+    OpenStackRequest *failedRequest;    
     
     NSInteger maxServers;
     
@@ -43,6 +42,7 @@
 @property (nonatomic, retain) Image *selectedImage;
 @property (nonatomic, retain) ServersViewController *serversViewController;
 @property (nonatomic, retain) AccountHomeViewController *accountHomeViewController;
+@property (nonatomic, retain) LogEntryModalViewController *logEntryModalViewController;
 
 - (void)saveButtonPressed:(id)sender;
 - (void)setNewSelectedImage:(Image *)image;

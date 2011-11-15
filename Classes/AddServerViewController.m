@@ -58,7 +58,7 @@
  
 @implementation AddServerViewController
 
-@synthesize account, selectedImage, serversViewController, accountHomeViewController;
+@synthesize account, selectedImage, serversViewController, accountHomeViewController, logEntryModalViewController;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
@@ -618,10 +618,9 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) { // details button
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            logEntryModalViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+            self.logEntryModalViewController.modalPresentationStyle = UIModalPresentationFormSheet;
         }                
-        [self.serversViewController presentModalViewController:logEntryModalViewController animated:YES];
-        [logEntryModalViewController release];
+        [self.serversViewController presentModalViewController:self.logEntryModalViewController animated:YES];
     }
 }
 
@@ -629,12 +628,12 @@
     if (request.responseStatusCode == 0) {
         [self failOnBadConnection];
     } else {
-        logEntryModalViewController = [[LogEntryModalViewController alloc] initWithNibName:@"LogEntryModalViewController" bundle:nil];
-        logEntryModalViewController.logEntry = [[APILogEntry alloc] initWithRequest:request];
-        logEntryModalViewController.requestDescription = [logEntryModalViewController.logEntry requestDescription];
-        logEntryModalViewController.responseDescription = [logEntryModalViewController.logEntry responseDescription];
-        logEntryModalViewController.requestMethod = [logEntryModalViewController.logEntry requestMethod];
-        logEntryModalViewController.url = [[logEntryModalViewController.logEntry url] description];
+        self.logEntryModalViewController = [[[LogEntryModalViewController alloc] initWithNibName:@"LogEntryModalViewController" bundle:nil] autorelease];
+        self.logEntryModalViewController.logEntry = [[[APILogEntry alloc] initWithRequest:request] autorelease];
+        self.logEntryModalViewController.requestDescription = [self.logEntryModalViewController.logEntry requestDescription];
+        self.logEntryModalViewController.responseDescription = [self.logEntryModalViewController.logEntry responseDescription];
+        self.logEntryModalViewController.requestMethod = [self.logEntryModalViewController.logEntry requestMethod];
+        self.logEntryModalViewController.url = [[self.logEntryModalViewController.logEntry url] description];
         
         // present an alert with a Details button to show the API log entry
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:@"Details", nil];
@@ -657,6 +656,7 @@
     [serversViewController release];
     [createServerObservers release];
     [accountHomeViewController release];
+    [logEntryModalViewController release];
     [super dealloc];
 }
 
