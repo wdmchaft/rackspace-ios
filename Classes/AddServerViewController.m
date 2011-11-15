@@ -30,6 +30,7 @@
 #import "ServerViewController.h"
 #import "AccountHomeViewController.h"
 #import "APICallback.h"
+#import "Analytics.h"
 
 #define kNodeCount 0
 #define kNodeDetails 1
@@ -77,6 +78,11 @@
 - (void)saveButtonPressed:(id)sender {
     
     // validate required fields?  name isn't actually required; flavor and image are defaulted
+    
+    // track multiple creates
+    if (nodeCount > 1) {
+        TrackEvent(CATEGORY_SERVER, EVENT_CREATED_MULTIPLE);
+    }
     
     // populate the server(s) info, then pass the server along to all the plugins
     for (int i = 0; i < nodeCount; i++) {

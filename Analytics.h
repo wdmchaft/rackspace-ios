@@ -18,6 +18,7 @@
 
 #define EVENT_REBOOTED @"reboot"
 #define EVENT_CREATED @"created"
+#define EVENT_CREATED_MULTIPLE @"created_multiple"
 #define EVENT_UPDATED @"updated"
 #define EVENT_PINGED @"pinged"
 #define EVENT_RESIZED @"resized"

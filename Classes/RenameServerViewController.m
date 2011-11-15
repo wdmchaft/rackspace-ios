@@ -57,7 +57,7 @@
 	} else {
         [self.serverViewController renameServer:textField.text];
         [self dismissModalViewControllerAnimated:YES];
-        [self.serverViewController.tableView deselectRowAtIndexPath:actionIndexPath animated:YES];        
+        [self.serverViewController.tableView deselectRowAtIndexPath:self.actionIndexPath animated:YES];        
 	}
 }
 

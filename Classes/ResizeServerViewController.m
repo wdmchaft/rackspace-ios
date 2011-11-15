@@ -48,9 +48,9 @@
         }];
         
         
-        [serverViewController showToolbarActivityMessage:@"Resizing server..."];
+        [self.serverViewController showToolbarActivityMessage:@"Resizing server..."];
         [self dismissModalViewControllerAnimated:YES];    
-        [serverViewController.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:kResize inSection:kActions] animated:YES];
+        [self.serverViewController.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:kResize inSection:kActions] animated:YES];
         
     }
     
