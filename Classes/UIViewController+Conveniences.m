@@ -8,7 +8,6 @@
 #import "NSObject+Conveniences.h"
 #import "OpenStackRequest.h"
 #import "LogEntryModalViewController.h"
-#import "APILogEntry.h"
 #import "OpenStackAccount.h"
 #import "ServerViewController.h"
 #import "OpenStackAppDelegate.h"

@@ -11,8 +11,6 @@
 @class ServerViewController;
 
 @interface ServerActionViewController : UIViewController {
-	ServerViewController *serverViewController;
-    NSIndexPath *actionIndexPath;
     IBOutlet UINavigationBar *navigationBar;
 }
 

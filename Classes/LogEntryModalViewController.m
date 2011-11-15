@@ -7,7 +7,6 @@
 //
 
 #import "LogEntryModalViewController.h"
-#import "APILogEntry.h"
 #import "TextViewCell.h"
 
 #define kRequest 0

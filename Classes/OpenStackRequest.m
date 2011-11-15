@@ -21,7 +21,6 @@
 #import "AccountManager.h"
 #import "GetFlavorsRequest.h"
 #import "APICallback.h"
-#import "APILogEntry.h"
 
 
 static NSRecursiveLock *accessDetailsLock = nil;

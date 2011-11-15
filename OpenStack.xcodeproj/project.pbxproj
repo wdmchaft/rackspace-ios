@@ -351,10 +351,6 @@
 		2748C581126E90FD00A24941 /* PingIPAddressViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748C57E126E90FD00A24941 /* PingIPAddressViewController.xib */; };
 		2748C583126E90FD00A24941 /* PingIPAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748C57D126E90FD00A24941 /* PingIPAddressViewController.m */; };
 		2748C584126E90FD00A24941 /* PingIPAddressViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748C57E126E90FD00A24941 /* PingIPAddressViewController.xib */; };
-		274C7C811278934A0013DB8D /* APILoggingSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 274C7C7E1278934A0013DB8D /* APILoggingSettingsController.m */; };
-		274C7C821278934A0013DB8D /* APILoggingSettingsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 274C7C7F1278934A0013DB8D /* APILoggingSettingsController.xib */; };
-		274C7C841278934A0013DB8D /* APILoggingSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 274C7C7E1278934A0013DB8D /* APILoggingSettingsController.m */; };
-		274C7C851278934A0013DB8D /* APILoggingSettingsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 274C7C7F1278934A0013DB8D /* APILoggingSettingsController.xib */; };
 		27528797126F84E40024E553 /* ServerActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27528795126F84E40024E553 /* ServerActionViewController.m */; };
 		27528799126F84E40024E553 /* ServerActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27528795126F84E40024E553 /* ServerActionViewController.m */; };
 		275287B3126F84F70024E553 /* RenameServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2752879B126F84F70024E553 /* RenameServerViewController.m */; };
@@ -684,7 +680,6 @@
 		277D9E48126E78DF002C69D9 /* OpenStackAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 2717275812565ED9003A1319 /* OpenStackAccount.m */; };
 		277D9E49126E78DF002C69D9 /* Archiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 27828AD7125A7F2E00004D33 /* Archiver.m */; };
 		277D9E4A126E78DF002C69D9 /* Flavor.m in Sources */ = {isa = PBXBuildFile; fileRef = 279754681256B9BF00D7A533 /* Flavor.m */; };
-		277D9E4B126E78DF002C69D9 /* APILogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 278694571263956700CE3435 /* APILogger.m */; };
 		277D9E4C126E78DF002C69D9 /* Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 279754941256BA2100D7A533 /* Base64.m */; };
 		277D9E4D126E78DF002C69D9 /* Server.m in Sources */ = {isa = PBXBuildFile; fileRef = 278283D9125A16E900004D33 /* Server.m */; };
 		277D9E4E126E78DF002C69D9 /* OpenStackAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* OpenStackAppDelegate.m */; };
@@ -764,7 +759,6 @@
 		27828AF6125A805200004D33 /* Archiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 27828AD7125A7F2E00004D33 /* Archiver.m */; };
 		27828B8E125A86CE00004D33 /* ProvidersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27828B3C125A858E00004D33 /* ProvidersViewController.m */; };
 		27828B9C125A86EF00004D33 /* ProvidersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27828B3D125A858E00004D33 /* ProvidersViewController.xib */; };
-		278694591263956700CE3435 /* APILogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 278694571263956700CE3435 /* APILogger.m */; };
 		278694911263971200CE3435 /* APILogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 2786948F1263971200CE3435 /* APILogEntry.m */; };
 		2786993A1263DF7A00CE3435 /* TextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 278699381263DF7A00CE3435 /* TextViewCell.m */; };
 		27869AF41263F22300CE3435 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27869AF31263F22300CE3435 /* MessageUI.framework */; };
@@ -895,7 +889,6 @@
 		27C15CDE13A7DE5A00A1BB9F /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CD1DC6129DBFC8006507BB /* ASIAuthenticationDialog.m */; };
 		27C15CDF13A7DE6E00A1BB9F /* GetCDNContainersRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2788981112C91283006448E2 /* GetCDNContainersRequest.m */; };
 		27C15CE013A7DE7A00A1BB9F /* APILogEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 2786948F1263971200CE3435 /* APILogEntry.m */; };
-		27C15CE113A7DE7E00A1BB9F /* APILogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 278694571263956700CE3435 /* APILogger.m */; };
 		27C15CE213A7DEC400A1BB9F /* NSObject+NSCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 270878F013282104006D4EE3 /* NSObject+NSCoding.m */; };
 		27C38BC013D0D48500CC7222 /* red-delete-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C38BBE13D0D48400CC7222 /* red-delete-button@2x.png */; };
 		27C38BC113D0D48500CC7222 /* red-delete-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C38BBE13D0D48400CC7222 /* red-delete-button@2x.png */; };
@@ -1191,9 +1184,6 @@
 		2748C57C126E90FD00A24941 /* PingIPAddressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PingIPAddressViewController.h; sourceTree = "<group>"; };
 		2748C57D126E90FD00A24941 /* PingIPAddressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PingIPAddressViewController.m; sourceTree = "<group>"; };
 		2748C57E126E90FD00A24941 /* PingIPAddressViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PingIPAddressViewController.xib; sourceTree = "<group>"; };
-		274C7C7D1278934A0013DB8D /* APILoggingSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APILoggingSettingsController.h; sourceTree = "<group>"; };
-		274C7C7E1278934A0013DB8D /* APILoggingSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APILoggingSettingsController.m; sourceTree = "<group>"; };
-		274C7C7F1278934A0013DB8D /* APILoggingSettingsController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = APILoggingSettingsController.xib; sourceTree = "<group>"; };
 		27528794126F84E40024E553 /* ServerActionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerActionViewController.h; sourceTree = "<group>"; };
 		27528795126F84E40024E553 /* ServerActionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerActionViewController.m; sourceTree = "<group>"; };
 		2752879A126F84F70024E553 /* RenameServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenameServerViewController.h; sourceTree = "<group>"; };
@@ -1415,8 +1405,6 @@
 		27828B3B125A858E00004D33 /* ProvidersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProvidersViewController.h; sourceTree = "<group>"; };
 		27828B3C125A858E00004D33 /* ProvidersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProvidersViewController.m; sourceTree = "<group>"; };
 		27828B3D125A858E00004D33 /* ProvidersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProvidersViewController.xib; sourceTree = "<group>"; };
-		278694561263956700CE3435 /* APILogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APILogger.h; sourceTree = "<group>"; };
-		278694571263956700CE3435 /* APILogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APILogger.m; sourceTree = "<group>"; };
 		2786948E1263971200CE3435 /* APILogEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APILogEntry.h; sourceTree = "<group>"; };
 		2786948F1263971200CE3435 /* APILogEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APILogEntry.m; sourceTree = "<group>"; };
 		278699371263DF7A00CE3435 /* TextViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewCell.h; sourceTree = "<group>"; };
@@ -1969,9 +1957,6 @@
 				2730137D12778F9B0082E457 /* PasscodeViewController.h */,
 				2730137E12778F9B0082E457 /* PasscodeViewController.m */,
 				2730137F12778F9B0082E457 /* PasscodeViewController.xib */,
-				274C7C7D1278934A0013DB8D /* APILoggingSettingsController.h */,
-				274C7C7E1278934A0013DB8D /* APILoggingSettingsController.m */,
-				274C7C7F1278934A0013DB8D /* APILoggingSettingsController.xib */,
 				27E6B6AA12D93D0B00EA623F /* AboutViewController.h */,
 				27E6B6AB12D93D0B00EA623F /* AboutViewController.m */,
 				27E6B6AC12D93D0B00EA623F /* AboutViewController.xib */,
@@ -2392,8 +2377,6 @@
 		2786946D126396A500CE3435 /* API Logging */ = {
 			isa = PBXGroup;
 			children = (
-				278694561263956700CE3435 /* APILogger.h */,
-				278694571263956700CE3435 /* APILogger.m */,
 				2786948E1263971200CE3435 /* APILogEntry.h */,
 				2786948F1263971200CE3435 /* APILogEntry.m */,
 			);
@@ -3346,7 +3329,6 @@
 				2730104412776AE10082E457 /* SettingsViewController.xib in Resources */,
 				27301275127781110082E457 /* PasscodeLockViewController.xib in Resources */,
 				2730138212778F9B0082E457 /* PasscodeViewController.xib in Resources */,
-				274C7C821278934A0013DB8D /* APILoggingSettingsController.xib in Resources */,
 				271EFD92127B8FB200431D19 /* ChefSettingsViewController.xib in Resources */,
 				27AE1586128338E9003DFBE8 /* chef_plugin_crontab in Resources */,
 				27AE158912833939003DFBE8 /* chef_plugin_install_script in Resources */,
@@ -3677,7 +3659,6 @@
 				2730104712776AE10082E457 /* SettingsViewController.xib in Resources */,
 				27301278127781110082E457 /* PasscodeLockViewController.xib in Resources */,
 				2730138512778F9B0082E457 /* PasscodeViewController.xib in Resources */,
-				274C7C851278934A0013DB8D /* APILoggingSettingsController.xib in Resources */,
 				271EFD95127B8FB200431D19 /* ChefSettingsViewController.xib in Resources */,
 				27AE1587128338E9003DFBE8 /* chef_plugin_crontab in Resources */,
 				27AE158A12833939003DFBE8 /* chef_plugin_install_script in Resources */,
@@ -4040,7 +4021,6 @@
 				27F7446312611341002C6CB0 /* NSObject+Conveniences.m in Sources */,
 				27F744DA126122AF002C6CB0 /* NSString+Conveniences.m in Sources */,
 				27F7456D12612C49002C6CB0 /* ActivityIndicatorView.m in Sources */,
-				278694591263956700CE3435 /* APILogger.m in Sources */,
 				278694911263971200CE3435 /* APILogEntry.m in Sources */,
 				2786993A1263DF7A00CE3435 /* TextViewCell.m in Sources */,
 				2748C583126E90FD00A24941 /* PingIPAddressViewController.m in Sources */,
@@ -4060,7 +4040,6 @@
 				2730104312776AE10082E457 /* SettingsViewController.m in Sources */,
 				27301274127781110082E457 /* PasscodeLockViewController.m in Sources */,
 				2730138112778F9B0082E457 /* PasscodeViewController.m in Sources */,
-				274C7C811278934A0013DB8D /* APILoggingSettingsController.m in Sources */,
 				271EF653127B333200431D19 /* AnimatedProgressView.m in Sources */,
 				271EFC84127B89F200431D19 /* SettingsPluginHandler.m in Sources */,
 				271EFCA2127B8AA100431D19 /* ChefSettingsPlugin.m in Sources */,
@@ -4172,7 +4151,6 @@
 				277D9E48126E78DF002C69D9 /* OpenStackAccount.m in Sources */,
 				277D9E49126E78DF002C69D9 /* Archiver.m in Sources */,
 				277D9E4A126E78DF002C69D9 /* Flavor.m in Sources */,
-				277D9E4B126E78DF002C69D9 /* APILogger.m in Sources */,
 				277D9E4C126E78DF002C69D9 /* Base64.m in Sources */,
 				277D9E4D126E78DF002C69D9 /* Server.m in Sources */,
 				277D9E4E126E78DF002C69D9 /* OpenStackAppDelegate.m in Sources */,
@@ -4220,7 +4198,6 @@
 				2730104612776AE10082E457 /* SettingsViewController.m in Sources */,
 				27301277127781110082E457 /* PasscodeLockViewController.m in Sources */,
 				2730138412778F9B0082E457 /* PasscodeViewController.m in Sources */,
-				274C7C841278934A0013DB8D /* APILoggingSettingsController.m in Sources */,
 				271EF655127B333200431D19 /* AnimatedProgressView.m in Sources */,
 				271EFC86127B89F200431D19 /* SettingsPluginHandler.m in Sources */,
 				271EFCA4127B8AA100431D19 /* ChefSettingsPlugin.m in Sources */,
@@ -4379,7 +4356,6 @@
 				27C15CDE13A7DE5A00A1BB9F /* ASIAuthenticationDialog.m in Sources */,
 				27C15CDF13A7DE6E00A1BB9F /* GetCDNContainersRequest.m in Sources */,
 				27C15CE013A7DE7A00A1BB9F /* APILogEntry.m in Sources */,
-				27C15CE113A7DE7E00A1BB9F /* APILogger.m in Sources */,
 				27C15CE213A7DEC400A1BB9F /* NSObject+NSCoding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

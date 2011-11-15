@@ -11,7 +11,6 @@
 #import "OpenStackRequest.h"
 #import "OpenStackAccount.h"
 #import "UIViewController+Conveniences.h"
-#import "APILogEntry.h"
 #import "AnimatedProgressView.h"
 
 

@@ -22,8 +22,7 @@
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark -
-#pragma mark HTTP Request Helpers
+#pragma mark - HTTP Request Helpers
 
 -(void)startRequest:(OpenStackRequest *)request {
 	[request setDelegate:self];
@@ -42,8 +41,7 @@
 }
 
 
-#pragma mark -
-#pragma mark HTTP Response Handlers
+#pragma mark - HTTP Response Handlers
 
 -(void)openStackRequestFinished:(OpenStackRequest *)request successSelector:(SEL)successSelector {
 	if ([request isSuccess]) {
@@ -126,8 +124,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark Button Handlers
+#pragma mark - Button Handlers
 
 -(void)cancelButtonPressed:(id)sender {
 	[self dismissModalViewControllerAnimated:YES];

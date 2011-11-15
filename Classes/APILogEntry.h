@@ -10,17 +10,7 @@
 
 @class OpenStackRequest;
 
-@interface APILogEntry : NSObject <NSCoding> {
-    NSString *requestMethod;
-    NSString *requestBody;
-    NSDictionary *requestHeaders;
-    NSInteger responseStatusCode;
-    NSDictionary *responseHeaders;
-    NSString *responseBody;
-    NSDate *requestDate;
-    NSString *responseStatusMessage;
-    NSURL *url;
-}
+@interface APILogEntry : NSObject <NSCoding>
 
 @property (nonatomic, retain) NSString *requestMethod;
 @property (nonatomic, retain) NSString *requestBody;

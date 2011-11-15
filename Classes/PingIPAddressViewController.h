@@ -11,9 +11,7 @@
 @class ServerViewController;
 
 @interface PingIPAddressViewController : UIViewController {
-    IBOutlet UIWebView *webView;
     NSString *ipAddress;
-    ServerViewController *serverViewController;
     IBOutlet UINavigationBar *navigationBar;
 }
 

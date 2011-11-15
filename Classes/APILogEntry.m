@@ -43,8 +43,7 @@
     return self;
 }
 
-#pragma mark -
-#pragma mark Serialization
+#pragma mark - Serialization
 
 - (void)encodeWithCoder: (NSCoder *)coder {
     [coder encodeObject:requestMethod forKey:@"requestMethod"];
@@ -128,8 +127,7 @@
     return description;
 }
 
-#pragma mark -
-#pragma mark Memory Management
+#pragma mark - Memory Management
 
 - (void)dealloc {
     [requestMethod release];

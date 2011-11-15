@@ -17,24 +17,14 @@
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark -
-#pragma mark View lifecycle
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
+#pragma mark - View lifecycle
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	[textField becomeFirstResponder];
 }
 
-#pragma mark -
-#pragma mark Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
+#pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 2;
@@ -44,7 +34,6 @@
     return @"The root password will be updated and the server will be restarted.  This process will only work if you have a user line for \"root\" in your passwd or shadow file.";
 }
 
-// Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 	if (indexPath.row == 0) {
@@ -78,8 +67,7 @@
 	
 }
 
-#pragma mark -
-#pragma mark UITextFieldDelegate
+#pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)aTextField {
     if ([textField isEqual:aTextField]) {
@@ -91,8 +79,7 @@
     return NO;
 }
 
-#pragma mark -
-#pragma mark Button Handlers
+#pragma mark - Button Handlers
 
 -(void)saveButtonPressed:(id)sender {
 	if ([textField.text isEqualToString:@""]) {
@@ -106,13 +93,6 @@
         [self dismissModalViewControllerAnimated:YES];
         [self.serverViewController.tableView deselectRowAtIndexPath:actionIndexPath animated:YES];        
 	}
-}
-
-#pragma mark -
-#pragma mark Memory management
-
-- (void)dealloc {
-    [super dealloc];
 }
 
 @end
