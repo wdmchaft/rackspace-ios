@@ -68,6 +68,7 @@
             }
         }
         [newImages release];
+        
         [self.account persist];
 
     }

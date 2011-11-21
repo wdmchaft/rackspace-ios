@@ -87,43 +87,52 @@
 	}
 }
 
-#pragma mark -
-#pragma mark Comparison
+#pragma mark - Comparison
 
 // overriding to handle version numbers in image names to create a natural ordering
 - (NSComparisonResult)compare:(ComputeModel *)aComputeModel {
-    NSComparisonResult result = NSOrderedSame;
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSArray *tokensA = [self.name componentsSeparatedByString:@" "];
-    NSArray *tokensB = [aComputeModel.name componentsSeparatedByString:@" "];
-
-    for (int i = 0; (i < [tokensA count] && i < [tokensB count]) && result == NSOrderedSame; i++) {
-
-        NSString *tokenA = [tokensA objectAtIndex:i];
-        NSString *tokenB = [tokensB objectAtIndex:i];
+    
+    @try {
+        NSComparisonResult result = NSOrderedSame;
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        NSArray *tokensA = [self.name componentsSeparatedByString:@" "];
+        NSArray *tokensB = [aComputeModel.name componentsSeparatedByString:@" "];
         
-        // problem: 8.04.2 is not a number, so we need to tokenize again on .
-        
-        NSArray *versionTokensA = [tokenA componentsSeparatedByString:@"."];
-        NSArray *versionTokensB = [tokenB componentsSeparatedByString:@"."];
-        
-        for (int j = 0; (j < [versionTokensA count] || j < [versionTokensB count]) && result == NSOrderedSame; j++) {
+        for (int i = 0; (i < [tokensA count] && i < [tokensB count]) && result == NSOrderedSame; i++) {
             
-            NSString *versionTokenA = [versionTokensA objectAtIndex:j];
-            NSString *versionTokenB = [versionTokensB objectAtIndex:j];
-            NSNumber *numberA = [formatter numberFromString:versionTokenA];
-            NSNumber *numberB = [formatter numberFromString:versionTokenB];
+            NSString *tokenA = [tokensA objectAtIndex:i];
+            NSString *tokenB = [tokensB objectAtIndex:i];
             
-            if (numberA && numberB) {
-                result = [numberA compare:numberB];
-            } else {
-                result = [versionTokenA compare:versionTokenB];
+            // problem: 8.04.2 is not a number, so we need to tokenize again on .
+            
+            NSArray *versionTokensA = [tokenA componentsSeparatedByString:@"."];
+            NSArray *versionTokensB = [tokenB componentsSeparatedByString:@"."];
+            
+            for (int j = 0; (j < [versionTokensA count] || j < [versionTokensB count]) && result == NSOrderedSame; j++) {
+                    
+                NSString *versionTokenA = [versionTokensA objectAtIndex:j];
+                NSString *versionTokenB = [versionTokensB objectAtIndex:j];
+                NSNumber *numberA = [formatter numberFromString:versionTokenA];
+                NSNumber *numberB = [formatter numberFromString:versionTokenB];
+                
+                if (numberA && numberB) {
+                    result = [numberA compare:numberB];
+                } else {
+                    result = [versionTokenA compare:versionTokenB];
+                }
             }
+            
         }
-        
+        [formatter release];
+        return result;
     }
-    [formatter release];
-    return result;
+    @catch (NSException *exception) {
+        // if anything goes wrong, default to standard comparator
+        return [super compare:aComputeModel];
+    }
+    @finally {
+    }
+        
 }
 
 
