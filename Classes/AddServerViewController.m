@@ -99,7 +99,7 @@
         
         server.flavor = [self.account.sortedFlavors objectAtIndex:flavorIndex];
         
-        server.image = selectedImage;
+        server.image = self.selectedImage;
 
         for (int i = 0; i < [plugins count]; i++) {
             id <AddServerPlugin> plugin = [plugins objectAtIndex:i];
@@ -132,22 +132,22 @@
             
             // insert the server into the servers list table
             // using reloadData instead of insertRows to avoid race conditions
-            serversViewController.tableView.allowsSelection = YES;
-            serversViewController.tableView.scrollEnabled = YES;
-            [serversViewController.tableView reloadData];
+            self.serversViewController.tableView.allowsSelection = YES;
+            self.serversViewController.tableView.scrollEnabled = YES;
+            [self.serversViewController.tableView reloadData];
             
             if (nodeCount - successCount - failureCount == 0) {
-                [serversViewController hideToolbarActivityMessage];
+                [self.serversViewController hideToolbarActivityMessage];
             } else {
                 if (nodeCount - successCount - failureCount == 1) {
-                    [serversViewController showToolbarActivityMessage:@"Creating 1 server..."];
+                    [self.serversViewController showToolbarActivityMessage:@"Creating 1 server..."];
                 } else {
-                    [serversViewController showToolbarActivityMessage:[NSString stringWithFormat:@"Creating %i servers...", nodeCount - successCount - failureCount]];
+                    [self.serversViewController showToolbarActivityMessage:[NSString stringWithFormat:@"Creating %i servers...", nodeCount - successCount - failureCount]];
                 }
             }
             
             if (failureCount + successCount == nodeCount) {
-                [serversViewController hideToolbarActivityMessage];
+                [self.serversViewController hideToolbarActivityMessage];
                 
                 if (failureCount > 0) {
                     if (nodeCount == 1) {                        
@@ -170,17 +170,17 @@
             // the first failure
             
             if (nodeCount - successCount - failureCount == 0) {
-                [serversViewController hideToolbarActivityMessage];
+                [self.serversViewController hideToolbarActivityMessage];
             } else {
                 if (nodeCount - successCount - failureCount == 1) {
-                    [serversViewController showToolbarActivityMessage:@"Creating 1 server..."];
+                    [self.serversViewController showToolbarActivityMessage:@"Creating 1 server..."];
                 } else {
-                    [serversViewController showToolbarActivityMessage:[NSString stringWithFormat:@"Creating %i servers...", nodeCount - successCount - failureCount]];
+                    [self.serversViewController showToolbarActivityMessage:[NSString stringWithFormat:@"Creating %i servers...", nodeCount - successCount - failureCount]];
                 }
             }
             
             if (failureCount + successCount == nodeCount) {
-                [serversViewController hideToolbarActivityMessage];
+                [self.serversViewController hideToolbarActivityMessage];
                 
                 if (failureCount > 0) {
                     if (nodeCount == 1) {
@@ -201,9 +201,9 @@
     // since UIProgressBar looks like crap on a non-default tint UIToolbar,
     // we'll just use text and count down as the servers are created
     if (nodeCount == 1) {
-        [serversViewController showToolbarActivityMessage:@"Creating server..."];
+        [self.serversViewController showToolbarActivityMessage:@"Creating server..."];
     } else {
-        [serversViewController showToolbarActivityMessage:[NSString stringWithFormat:@"Creating %i servers...", nodeCount]];
+        [self.serversViewController showToolbarActivityMessage:[NSString stringWithFormat:@"Creating %i servers...", nodeCount]];
     }
     
     [self dismissModalViewControllerAnimated:YES];
@@ -313,15 +313,15 @@
         }
         
         if ([ubuntus count] > 0) {
-            selectedImage = [ubuntus lastObject];
+            self.selectedImage = [ubuntus lastObject];
         } else {
-            selectedImage = [sortedImages objectAtIndex:0];
+            self.selectedImage = [sortedImages objectAtIndex:0];
         }
-        account.lastUsedImageId = selectedImage.identifier;
+        account.lastUsedImageId = self.selectedImage.identifier;
         [ubuntus release];
         
     } else {
-        selectedImage = [self.account.images objectForKey:account.lastUsedImageId];
+        self.selectedImage = [self.account.images objectForKey:account.lastUsedImageId];
     }
     
     [self.tableView reloadData]; // force the image name to show up
@@ -343,7 +343,7 @@
         if (indexPath.row == kSize) {
             return tableView.rowHeight + serverCountSlider.frame.size.height + 3.0;
         } else if (indexPath.row == kImageRow) {
-            CGSize size = [selectedImage.name sizeWithFont:[UIFont systemFontOfSize:18.0] constrainedToSize:CGSizeMake(220.0, 9000.0f) lineBreakMode:UILineBreakModeWordWrap];
+            CGSize size = [self.selectedImage.name sizeWithFont:[UIFont systemFontOfSize:18.0] constrainedToSize:CGSizeMake(220.0, 9000.0f) lineBreakMode:UILineBreakModeWordWrap];
             CGFloat result = size.height;
             if (result > 22.0) {
                 result += 22.0;
@@ -597,7 +597,7 @@
         SimpleImagePickerViewController *vc = [[SimpleImagePickerViewController alloc] initWithNibName:@"SimpleImagePickerViewController" bundle:nil];
         vc.mode = kModeChooseImage;
         vc.account = self.account;
-        vc.selectedImageId = selectedImage.identifier;
+        vc.selectedImageId = self.selectedImage.identifier;
         vc.delegate = self;
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];

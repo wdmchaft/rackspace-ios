@@ -22,11 +22,9 @@
     
     NSInteger nodeCount;
     NSInteger flavorIndex;
-    Image *selectedImage;
     
     NSArray *plugins;
     
-    ServersViewController *serversViewController;
     NSMutableArray *createServerObservers;
     NSInteger successCount;
     NSInteger failureCount;
