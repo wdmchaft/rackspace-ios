@@ -50,13 +50,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    self.navigationItem.title = [feed objectForKey:@"name"];
+    self.navigationItem.title = [self.feed objectForKey:@"name"];
     
     NSString *activityMessage = @"Loading...";
     self.activityIndicatorView = [[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:activityMessage] text:activityMessage];
     [self.activityIndicatorView addToView:self.view scrollOffset:self.tableView.contentOffset.y];    
     
-    NSURL *url = [NSURL URLWithString:[feed objectForKey:@"url"]];
+    NSURL *url = [NSURL URLWithString:[self.feed objectForKey:@"url"]];
     
     __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     request.delegate = self;

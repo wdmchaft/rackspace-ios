@@ -4500,8 +4500,8 @@
 					armv6,
 				);
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Rackspace Hosting";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rackspace Hosting";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Eric Johnson (5D9RVMU5AT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eric Johnson (5D9RVMU5AT)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -4524,8 +4524,8 @@
 					UIKit,
 				);
 				PRODUCT_NAME = "Rackspace Cloud";
-				PROVISIONING_PROFILE = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
+				PROVISIONING_PROFILE = "4EB414AE-59AC-4BCF-A79F-E38B96B8856A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4EB414AE-59AC-4BCF-A79F-E38B96B8856A";
 				SDKROOT = iphoneos;
 				ZERO_LINK = NO;
 			};
