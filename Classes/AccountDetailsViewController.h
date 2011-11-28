@@ -11,7 +11,6 @@
 @class Provider, RootViewController, ProvidersViewController, OpenStackAccount, ActivityIndicatorView;
 
 @interface AccountDetailsViewController : UITableViewController <UITextFieldDelegate> {
-    Provider *provider;
     UITextField *usernameTextField;
     UITextField *apiKeyTextField;
     UITextField *providerNameTextField;
@@ -25,7 +24,6 @@
     
     BOOL tableShrunk;
     
-    OpenStackAccount *account;    
 }
 
 @property (nonatomic, retain) Provider *provider;
@@ -33,6 +31,7 @@
 @property (nonatomic, retain) ProvidersViewController *providersViewController;
 @property (nonatomic, retain) ActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, retain) UISwitch *validateSSLSwitch;
+@property (nonatomic, retain) OpenStackAccount *account;    
 
 - (void)saveButtonPressed:(id)sender;
 

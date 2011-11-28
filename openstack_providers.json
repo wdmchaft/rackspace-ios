@@ -1,7 +1,7 @@
 { "providers": [
     {
         "name": "Rackspace Cloud (US)", 
-        "auth_endpoint_url": "https://auth.api.rackspacecloud.com/v1.0",
+        "auth_endpoint_url": "https://auth.api.rackspacecloud.com/v2.0/tokens",
         "auth_help_message": "Your API Key is available at manage.rackspacecloud.com",
         "bar_style": "black",
         "rss_feeds": [        
@@ -33,7 +33,7 @@
     },
     {
         "name": "Rackspace Cloud (UK)", 
-        "auth_endpoint_url": "https://lon.auth.api.rackspacecloud.com/v1.0",
+        "auth_endpoint_url": "https://lon.auth.api.rackspacecloud.com/v2.0/tokens",
         "auth_help_message": "Your API Key is available at lon.manage.rackspacecloud.com",
         "bar_style": "black",
         "rss_feeds": [

@@ -10,6 +10,7 @@
 #import "Provider.h"
 #import "RSTextFieldCell.h"
 #import "OpenStackAccount.h"
+#import "AccountManager.h"
 #import "RootViewController.h"
 #import "ProvidersViewController.h"
 #import "OpenStackRequest.h"
@@ -27,50 +28,27 @@
 
 @implementation AccountDetailsViewController
 
-@synthesize provider, rootViewController, providersViewController, activityIndicatorView, validateSSLSwitch;
+@synthesize provider, rootViewController, providersViewController, activityIndicatorView, validateSSLSwitch, account;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark -
-#pragma mark HTTP Response Handlers
-
-- (void)authenticationSucceded:(OpenStackRequest *)request {
+- (BOOL)textFieldsHaveValues:(NSArray *)textFields {
     
-    [self.activityIndicatorView removeFromSuperview];
+    BOOL valid = YES;
     
-    if ([request isSuccess]) {        
-        account.authToken = [[request responseHeaders] objectForKey:@"X-Auth-Token"];
-        account.serversURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Server-Management-Url"]];
-        account.filesURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Storage-Url"]];
+    for (UITextField *textField in textFields) {
         
-        NSString *cdnStr = [[request responseHeaders] objectForKey:@"X-Cdn-Management-Url"];
-        if (!cdnStr) {
-            cdnStr = [[request responseHeaders] objectForKey:@"X-CDN-Management-Url"];
+        valid = valid && textField.text && ![@"" isEqualToString:textField.text];
+        if (!valid) {
+            break;
         }
-        if (cdnStr) {
-            account.cdnURL = [NSURL URLWithString:cdnStr];
-        }
-        account.ignoresSSLValidation = !self.validateSSLSwitch.on;
-        [account persist];
-        [rootViewController.tableView reloadData];
-        [account refreshCollections];
-        [self.navigationController dismissModalViewControllerAnimated:YES];
-    } else {
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self alert:@"Authentication Failure" message:@"Please check your User Name and API Key."];
+        
     }
-}
-
-- (void)authenticationFailed:(OpenStackRequest *)request {
-    [self.activityIndicatorView removeFromSuperview];
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-    if ([request responseStatusCode] == 401) {
-        [self alert:@"Authentication Failure" message:@"Please check your User Name and API Key."];
-    } else {
-        [self failOnBadConnection];
-    }
+    
+    return valid;
+    
 }
 
 - (void)authenticate {
@@ -78,103 +56,74 @@
     BOOL valid = YES;
     
     if (customProvider) {
-        valid = valid && providerNameTextField.text && ![@"" isEqualToString:providerNameTextField.text];
-        if (!valid) {
-            [self alert:nil message:@"Please enter a provider name."];
-            [providerNameTextField becomeFirstResponder];
-        } else {
-            valid = valid && apiEndpointTextField.text && ![@"" isEqualToString:apiEndpointTextField.text];
-            if (!valid) {
-                [self alert:nil message:@"Please enter an API authentication URL."];
-                [apiEndpointTextField becomeFirstResponder];
-            } else {
-                valid = valid && apiEndpointTextField.text && [apiEndpointTextField.text isURL];
-                if (!valid) {
-                    [self alert:nil message:@"Please enter a valid API authentication URL."];
-                    [apiEndpointTextField becomeFirstResponder];
-                } else {
-                    valid = valid && usernameTextField.text && ![@"" isEqualToString:usernameTextField.text];
-                    if (!valid) {
-                        [self alert:nil message:@"Please enter your username."];
-                        [usernameTextField becomeFirstResponder];
-                    } else {
-                        valid = valid && apiKeyTextField.text && ![@"" isEqualToString:apiKeyTextField.text];
-                        if (!valid) {
-                            [self alert:nil message:@"Please enter your API key."];
-                            [apiKeyTextField becomeFirstResponder];
-                        } else {
-                            account = [[OpenStackAccount alloc] init];
-                            account.provider = provider;
-                            
-                            if (!account.provider) {
-                                Provider *p = [[Provider alloc] init];
-                                p.name = providerNameTextField.text;                                
-                                
-                                NSString *urlString = apiEndpointTextField.text;
-                                if ([urlString characterAtIndex:[urlString length] - 1] == '/') {
-                                    urlString = [urlString substringToIndex:[urlString length] - 1];
-                                }
-                                
-                                p.authEndpointURL = [NSURL URLWithString:urlString];
-                                account.provider = p;
-                                [p release];
-                            }
-                            
-                            account.username = usernameTextField.text;
-                            account.apiKey = [NSString stringWithString:apiKeyTextField.text];
-                            
-                            self.activityIndicatorView = [[[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Authenticating..."] text:@"Authenticating..."] autorelease];
-                            [self.activityIndicatorView addToView:self.view];
-                            
-                            OpenStackRequest *request = [OpenStackRequest authenticationRequest:account];
-                            request.delegate = self;
-                            if (self.validateSSLSwitch && !self.validateSSLSwitch.on) {
-                                request.validatesSecureCertificate = NO;
-                            } else {
-                                request.validatesSecureCertificate = YES;
-                            }
-                            request.didFinishSelector = @selector(authenticationSucceded:);
-                            request.didFailSelector = @selector(authenticationFailed:);
-                            [request startAsynchronous];
-                        }
-                    }
-                }                
-            }
-        }
+        
+        valid = [self textFieldsHaveValues:[NSArray arrayWithObjects:providerNameTextField, 
+                                            apiEndpointTextField, usernameTextField,
+                                            apiKeyTextField, nil]];
+        
     } else {
-        valid = valid && usernameTextField.text && ![@"" isEqualToString:usernameTextField.text];
-        if (!valid) {
-            [self alert:nil message:@"Please enter your username."];
-            [usernameTextField becomeFirstResponder];
-        } else {
-            valid = valid && apiKeyTextField.text && ![@"" isEqualToString:apiKeyTextField.text];
-            if (!valid) {
-                [self alert:nil message:@"Please enter your API key."];
-                [apiKeyTextField becomeFirstResponder];
-            } else {
-                account = [[OpenStackAccount alloc] init];
-                account.provider = provider;
-                account.username = usernameTextField.text;
-                account.apiKey = apiKeyTextField.text;                        
-                
-                self.activityIndicatorView = [[[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Authenticating..."] text:@"Authenticating..."] autorelease];
-                [self.activityIndicatorView addToView:self.view];
-                
-                OpenStackRequest *request = [OpenStackRequest authenticationRequest:account];
-                request.delegate = self;
-                request.didFinishSelector = @selector(authenticationSucceded:);
-                request.didFailSelector = @selector(authenticationFailed:);
-                [request startAsynchronous];
-            }
-        }
+        
+        valid = [self textFieldsHaveValues:[NSArray arrayWithObjects:usernameTextField,
+                                            apiKeyTextField, nil]];
+        
     }
+    
+    if (!valid) {
+        [self alert:nil message:@"All fields are required."];
+        return;
+    }
+    
+    self.account = [[[OpenStackAccount alloc] init] autorelease];
+    self.account.provider = provider;
+    
+    if (!self.account.provider) {
+        Provider *p = [[Provider alloc] init];
+        p.name = providerNameTextField.text;                                
+        
+        NSString *urlString = apiEndpointTextField.text;
+        if ([urlString characterAtIndex:[urlString length] - 1] == '/') {
+            urlString = [urlString substringToIndex:[urlString length] - 1];
+        }
+        
+        p.authEndpointURL = [NSURL URLWithString:urlString];
+        self.account.provider = p;
+        [p release];
+    }
+    
+    self.account.username = usernameTextField.text;
+    self.account.apiKey = apiKeyTextField.text;                        
+    
+    if (self.validateSSLSwitch && !self.validateSSLSwitch.on) {
+        self.account.ignoresSSLValidation = YES;
+    } else {
+        self.account.ignoresSSLValidation = NO;
+    }
+    
+    self.activityIndicatorView = [[[ActivityIndicatorView alloc] initWithFrame:[ActivityIndicatorView frameForText:@"Authenticating..."] text:@"Authenticating..."] autorelease];
+    [self.activityIndicatorView addToView:self.view];
+    
+    [[self.account.manager authenticate] success:^(OpenStackRequest *request) {
+        
+        [rootViewController.tableView reloadData];
+        [self.account refreshCollections];
+        [self.navigationController dismissModalViewControllerAnimated:YES];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        [self.activityIndicatorView removeFromSuperview];
+        if ([request responseStatusCode] == 401) {
+            [self alert:@"Authentication failed.  Please check your User Name and API Key." request:request];
+        } else {
+            [self failOnBadConnection];
+        }
+        
+    }];
+    
 }
 
-#pragma mark -
-#pragma mark Button Handlers
+#pragma mark - Button Handlers
 
 - (void)saveButtonPressed:(id)sender {
-    self.navigationItem.rightBarButtonItem.enabled = NO;
     tableShrunk = NO;
     CGRect rect = self.tableView.frame;
     rect.size.height = 416.0;
@@ -223,8 +172,7 @@
     self.tableView.frame = rect;
 }
 
-#pragma mark -
-#pragma mark Table view data source
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return customProvider ? 2 : 1;
@@ -331,8 +279,7 @@
     
 }
 
-#pragma mark -
-#pragma mark Text Field Delegate
+#pragma mark - Text Field Delegate
 
 - (void)tableShrinkAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
     UITextField *textField = ((UITextField *)context);
@@ -369,7 +316,6 @@
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:kAPIKey inSection:authenticationSection] atScrollPosition:UITableViewScrollPositionNone animated:YES];
     } else {
         [textField resignFirstResponder];
-        self.navigationItem.rightBarButtonItem.enabled = NO;        
         tableShrunk = NO;
         CGRect rect = self.tableView.frame;
         rect.size.height = 416.0;
@@ -379,8 +325,7 @@
     return NO;
 }
 
-#pragma mark -
-#pragma mark Memory management
+#pragma mark - Memory management
 
 - (void)dealloc {
     [provider release];
@@ -388,6 +333,7 @@
     [providersViewController release];
     [activityIndicatorView release];
     [validateSSLSwitch release];
+    [account release];
     [super dealloc];
 }
 

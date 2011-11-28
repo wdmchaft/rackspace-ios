@@ -21,6 +21,7 @@
 #import "AccountManager.h"
 #import "GetFlavorsRequest.h"
 #import "APICallback.h"
+#import "NSString+Conveniences.h"
 
 
 static NSRecursiveLock *accessDetailsLock = nil;
@@ -244,7 +245,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
 
 + (NSString *)apiVersionForURL:(NSURL *)url {
     NSArray *components = [[url description] componentsSeparatedByString:@"/"];
-    if ([[components lastObject] isEqualToString:@"2.0"]) {
+    if ([[components lastObject] isEqualToString:@"v2.0"] || [[components lastObject] isEqualToString:@"tokens"]) {
         return @"2.0";
     } else if ([[components lastObject] isEqualToString:@"v1.1"]) {
         return @"1.1";
@@ -260,6 +261,26 @@ static NSRecursiveLock *accessDetailsLock = nil;
     } else {
         [request addRequestHeader:@"X-Auth-Key" value:@""];
     }        
+}
+
++ (void)setupV2AuthForRequest:(OpenStackRequest *)request account:(OpenStackAccount *)account apiVersion:(NSString *)apiVersion {
+    
+    request.requestMethod = @"POST";
+
+    NSString *body
+        = @"{ \"auth\": { "
+        "       \"passwordCredentials\": { "
+        "           \"username\": \"<username>\","
+        "           \"password\": \"<password>\""
+        "       }"
+        "  }}";
+    body = [body replace:@"<username>" with:account.username];
+    body = [body replace:@"<password>" with:account.apiKey];
+    
+    NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
+    [request setPostBody:[NSMutableData dataWithData:data]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    
 }
 
 + (void)setupAuthForRequest:(OpenStackRequest *)request account:(OpenStackAccount *)account apiVersion:(NSString *)apiVersion {
@@ -279,8 +300,9 @@ static NSRecursiveLock *accessDetailsLock = nil;
         
     } else if ([apiVersion isEqualToString:@"2.0"]) {
         
-        // TODO: support 2.0 auth
-        account.apiVersion = @"1.1";
+        [OpenStackRequest setupV2AuthForRequest:request account:account apiVersion:apiVersion];
+        account.apiVersion = @"2.0";
+        
     }
 }
 
@@ -475,7 +497,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
 + (RateLimit *)createServerLimit:(OpenStackAccount *)account {
     return [OpenStackRequest limitForPath:@"/servers" verb:@"POST" account:account];
 }
-
+    
 - (Server *)server {
     SBJSON *parser = [[SBJSON alloc] init];
     NSDictionary *dict = [[parser objectWithString:[self responseString]] objectForKey:@"server"];

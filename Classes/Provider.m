@@ -89,9 +89,6 @@ static NSArray *providers = nil;
     return self;
 }
 
-#pragma mark -
-#pragma mark HTTP Logo Requests
-
 - (BOOL)isRackspace {
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"rackspacecloud.com" options:NSRegularExpressionCaseInsensitive error:nil];            
     NSInteger matches = [regex numberOfMatchesInString:[self.authEndpointURL host] options:0 range:NSMakeRange(0, [[self.authEndpointURL host] length])];    
@@ -107,8 +104,7 @@ static NSArray *providers = nil;
 }
 
 
-#pragma mark -
-#pragma mark Memory Management
+#pragma mark - Memory Management
 
 - (void)dealloc {
     [name release];

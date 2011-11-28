@@ -471,7 +471,10 @@
 - (APICallback *)authenticate {
     __block OpenStackRequest *request = [OpenStackRequest authenticationRequest:self.account];
     return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
-        if ([request isSuccess]) {        
+        if ([request isSuccess]) {
+            
+            NSLog(@"api version: %@", self.account.apiVersion);
+            
             self.account.authToken = [[request responseHeaders] objectForKey:@"X-Auth-Token"];
             self.account.serversURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Server-Management-Url"]];
             self.account.filesURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Storage-Url"]];

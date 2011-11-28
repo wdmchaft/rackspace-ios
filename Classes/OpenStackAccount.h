@@ -8,14 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
-@class Provider;
-
-@class AccountManager;
+@class Provider, AccountManager;
 
 @interface OpenStackAccount : NSObject <NSCoding, NSCopying> {
     @private
     BOOL serversUnarchived;
 }
+
+// an account has services
+// services has endpoints OpenStackService
+// endpoints have versions
+// OpenStackService: type, name, version, url
 
 @property (nonatomic, assign) BOOL hasBeenRefreshed;
 @property (nonatomic, retain) NSString *uuid;
