@@ -112,7 +112,11 @@
         
         [self.activityIndicatorView removeFromSuperview];
         if ([request responseStatusCode] == 401) {
-            [self alert:@"Authentication failed.  Please check your User Name and API Key." request:request];
+            if (!customProvider) {
+                [self alert:@"Authentication failed.  Please check your User Name and Password." request:request];
+            } else {
+                [self alert:@"Authentication failed.  Please check your User Name and API Key." request:request];
+            }
         } else {
             [self failOnBadConnection];
         }
@@ -244,7 +248,11 @@
             
         } else if (indexPath.row == kAPIKey) {
             
-            cell = [self textCell:@"API Key" textField:&apiKeyTextField secure:YES returnKeyType:UIReturnKeyDone];
+            if (!customProvider) {
+                cell = [self textCell:@"Password" textField:&apiKeyTextField secure:YES returnKeyType:UIReturnKeyDone];
+            } else {
+                cell = [self textCell:@"API Key" textField:&apiKeyTextField secure:YES returnKeyType:UIReturnKeyDone];
+            }
             
         }
         
