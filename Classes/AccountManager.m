@@ -26,6 +26,7 @@
 #import "LoadBalancerRequest.h"
 #import "APICallback.h"
 #import "Analytics.h"
+#import "SBJSON.h"
 
 
 @implementation AccountManager
@@ -475,10 +476,53 @@
             
             NSLog(@"api version: %@", self.account.apiVersion);
             
-            self.account.authToken = [[request responseHeaders] objectForKey:@"X-Auth-Token"];
-            self.account.serversURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Server-Management-Url"]];
-            self.account.filesURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Storage-Url"]];
-            self.account.cdnURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Cdn-Management-Url"]];
+            if ([self.account.apiVersion isEqualToString:@"2.0"]) {
+                
+                // API version 2.0 style auth response
+                
+                SBJSON *parser = [[SBJSON alloc] init];
+                NSDictionary *jsonObject = [[parser objectWithString:[request responseString]] objectForKey:@"access"];
+                [parser release];
+
+                self.account.authToken = [[jsonObject objectForKey:@"token"] objectForKey:@"id"];
+                
+                NSArray *services = [jsonObject objectForKey:@"serviceCatalog"];
+                
+                for (NSDictionary *service in services) {
+                    
+                    if ([[service valueForKey:@"type"] isEqualToString:@"compute"]) {
+                        
+                        NSDictionary *endpoint = [[service valueForKey:@"endpoints"] objectAtIndex:0];                        
+                        self.account.serversURL = [NSURL URLWithString:[endpoint valueForKey:@"publicURL"]];
+                        
+                    } else if ([[service valueForKey:@"type"] isEqualToString:@"object-store"]) {
+                     
+                        if ([[service valueForKey:@"name"] isEqualToString:@"cloudFiles"]) {
+                            
+                            NSDictionary *endpoint = [[service valueForKey:@"endpoints"] objectAtIndex:0];                        
+                            self.account.filesURL = [NSURL URLWithString:[endpoint valueForKey:@"publicURL"]];
+                        
+                        } else if ([[service valueForKey:@"name"] isEqualToString:@"cloudFilesCDN"]) {
+                        
+                            NSDictionary *endpoint = [[service valueForKey:@"endpoints"] objectAtIndex:0];                        
+                            self.account.cdnURL = [NSURL URLWithString:[endpoint valueForKey:@"publicURL"]];
+
+                        }
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                // API version 1.0 style auth response
+                
+                self.account.authToken = [[request responseHeaders] objectForKey:@"X-Auth-Token"];
+                self.account.serversURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Server-Management-Url"]];
+                self.account.filesURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Storage-Url"]];
+                self.account.cdnURL = [NSURL URLWithString:[[request responseHeaders] objectForKey:@"X-Cdn-Management-Url"]];
+
+            }
             
             [self.account persist];
         }
