@@ -61,6 +61,7 @@
 - (NSString *)loadBalancerEndpointForRegion:(NSString *)region;
 - (NSString *)loadBalancerRegionForEndpoint:(NSString *)endpoint;
 - (NSString *)accountNumber;
+- (BOOL)usesHumanPassword;
 
 - (NSArray *)sortedServers;
 - (NSArray *)sortedImages;

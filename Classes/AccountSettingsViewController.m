@@ -136,7 +136,11 @@
                 break;
                 
             case kAPIKey:
-                cell.textLabel.text = @"API Key";
+                if ([self.account usesHumanPassword]) {
+                    cell.textLabel.text = @"Password";                    
+                } else {
+                    cell.textLabel.text = @"API Key";
+                }
                 apiKeyTextField = cell.textField;
                 apiKeyTextField.secureTextEntry = YES;
                 apiKeyTextField.delegate = self;

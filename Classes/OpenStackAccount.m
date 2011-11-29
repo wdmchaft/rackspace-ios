@@ -381,6 +381,10 @@ static NSMutableDictionary *timers = nil;
     return accountNumber;
 }
 
+- (BOOL)usesHumanPassword {
+    return [self.apiVersion isEqualToString:@"2.0"];
+}
+
 - (NSString *)loadBalancerEndpointForRegion:(NSString *)region {
     NSString *accountNumber = [self accountNumber];
     if ([self.provider isRackspaceUS]) {
