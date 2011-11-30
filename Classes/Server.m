@@ -124,7 +124,7 @@
 }
 
 - (NSString *)toJSON:(NSString *)apiVersion {
-    BOOL version1 = [apiVersion isEqualToString:@"1.0"];
+    BOOL version1 = ![apiVersion isEqualToString:@"1.1"];
     
     NSString *json
         = @"{ \"server\": { "
@@ -191,8 +191,7 @@
 	return ([self.status isEqualToString:@"BUILD"] || [self.status isEqualToString:@"UNKNOWN"] || [self.status isEqualToString:@"RESIZE"] || [self.status isEqualToString:@"QUEUE_RESIZE"] || [self.status isEqualToString:@"PREP_RESIZE"] || [self.status isEqualToString:@"REBUILD"] || [self.status isEqualToString:@"REBOOT"] || [self.status isEqualToString:@"HARD_REBOOT"]);
 }
 
-#pragma mark -
-#pragma mark Setters
+#pragma mark - Setters
 
 - (void)setFlavor:(Flavor *)aFlavor {
     if (aFlavor) {
@@ -207,7 +206,7 @@
         for (OpenStackAccount *account in [OpenStackAccount accounts]) {
             Image *i = [account.images objectForKey:self.imageId];
             if (i) {
-                image = i;
+                self.image = i;
                 break;
             }
         }

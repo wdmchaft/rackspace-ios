@@ -10,11 +10,11 @@
 
 @class OpenStackRequest, LogEntryModalViewController;
 
-@interface ErrorAlerter : NSObject {
-    OpenStackRequest *failedRequest;
-    LogEntryModalViewController *logEntryModalViewController;
-    UIViewController *viewController;
-}
+@interface ErrorAlerter : NSObject
+
+@property (nonatomic, retain) OpenStackRequest *failedRequest;
+@property (nonatomic, retain) LogEntryModalViewController *logEntryModalViewController;
+@property (nonatomic, retain) UIViewController *viewController;
 
 - (void)alert:(NSString *)message request:(OpenStackRequest *)request viewController:(UIViewController *)viewController;
 

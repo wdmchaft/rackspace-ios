@@ -151,11 +151,11 @@
                 
                 if (failureCount > 0) {
                     if (nodeCount == 1) {                        
-                        [self alert:@"There was a problem creating your Cloud Server." request:request];
+                        [self.serversViewController alert:@"There was a problem creating your Cloud Server." request:request];
                     } else if (failureCount == nodeCount) {
-                        [self alert:@"There was a problem creating your Cloud Servers." request:request];
+                        [self.serversViewController alert:@"There was a problem creating your Cloud Servers." request:request];
                     } else {
-                        [self alert:[NSString stringWithFormat:@"There was a problem creating %i of your Cloud Servers.", failureCount] request:request];
+                        [self.serversViewController alert:[NSString stringWithFormat:@"There was a problem creating %i of your Cloud Servers.", failureCount] request:request];
                     }
                 }
             }
@@ -184,11 +184,11 @@
                 
                 if (failureCount > 0) {
                     if (nodeCount == 1) {
-                        [self alert:@"There was a problem creating your Cloud Server." request:request];
+                        [self.serversViewController alert:@"There was a problem creating your Cloud Server." request:request];
                     } else if (failureCount == nodeCount) {
-                        [self alert:@"There was a problem creating your Cloud Servers." request:request];
+                        [self.serversViewController alert:@"There was a problem creating your Cloud Servers." request:request];
                     } else {
-                        [self alert:[NSString stringWithFormat:@"There was a problem creating %i of your Cloud Server.", failureCount] request:request];
+                        [self.serversViewController alert:[NSString stringWithFormat:@"There was a problem creating %i of your Cloud Server.", failureCount] request:request];
                     }
                 }
             }
@@ -612,9 +612,9 @@
     return NO;
 }
 
-#pragma mark -
-#pragma mark Error Alert
+#pragma mark - Error Alert
 
+/*
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) { // details button
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -641,9 +641,9 @@
         [alert release];        
     }
 }
- 
-#pragma mark -
-#pragma mark Memory management
+*/ 
+
+#pragma mark - Memory management
 
 - (void)dealloc {
     [account release];

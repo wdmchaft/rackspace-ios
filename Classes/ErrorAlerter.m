@@ -15,19 +15,20 @@
 
 @implementation ErrorAlerter
 
+@synthesize failedRequest, logEntryModalViewController, viewController;
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) { // details button
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            logEntryModalViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+            self.logEntryModalViewController.modalPresentationStyle = UIModalPresentationFormSheet;
         }                
-        [viewController presentModalViewController:logEntryModalViewController animated:YES];
-        [logEntryModalViewController release];
+        [self.viewController presentModalViewController:self.logEntryModalViewController animated:YES];
     }
 }
 
 - (void)alert:(NSString *)message request:(OpenStackRequest *)request viewController:(UIViewController *)aViewController {
     
-    viewController = aViewController;
+    self.viewController = aViewController;
 
     NSString *title = @"Error";
     if (request.responseStatusCode == 0) {
@@ -35,12 +36,12 @@
         message = @"Please check your connection or API URL and try again.";
     }
 
-    logEntryModalViewController = [[LogEntryModalViewController alloc] initWithNibName:@"LogEntryModalViewController" bundle:nil];
-    logEntryModalViewController.logEntry = [[[APILogEntry alloc] initWithRequest:request] autorelease];
-    logEntryModalViewController.requestDescription = [logEntryModalViewController.logEntry requestDescription];
-    logEntryModalViewController.responseDescription = [logEntryModalViewController.logEntry responseDescription];
-    logEntryModalViewController.requestMethod = [logEntryModalViewController.logEntry requestMethod];
-    logEntryModalViewController.url = [[logEntryModalViewController.logEntry url] description];
+    self.logEntryModalViewController = [[LogEntryModalViewController alloc] initWithNibName:@"LogEntryModalViewController" bundle:nil];
+    self.logEntryModalViewController.logEntry = [[[APILogEntry alloc] initWithRequest:request] autorelease];
+    self.logEntryModalViewController.requestDescription = [self.logEntryModalViewController.logEntry requestDescription];
+    self.logEntryModalViewController.responseDescription = [self.logEntryModalViewController.logEntry responseDescription];
+    self.logEntryModalViewController.requestMethod = [self.logEntryModalViewController.logEntry requestMethod];
+    self.logEntryModalViewController.url = [[self.logEntryModalViewController.logEntry url] description];
     
     // present an alert with a Details button to show the API log entry
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:@"Details", nil];
@@ -48,5 +49,11 @@
     [alert release];        
 }
 
+- (void)dealloc {
+    [failedRequest release];
+    [logEntryModalViewController release];
+    [viewController release];
+    [super dealloc];
+}
 
 @end
