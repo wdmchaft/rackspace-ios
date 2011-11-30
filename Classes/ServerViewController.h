@@ -38,8 +38,6 @@
     Server *server;
     OpenStackAccount *account;
     IBOutlet UITableView *tableView;
-    NSString *selectedIPAddress;
-    NSIndexPath *selectedIPAddressIndexPath;
     BOOL actionsExpanded;
     AnimatedProgressView *progressView;
     
@@ -84,6 +82,8 @@
 @property (nonatomic, retain) ServersViewController *serversViewController;
 @property (nonatomic, retain) NSIndexPath *selectedServerIndexPath;
 @property (nonatomic, retain) AccountHomeViewController *accountHomeViewController;
+@property (nonatomic, retain) NSString *selectedIPAddress;
+
 
 - (void)refreshLimitStrings;
 - (void)pollServer;

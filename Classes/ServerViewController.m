@@ -38,7 +38,7 @@
 
 @implementation ServerViewController
 
-@synthesize server, account, tableView, selectedIPAddressIndexPath, serversViewController, selectedServerIndexPath, accountHomeViewController;
+@synthesize server, account, tableView, selectedIPAddressIndexPath, serversViewController, selectedServerIndexPath, accountHomeViewController, selectedIPAddress;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 
@@ -290,9 +290,9 @@
     UIApplication *application = [UIApplication sharedApplication];
     NSURL *url = [NSURL URLWithString:@"ssh://123.123.123.123"];
     if ([application canOpenURL:url]) {
-        ipAddressActionSheet = [[UIActionSheet alloc] initWithTitle:selectedIPAddress delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Ping IP Address", @"Copy to Pasteboard", @"Open in Safari", @"Open in SSH Client", nil];
+        ipAddressActionSheet = [[UIActionSheet alloc] initWithTitle:self.selectedIPAddress delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Ping IP Address", @"Copy to Pasteboard", @"Open in Safari", @"Open in SSH Client", nil];
     } else {
-        ipAddressActionSheet = [[UIActionSheet alloc] initWithTitle:selectedIPAddress delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Ping IP Address", @"Copy to Pasteboard", @"Open in Safari", nil];    
+        ipAddressActionSheet = [[UIActionSheet alloc] initWithTitle:self.selectedIPAddress delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Ping IP Address", @"Copy to Pasteboard", @"Open in Safari", nil];    
     }
     
     rebootActionSheet = [[UIActionSheet alloc] initWithTitle:@"A soft reboot performs a graceful shutdown of your system.  A hard reboot is the equivalent of unplugging your server." delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Perform Hard Reboot" otherButtonTitles:@"Perform Soft Reboot", nil];
@@ -632,20 +632,20 @@
         NSArray *privateIPs = [server.addresses objectForKey:@"private"];
         if (indexPath.row < [publicIPs count]) {
             if ([[publicIPs objectAtIndex:indexPath.row] isKindOfClass:[NSString class]]) {
-                selectedIPAddress = [publicIPs objectAtIndex:indexPath.row];
+                self.selectedIPAddress = [publicIPs objectAtIndex:indexPath.row];
             } else {
-                selectedIPAddress = [[publicIPs objectAtIndex:indexPath.row] objectForKey:@"addr"];
+                self.selectedIPAddress = [[publicIPs objectAtIndex:indexPath.row] objectForKey:@"addr"];
             }
         } else {
             if ([[privateIPs objectAtIndex:[publicIPs count] - indexPath.row] isKindOfClass:[NSString class]]) {
-                selectedIPAddress = [privateIPs objectAtIndex:[publicIPs count] - indexPath.row];
+                self.selectedIPAddress = [privateIPs objectAtIndex:[publicIPs count] - indexPath.row];
             } else {
-                selectedIPAddress = [[privateIPs objectAtIndex:[publicIPs count] - indexPath.row] objectForKey:@"addr"];
+                self.selectedIPAddress = [[privateIPs objectAtIndex:[publicIPs count] - indexPath.row] objectForKey:@"addr"];
             }
         }
-        selectedIPAddressIndexPath = indexPath;
+        self.selectedIPAddressIndexPath = indexPath;
 
-        ipAddressActionSheet.title = selectedIPAddress;
+        ipAddressActionSheet.title = self.selectedIPAddress;
         [ipAddressActionSheet showInView:self.view];
     } else if (indexPath.section == kActions) {
         if (indexPath.row == kActionsRow) {
@@ -861,35 +861,35 @@
     if ([actionSheet isEqual:ipAddressActionSheet]) {
 
         UIApplication *application = [UIApplication sharedApplication];
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"ssh://%@", selectedIPAddress]];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"ssh://%@", self.selectedIPAddress]];
         
         if (buttonIndex == 0) { // Ping IP Address
             
             TrackEvent(CATEGORY_SERVER, EVENT_PINGED);
             
-            PingIPAddressViewController *vc = [[PingIPAddressViewController alloc] initWithNibName:@"PingIPAddressViewController" bundle:nil ipAddress:selectedIPAddress];
+            PingIPAddressViewController *vc = [[PingIPAddressViewController alloc] initWithNibName:@"PingIPAddressViewController" bundle:nil ipAddress:self.selectedIPAddress];
             vc.serverViewController = self;
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                 vc.modalPresentationStyle = UIModalPresentationPageSheet;
             }                
             [self.navigationController presentModalViewController:vc animated:YES];
             [vc release];
-            [self.tableView deselectRowAtIndexPath:selectedIPAddressIndexPath animated:YES];
+            [self.tableView deselectRowAtIndexPath:self.selectedIPAddressIndexPath animated:YES];
         } else if (buttonIndex == 1) { // Copy to Pasteboard
             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-            [pasteboard setString:selectedIPAddress];
-            [self.tableView deselectRowAtIndexPath:selectedIPAddressIndexPath animated:YES];
+            [pasteboard setString:self.selectedIPAddress];
+            [self.tableView deselectRowAtIndexPath:self.selectedIPAddressIndexPath animated:YES];
         } else if (buttonIndex == 2) {
             UIApplication *application = [UIApplication sharedApplication];
-            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", selectedIPAddress]];
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", self.selectedIPAddress]];
             if ([application canOpenURL:url]) {
                 [application openURL:url];
             }
-            [self.tableView deselectRowAtIndexPath:selectedIPAddressIndexPath animated:YES];
+            [self.tableView deselectRowAtIndexPath:self.selectedIPAddressIndexPath animated:YES];
         } else if (buttonIndex == 3 && [application canOpenURL:url]) {
             [application openURL:url];
         } else {
-            [self.tableView deselectRowAtIndexPath:selectedIPAddressIndexPath animated:YES];
+            [self.tableView deselectRowAtIndexPath:self.selectedIPAddressIndexPath animated:YES];
         }
     } else if ([actionSheet isEqual:rebootActionSheet]) {
         [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:kReboot inSection:kActions] animated:YES];
@@ -1016,6 +1016,7 @@
     [progressView release];
     [actionsArrow release];
     [accountHomeViewController release];
+    [selectedIPAddress release];
     [super dealloc];
 }
 
