@@ -66,7 +66,7 @@
     } else {
         contactRow = -1;
     }
-    if ([self.account.apiVersion isEqualToString:@"1.0"]) {
+    if (![self.account.apiVersion isEqualToString:@"1.1"]) {
         limitsRow = totalRows++;
     } else {
         limitsRow = -1;

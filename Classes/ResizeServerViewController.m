@@ -43,7 +43,7 @@
         } failure:^(OpenStackRequest *request) {
             
             [self.serverViewController hideToolbarActivityMessage];
-            [self alert:@"There was a problem resizing this server." request:request];
+            [self.serverViewController alert:@"There was a problem resizing this server." request:request];
 
         }];
         

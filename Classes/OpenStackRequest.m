@@ -508,7 +508,7 @@ static NSRecursiveLock *accessDetailsLock = nil;
 
 + (OpenStackRequest *)resizeServerRequest:(OpenStackAccount *)account server:(Server *)server flavor:(Flavor *)flavor {
 	NSString *body;
-    if ([account.apiVersion isEqualToString:@"1.0"]) {
+    if (![account.apiVersion isEqualToString:@"1.1"]) {
         body = [NSString stringWithFormat:@"{ \"resize\": { \"flavorId\": %@ } }", flavor.identifier];
     } else {
         body = [NSString stringWithFormat:@"{ \"resize\": { \"flavorRef\": %@ } }", flavor.identifier];

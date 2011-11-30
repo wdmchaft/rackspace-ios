@@ -604,44 +604,12 @@
     }
 }
 
-#pragma mark -
-#pragma mark Text Field Delegate
+#pragma mark - Text Field Delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return NO;
 }
-
-#pragma mark - Error Alert
-
-/*
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) { // details button
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            self.logEntryModalViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-        }                
-        [self.serversViewController presentModalViewController:self.logEntryModalViewController animated:YES];
-    }
-}
-
-- (void)alert:(NSString *)message request:(OpenStackRequest *)request {
-    if (request.responseStatusCode == 0) {
-        [self failOnBadConnection];
-    } else {
-        self.logEntryModalViewController = [[[LogEntryModalViewController alloc] initWithNibName:@"LogEntryModalViewController" bundle:nil] autorelease];
-        self.logEntryModalViewController.logEntry = [[[APILogEntry alloc] initWithRequest:request] autorelease];
-        self.logEntryModalViewController.requestDescription = [self.logEntryModalViewController.logEntry requestDescription];
-        self.logEntryModalViewController.responseDescription = [self.logEntryModalViewController.logEntry responseDescription];
-        self.logEntryModalViewController.requestMethod = [self.logEntryModalViewController.logEntry requestMethod];
-        self.logEntryModalViewController.url = [[self.logEntryModalViewController.logEntry url] description];
-        
-        // present an alert with a Details button to show the API log entry
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:@"Details", nil];
-        [alert show];
-        [alert release];        
-    }
-}
-*/ 
 
 #pragma mark - Memory management
 
