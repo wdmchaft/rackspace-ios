@@ -42,7 +42,7 @@
 
 @implementation ConfigureLoadBalancerViewController
 
-@synthesize account, loadBalancer, loadBalancerViewController;
+@synthesize account, loadBalancer, loadBalancerViewController, selectedVIPIndexPath;
 
 - (id)initWithAccount:(OpenStackAccount *)a loadBalancer:(LoadBalancer *)lb {
     self = [super initWithStyle:UITableViewStyleGrouped];
@@ -60,6 +60,7 @@
     [deleteActionSheet release];
     [ipActionSheet release];
     [loadBalancerViewController release];
+    [selectedVIPIndexPath release];
     [super dealloc];
 }
 
@@ -268,7 +269,7 @@
     if (indexPath.section == kVirtualIPsSection) {
         VirtualIP *vip = [self.loadBalancer.virtualIPs objectAtIndex:indexPath.row];
         selectedVirtualIP = vip;
-        selectedVIPIndexPath = indexPath;        
+        self.selectedVIPIndexPath = indexPath;        
         ipActionSheet.title = vip.address;
         [ipActionSheet showInView:self.view];
     } else if (indexPath.section == kNodesSection) {
@@ -321,7 +322,7 @@
         } else if (buttonIndex == 1) { // copy to pasteboard
             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
             [pasteboard setString:selectedVirtualIP.address];
-            [self.tableView deselectRowAtIndexPath:selectedVIPIndexPath animated:YES];
+            [self.tableView deselectRowAtIndexPath:self.selectedVIPIndexPath animated:YES];
         } else if (buttonIndex == 2) { // open in safari
             UIApplication *application = [UIApplication sharedApplication];
             NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", selectedVirtualIP.address]];
@@ -329,7 +330,7 @@
                 [application openURL:url];
             }
         }
-        [self.tableView deselectRowAtIndexPath:selectedVIPIndexPath animated:YES];
+        [self.tableView deselectRowAtIndexPath:self.selectedVIPIndexPath animated:YES];
     }
 }
 

@@ -14,7 +14,6 @@
 @private
     NSDictionary *algorithmNames;
     VirtualIP *selectedVirtualIP;
-    NSIndexPath *selectedVIPIndexPath;
     UIActionSheet *deleteActionSheet;
     UIActionSheet *ipActionSheet;
 }
@@ -22,6 +21,7 @@
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) LoadBalancer *loadBalancer;
 @property (nonatomic, retain) LoadBalancerViewController *loadBalancerViewController;
+@property (nonatomic, retain) NSIndexPath *selectedVIPIndexPath;
 
 - (id)initWithAccount:(OpenStackAccount *)account loadBalancer:(LoadBalancer *)loadBalancer;
 

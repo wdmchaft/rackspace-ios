@@ -84,7 +84,7 @@
 
         } failure:^(OpenStackRequest *request) {
             
-            [self alert:@"Error" message:@"There was a problem retrieving the backup schedule."];
+            [self.serverViewController alert:@"Error" message:@"There was a problem retrieving the backup schedule."];
             [activityIndicatorView removeFromSuperviewAndRelease];
 
         }];
@@ -205,7 +205,7 @@
     } failure:^(OpenStackRequest *request) {
         
         [self.serverViewController hideToolbarActivityMessage];
-        [self alert:@"There was a problem updating your backup schedule." request:request];        
+        [self.serverViewController alert:@"There was a problem updating your backup schedule." request:request];        
         
     }];
     
