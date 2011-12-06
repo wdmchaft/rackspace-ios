@@ -300,10 +300,20 @@
     if (actionSheet == deleteActionSheet) {
         if (buttonIndex == 0) {            
             [[self.account.manager deleteLoadBalancer:self.loadBalancer] success:^(OpenStackRequest *request) {                
-                LoadBalancersViewController *vc = [[self.loadBalancerViewController.navigationController viewControllers] objectAtIndex:2];                
-                [vc refreshButtonPressed:nil];
-                [self dismissModalViewControllerAnimated:YES];
-                [self.loadBalancerViewController.navigationController popToViewController:vc animated:YES];
+                
+                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                
+                    LoadBalancersViewController *vc = [[self.loadBalancerViewController.navigationController viewControllers] objectAtIndex:2];                
+                    [vc refreshButtonPressed:nil];
+                    [self dismissModalViewControllerAnimated:YES];
+                    [self.loadBalancerViewController.navigationController popToViewController:vc animated:YES];
+
+                } else {
+                    
+                    [self dismissModalViewControllerAnimated:YES];
+
+                }
+                
             } failure:^(OpenStackRequest *request) {
                 [self alert:@"There was a problem deleting the load balancer." request:request];
             }];
