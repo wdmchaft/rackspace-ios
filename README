@@ -5,4 +5,3 @@ To enable HopToad and Google Analytics Tracking:
 2) For HopToad, add the key HOPTOAD_ACCOUNT_KEY and your account key as the value
 3) For Google Analytics, add the key ANALYTICS_ACCOUNT_KEY and your account key as the value
  
-
