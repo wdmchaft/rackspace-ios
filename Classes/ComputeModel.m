@@ -29,8 +29,7 @@
     return self;
 }
 
-#pragma mark -
-#pragma mark JSON Parsing
+#pragma mark - JSON Parsing
 
 - (id)initWithJSONDict:(NSDictionary *)dict {
     if (self = [super init]) {
@@ -56,8 +55,7 @@
     return date;
 }
 
-#pragma mark -
-#pragma mark Date Parser
+#pragma mark - Date Parser
 
 + (NSDate *)dateFromString:(NSString *)dateString {
     return nil; // temporarily removing date parsing for performance

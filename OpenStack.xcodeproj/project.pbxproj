@@ -983,6 +983,10 @@
 		27F10F4113391C3000F8674C /* NameAndStatusTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F10F3D13391C3000F8674C /* NameAndStatusTitleView.m */; };
 		27F10F4D1339316000F8674C /* DDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F10F4A1339316000F8674C /* DDProgressView.m */; };
 		27F10F4E1339316000F8674C /* DDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F10F4A1339316000F8674C /* DDProgressView.m */; };
+		27F4782614972267006B4AAF /* RSDomain.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782414972267006B4AAF /* RSDomain.h */; };
+		27F4782714972267006B4AAF /* RSDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782514972267006B4AAF /* RSDomain.m */; };
+		27F4782E14972286006B4AAF /* RSRecord.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782C14972286006B4AAF /* RSRecord.h */; };
+		27F4782F14972286006B4AAF /* RSRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782D14972286006B4AAF /* RSRecord.m */; };
 		27F73E05125F73B2002C6CB0 /* ServersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F73E02125F73B2002C6CB0 /* ServersViewController.m */; };
 		27F73E06125F73B2002C6CB0 /* ServersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27F73E03125F73B2002C6CB0 /* ServersViewController.xib */; };
 		27F73E0B125F73B9002C6CB0 /* AddServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F73E08125F73B9002C6CB0 /* AddServerViewController.m */; };
@@ -1637,6 +1641,10 @@
 		27F10F3D13391C3000F8674C /* NameAndStatusTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NameAndStatusTitleView.m; sourceTree = "<group>"; };
 		27F10F491339316000F8674C /* DDProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDProgressView.h; sourceTree = "<group>"; };
 		27F10F4A1339316000F8674C /* DDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDProgressView.m; sourceTree = "<group>"; };
+		27F4782414972267006B4AAF /* RSDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSDomain.h; sourceTree = "<group>"; };
+		27F4782514972267006B4AAF /* RSDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDomain.m; sourceTree = "<group>"; };
+		27F4782C14972286006B4AAF /* RSRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSRecord.h; sourceTree = "<group>"; };
+		27F4782D14972286006B4AAF /* RSRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSRecord.m; sourceTree = "<group>"; };
 		27F73E01125F73B2002C6CB0 /* ServersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServersViewController.h; sourceTree = "<group>"; };
 		27F73E02125F73B2002C6CB0 /* ServersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServersViewController.m; sourceTree = "<group>"; };
 		27F73E03125F73B2002C6CB0 /* ServersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServersViewController.xib; sourceTree = "<group>"; };
@@ -1883,6 +1891,7 @@
 				2797545F1256B9A200D7A533 /* Compute */,
 				279754601256B9A800D7A533 /* Storage */,
 				27551BF5130336AE0004994F /* Load Balancing */,
+				27F4782214972204006B4AAF /* DNS */,
 			);
 			name = "Remote Models";
 			sourceTree = "<group>";
@@ -3033,6 +3042,17 @@
 			name = DDProgressView;
 			sourceTree = "<group>";
 		};
+		27F4782214972204006B4AAF /* DNS */ = {
+			isa = PBXGroup;
+			children = (
+				27F4782414972267006B4AAF /* RSDomain.h */,
+				27F4782514972267006B4AAF /* RSDomain.m */,
+				27F4782C14972286006B4AAF /* RSRecord.h */,
+				27F4782D14972286006B4AAF /* RSRecord.m */,
+			);
+			name = DNS;
+			sourceTree = "<group>";
+		};
 		27F7445D12611316002C6CB0 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -4140,6 +4160,10 @@
 				27DADC1613B94D6C00F9E906 /* LBNodeViewController.m in Sources */,
 				27DC5DD813CB8F0F00091902 /* LoadBalancerConnectionThrottle.m in Sources */,
 				27B1BBC2146C32B700FAC8E5 /* GANTracker.h in Sources */,
+				27F4782614972267006B4AAF /* RSDomain.h in Sources */,
+				27F4782714972267006B4AAF /* RSDomain.m in Sources */,
+				27F4782E14972286006B4AAF /* RSRecord.h in Sources */,
+				27F4782F14972286006B4AAF /* RSRecord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
