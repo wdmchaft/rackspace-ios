@@ -112,11 +112,7 @@
         
         [self.activityIndicatorView removeFromSuperview];
         if ([request responseStatusCode] == 401) {
-            if (!customProvider) {
-                [self alert:@"Authentication failed.  Please check your User Name and Password." request:request];
-            } else {
-                [self alert:@"Authentication failed.  Please check your User Name and API Key." request:request];
-            }
+            [self alert:@"Authentication failed.  Please check your login credentials." request:request];
         } else {
             [self failOnBadConnection];
         }

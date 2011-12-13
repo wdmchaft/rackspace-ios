@@ -24,6 +24,7 @@
 #import "GetFlavorsRequest.h"
 #import "LoadBalancer.h"
 #import "LoadBalancerRequest.h"
+#import "DNSRequest.h"
 #import "APICallback.h"
 #import "Analytics.h"
 #import "SBJSON.h"
@@ -526,6 +527,33 @@
             
             [self.account persist];
         }
+    }];
+}
+
+#pragma mark - DNS
+
+- (APICallback *)getDomains {
+    __block DNSRequest *request = [DNSRequest getDomainsRequest:self.account];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+        
+        
+        NSLog(@"domains response: %@", [request responseString]);
+        
+        /*
+        if (!self.account.loadBalancers) {
+            self.account.loadBalancers = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
+        }
+        
+        NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers:self.account];
+        
+        for (NSString *identifier in lbs) {
+            LoadBalancer *lb = [lbs objectForKey:identifier];
+            lb.region = [self.account loadBalancerRegionForEndpoint:endpoint];
+        }
+        
+        [self.account.loadBalancers setObject:lbs forKey:endpoint];
+        [self.account persist];
+         */
     }];
 }
 

@@ -89,7 +89,7 @@
 				break;				
 			case 401:
 				title = @"Authentication Failure";
-				errorMessage = @"Please check your User Name and API Key.";
+				errorMessage = @"Please check your login credentials.";
 				break;
 			case 409:
 				errorMessage = @"Your server cannot be renamed at the moment because it is currently building.";

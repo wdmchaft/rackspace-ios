@@ -55,6 +55,7 @@
     computeRow = (self.account.serversURL && [self.account.serversURL host]) ? totalRows++ : -1;
     storageRow = (self.account.filesURL && [self.account.filesURL host]) ? totalRows++ : -1;
     loadBalancingRow = [self.account loadBalancerURLs] ? totalRows++ : -1;
+    dnsRow = [self.account dnsURL] ? totalRows++ : -1;
 
     if (self.account.provider.rssFeeds && [self.account.provider.rssFeeds count] > 0) {
         rssFeedsRow = totalRows++;
@@ -119,6 +120,12 @@
         
         cell.textLabel.text = @"Load Balancers";
         cell.imageView.image = [UIImage imageNamed:@"load-balancers-icon.png"];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+    } else if (indexPath.row == dnsRow) {
+        
+        cell.textLabel.text = @"Cloud DNS";
+        cell.imageView.image = nil;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
     } else if (indexPath.row == rssFeedsRow) {

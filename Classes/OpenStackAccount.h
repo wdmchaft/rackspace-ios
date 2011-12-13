@@ -58,6 +58,8 @@
 - (NSArray *)loadBalancerURLs;
 - (NSArray *)loadBalancerRegions;
 
+- (NSString *)dnsURL;
+
 - (NSString *)loadBalancerEndpointForRegion:(NSString *)region;
 - (NSString *)loadBalancerRegionForEndpoint:(NSString *)endpoint;
 - (NSString *)accountNumber;

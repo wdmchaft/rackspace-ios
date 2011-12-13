@@ -987,6 +987,18 @@
 		27F4782714972267006B4AAF /* RSDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782514972267006B4AAF /* RSDomain.m */; };
 		27F4782E14972286006B4AAF /* RSRecord.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782C14972286006B4AAF /* RSRecord.h */; };
 		27F4782F14972286006B4AAF /* RSRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782D14972286006B4AAF /* RSRecord.m */; };
+		27F4783214972750006B4AAF /* RSDNSJob.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4783014972750006B4AAF /* RSDNSJob.h */; };
+		27F4783314972750006B4AAF /* RSDNSJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4783114972750006B4AAF /* RSDNSJob.m */; };
+		27F47837149731A0006B4AAF /* DNSRequest.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F47835149731A0006B4AAF /* DNSRequest.h */; };
+		27F47838149731A0006B4AAF /* DNSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F47836149731A0006B4AAF /* DNSRequest.m */; };
+		27F478391497323C006B4AAF /* RSDomain.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782414972267006B4AAF /* RSDomain.h */; };
+		27F4783A1497323C006B4AAF /* RSDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782514972267006B4AAF /* RSDomain.m */; };
+		27F4783B1497323C006B4AAF /* RSRecord.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782C14972286006B4AAF /* RSRecord.h */; };
+		27F4783C1497323C006B4AAF /* RSRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782D14972286006B4AAF /* RSRecord.m */; };
+		27F4783D1497323C006B4AAF /* RSDNSJob.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4783014972750006B4AAF /* RSDNSJob.h */; };
+		27F4783E1497323C006B4AAF /* RSDNSJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4783114972750006B4AAF /* RSDNSJob.m */; };
+		27F4783F14973247006B4AAF /* DNSRequest.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F47835149731A0006B4AAF /* DNSRequest.h */; };
+		27F4784014973247006B4AAF /* DNSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F47836149731A0006B4AAF /* DNSRequest.m */; };
 		27F73E05125F73B2002C6CB0 /* ServersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F73E02125F73B2002C6CB0 /* ServersViewController.m */; };
 		27F73E06125F73B2002C6CB0 /* ServersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27F73E03125F73B2002C6CB0 /* ServersViewController.xib */; };
 		27F73E0B125F73B9002C6CB0 /* AddServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F73E08125F73B9002C6CB0 /* AddServerViewController.m */; };
@@ -1645,6 +1657,10 @@
 		27F4782514972267006B4AAF /* RSDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDomain.m; sourceTree = "<group>"; };
 		27F4782C14972286006B4AAF /* RSRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSRecord.h; sourceTree = "<group>"; };
 		27F4782D14972286006B4AAF /* RSRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSRecord.m; sourceTree = "<group>"; };
+		27F4783014972750006B4AAF /* RSDNSJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSDNSJob.h; sourceTree = "<group>"; };
+		27F4783114972750006B4AAF /* RSDNSJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDNSJob.m; sourceTree = "<group>"; };
+		27F47835149731A0006B4AAF /* DNSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = DNSRequest.h; sourceTree = "<group>"; };
+		27F47836149731A0006B4AAF /* DNSRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DNSRequest.m; sourceTree = "<group>"; };
 		27F73E01125F73B2002C6CB0 /* ServersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServersViewController.h; sourceTree = "<group>"; };
 		27F73E02125F73B2002C6CB0 /* ServersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServersViewController.m; sourceTree = "<group>"; };
 		27F73E03125F73B2002C6CB0 /* ServersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServersViewController.xib; sourceTree = "<group>"; };
@@ -1904,6 +1920,7 @@
 				2788958512C4769D006448E2 /* Compute */,
 				2788958612C476A3006448E2 /* Object Storage */,
 				27551DB9130486B20004994F /* Load Balancing */,
+				27F4783414973183006B4AAF /* DNS */,
 				27F73E0D125F73EE002C6CB0 /* OpenStackRequest.h */,
 				27F73E0E125F73EE002C6CB0 /* OpenStackRequest.m */,
 			);
@@ -3049,6 +3066,17 @@
 				27F4782514972267006B4AAF /* RSDomain.m */,
 				27F4782C14972286006B4AAF /* RSRecord.h */,
 				27F4782D14972286006B4AAF /* RSRecord.m */,
+				27F4783014972750006B4AAF /* RSDNSJob.h */,
+				27F4783114972750006B4AAF /* RSDNSJob.m */,
+			);
+			name = DNS;
+			sourceTree = "<group>";
+		};
+		27F4783414973183006B4AAF /* DNS */ = {
+			isa = PBXGroup;
+			children = (
+				27F47835149731A0006B4AAF /* DNSRequest.h */,
+				27F47836149731A0006B4AAF /* DNSRequest.m */,
 			);
 			name = DNS;
 			sourceTree = "<group>";
@@ -4164,6 +4192,10 @@
 				27F4782714972267006B4AAF /* RSDomain.m in Sources */,
 				27F4782E14972286006B4AAF /* RSRecord.h in Sources */,
 				27F4782F14972286006B4AAF /* RSRecord.m in Sources */,
+				27F4783214972750006B4AAF /* RSDNSJob.h in Sources */,
+				27F4783314972750006B4AAF /* RSDNSJob.m in Sources */,
+				27F47837149731A0006B4AAF /* DNSRequest.h in Sources */,
+				27F47838149731A0006B4AAF /* DNSRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4317,6 +4349,14 @@
 				2726C64F13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m in Sources */,
 				27DADC1713B94D6C00F9E906 /* LBNodeViewController.m in Sources */,
 				27DC5DDA13CB925200091902 /* LoadBalancerConnectionThrottle.m in Sources */,
+				27F478391497323C006B4AAF /* RSDomain.h in Sources */,
+				27F4783A1497323C006B4AAF /* RSDomain.m in Sources */,
+				27F4783B1497323C006B4AAF /* RSRecord.h in Sources */,
+				27F4783C1497323C006B4AAF /* RSRecord.m in Sources */,
+				27F4783D1497323C006B4AAF /* RSDNSJob.h in Sources */,
+				27F4783E1497323C006B4AAF /* RSDNSJob.m in Sources */,
+				27F4783F14973247006B4AAF /* DNSRequest.h in Sources */,
+				27F4784014973247006B4AAF /* DNSRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

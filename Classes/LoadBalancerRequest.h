@@ -10,9 +10,7 @@
 
 @class LoadBalancerUsage, LoadBalancerNode, LoadBalancerConnectionThrottle;
 
-@interface LoadBalancerRequest : OpenStackRequest {
-
-}
+@interface LoadBalancerRequest : OpenStackRequest
 
 + (LoadBalancerRequest *)getLoadBalancersRequest:(OpenStackAccount *)account endpoint:(NSString *)endpoint;
 - (NSMutableDictionary *)loadBalancers:(OpenStackAccount *)account;

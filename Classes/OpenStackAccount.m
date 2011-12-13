@@ -130,6 +130,10 @@ static NSMutableDictionary *timers = nil;
         [self.manager getImages];
         [self.manager getFlavors];
         [self.manager getServers];
+        
+        
+        [self.manager getDomains];
+        
 
         [[self.manager getLimits] success:^(OpenStackRequest *request) {
             
@@ -419,6 +423,22 @@ static NSMutableDictionary *timers = nil;
         } else if ([self.provider isRackspaceUK]) {
             NSString *lon = [NSString stringWithFormat:@"https://lon.loadbalancers.api.rackspacecloud.com/v1.0/%@", accountNumber];
             return [NSArray arrayWithObjects:lon, nil];
+        } else {
+            return nil;
+        }
+    } else {
+        return nil;
+    }
+}
+
+- (NSURL *)dnsURL {
+    NSString *accountNumber = [self accountNumber];
+    
+    if (accountNumber && [self.provider isRackspace]) {
+        if ([self.provider isRackspaceUS]) {
+            return [NSString stringWithFormat:@"https://dns.api.rackspacecloud.com/v1.0/%@", accountNumber];
+        } else if ([self.provider isRackspaceUK]) {
+            return [NSString stringWithFormat:@"https://lon.dns.api.rackspacecloud.com/v1.0/%@", accountNumber];
         } else {
             return nil;
         }

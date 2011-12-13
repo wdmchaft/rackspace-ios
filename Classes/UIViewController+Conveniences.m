@@ -114,7 +114,7 @@
 
     if (request.responseStatusCode == 401) {
         
-        message = [message stringByAppendingString:@"  Authorization failed.  Please check your User Name and API Key."];
+        message = [message stringByAppendingString:@"  Authorization failed.  Please check your login credentials."];
         
     } else if (request.responseStatusCode == 503) {
         

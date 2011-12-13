@@ -76,4 +76,8 @@
 - (APICallback *)updateLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 - (APICallback *)deleteLBNode:(LoadBalancerNode *)node loadBalancer:(LoadBalancer *)loadBalancer endpoint:(NSString *)endpoint;
 
+#pragma mark - DNS
+
+- (APICallback *)getDomains;
+
 @end

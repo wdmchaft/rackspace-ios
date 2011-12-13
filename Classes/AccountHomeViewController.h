@@ -22,6 +22,7 @@
     NSInteger computeRow;
     NSInteger storageRow;
     NSInteger loadBalancingRow;
+    NSInteger dnsRow;
     NSInteger rssFeedsRow;
     NSInteger contactRow;
     NSInteger limitsRow;
