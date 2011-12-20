@@ -291,6 +291,10 @@
 		272BDA1214A07A4100F83775 /* cloud-dns-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA0F14A07A4100F83775 /* cloud-dns-icon.png */; };
 		272BDA1314A07A4100F83775 /* cloud-dns-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA1014A07A4100F83775 /* cloud-dns-icon@2x.png */; };
 		272BDA1414A07A4100F83775 /* cloud-dns-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA1014A07A4100F83775 /* cloud-dns-icon@2x.png */; };
+		272BDA1714A07CBE00F83775 /* RSAddDomainViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA1514A07CBE00F83775 /* RSAddDomainViewController.h */; };
+		272BDA1814A07CBE00F83775 /* RSAddDomainViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA1514A07CBE00F83775 /* RSAddDomainViewController.h */; };
+		272BDA1914A07CBE00F83775 /* RSAddDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA1614A07CBE00F83775 /* RSAddDomainViewController.m */; };
+		272BDA1A14A07CBE00F83775 /* RSAddDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA1614A07CBE00F83775 /* RSAddDomainViewController.m */; };
 		27300F0F12775D580082E457 /* UIColor+MoreColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F0D12775D580082E457 /* UIColor+MoreColors.m */; };
 		27300F1112775D580082E457 /* UIColor+MoreColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F0D12775D580082E457 /* UIColor+MoreColors.m */; };
 		27300F3512775FE70082E457 /* SimpleImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F3212775FE70082E457 /* SimpleImagePickerViewController.m */; };
@@ -1161,6 +1165,8 @@
 		272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RSDomainsViewController.xib; sourceTree = "<group>"; };
 		272BDA0F14A07A4100F83775 /* cloud-dns-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud-dns-icon.png"; sourceTree = "<group>"; };
 		272BDA1014A07A4100F83775 /* cloud-dns-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud-dns-icon@2x.png"; sourceTree = "<group>"; };
+		272BDA1514A07CBE00F83775 /* RSAddDomainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSAddDomainViewController.h; sourceTree = "<group>"; };
+		272BDA1614A07CBE00F83775 /* RSAddDomainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSAddDomainViewController.m; sourceTree = "<group>"; };
 		27300F0C12775D580082E457 /* UIColor+MoreColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+MoreColors.h"; sourceTree = "<group>"; };
 		27300F0D12775D580082E457 /* UIColor+MoreColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MoreColors.m"; sourceTree = "<group>"; };
 		27300F3112775FE70082E457 /* SimpleImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleImagePickerViewController.h; sourceTree = "<group>"; };
@@ -1992,6 +1998,8 @@
 				272BDA0614A0476D00F83775 /* RSDomainsViewController.h */,
 				272BDA0714A0476D00F83775 /* RSDomainsViewController.m */,
 				272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */,
+				272BDA1514A07CBE00F83775 /* RSAddDomainViewController.h */,
+				272BDA1614A07CBE00F83775 /* RSAddDomainViewController.m */,
 			);
 			name = DNS;
 			sourceTree = "<group>";
@@ -4232,6 +4240,8 @@
 				27F47838149731A0006B4AAF /* DNSRequest.m in Sources */,
 				272BDA0914A0476D00F83775 /* RSDomainsViewController.h in Sources */,
 				272BDA0A14A0476D00F83775 /* RSDomainsViewController.m in Sources */,
+				272BDA1714A07CBE00F83775 /* RSAddDomainViewController.h in Sources */,
+				272BDA1914A07CBE00F83775 /* RSAddDomainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4395,6 +4405,8 @@
 				27F4784014973247006B4AAF /* DNSRequest.m in Sources */,
 				272BDA0C14A0485B00F83775 /* RSDomainsViewController.h in Sources */,
 				272BDA0D14A0485F00F83775 /* RSDomainsViewController.m in Sources */,
+				272BDA1814A07CBE00F83775 /* RSAddDomainViewController.h in Sources */,
+				272BDA1A14A07CBE00F83775 /* RSAddDomainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

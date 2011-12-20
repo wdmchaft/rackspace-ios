@@ -11,6 +11,7 @@
 #import "AccountManager.h"
 #import "RSDomain.h"
 #import "UIViewController+Conveniences.h"
+#import "RSAddDomainViewController.h"
 
 @implementation RSDomainsViewController
 
@@ -81,6 +82,9 @@
 }
 
 - (void)addButtonPressed:(id)sender {
+    
+    RSAddDomainViewController *vc = [[RSAddDomainViewController alloc] initWithAccount:self.account];
+    [self.navigationController presentModalViewControllerWithNavigation:vc];
     
 }
 
