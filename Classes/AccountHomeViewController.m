@@ -126,7 +126,7 @@
     } else if (indexPath.row == dnsRow) {
         
         cell.textLabel.text = @"Cloud DNS";
-        cell.imageView.image = nil;
+        cell.imageView.image = [UIImage imageNamed:@"cloud-dns-icon.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
     } else if (indexPath.row == rssFeedsRow) {

@@ -29,6 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Domains";
+    [self addAddButton];
 }
 
 - (void)viewDidUnload {
@@ -67,13 +68,19 @@
     
     [[self.account.manager getDomains] success:^(OpenStackRequest *request) {
         
+        [self hideToolbarActivityMessage];
         [self.tableView reloadData];
         
     } failure:^(OpenStackRequest *request) {
         
+        [self hideToolbarActivityMessage];
         [self alert:@"There was a problem loading your domains." request:request];
         
     }];
+    
+}
+
+- (void)addButtonPressed:(id)sender {
     
 }
 
