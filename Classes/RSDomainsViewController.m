@@ -84,7 +84,7 @@
 - (void)addButtonPressed:(id)sender {
     
     RSAddDomainViewController *vc = [[RSAddDomainViewController alloc] initWithAccount:self.account];
-    [self.navigationController presentModalViewControllerWithNavigation:vc];
+    [self presentModalViewControllerWithNavigation:vc];
     
 }
 
