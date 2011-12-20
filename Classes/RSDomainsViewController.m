@@ -8,11 +8,13 @@
 
 #import "RSDomainsViewController.h"
 #import "OpenStackAccount.h"
+#import "AccountManager.h"
 #import "RSDomain.h"
+#import "UIViewController+Conveniences.h"
 
 @implementation RSDomainsViewController
 
-@synthesize account;
+@synthesize account, tableView;
 
 - (id)initWithAccount:(OpenStackAccount *)anAccount {
     self = [self initWithNibName:@"RSDomainsViewController" bundle:nil];
@@ -31,12 +33,7 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+    self.tableView = nil;
 }
 
 #pragma mark - Table View Data Source and Delegate
@@ -48,7 +45,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellId = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellId];
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellId];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellId];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -60,6 +57,24 @@
     
     
     return cell;
+}
+
+#pragma mark - Button Handlers
+
+- (IBAction)refreshButtonPressed:(id)sender {
+    
+    [self showToolbarActivityMessage:@"Refreshing domains..."];
+    
+    [[self.account.manager getDomains] success:^(OpenStackRequest *request) {
+        
+        [self.tableView reloadData];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        [self alert:@"There was a problem loading your domains." request:request];
+        
+    }];
+    
 }
 
 #pragma mark - Memory Management

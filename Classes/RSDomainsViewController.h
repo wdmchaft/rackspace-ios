@@ -6,14 +6,16 @@
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "OpenStackViewController.h"
 
 @class OpenStackAccount;
 
-@interface RSDomainsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface RSDomainsViewController : OpenStackViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) OpenStackAccount *account;
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
 
 - (id)initWithAccount:(OpenStackAccount *)account;
+- (IBAction)refreshButtonPressed:(id)sender;
 
 @end
