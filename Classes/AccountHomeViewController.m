@@ -26,6 +26,7 @@
 #import "LoadBalancersViewController.h"
 #import "Reachability.h"
 #import "Image.h"
+#import "RSDomainsViewController.h"
 
 
 @implementation AccountHomeViewController
@@ -231,6 +232,10 @@
     } else if (indexPath.row == loadBalancingRow) {
         LoadBalancersViewController *vc = [[LoadBalancersViewController alloc] initWithNibName:@"LoadBalancersViewController" bundle:nil];
         vc.account = account;
+        [self.navigationController pushViewController:vc animated:YES];
+        [vc release];
+    } else if (indexPath.row == dnsRow) {
+        RSDomainsViewController *vc = [[RSDomainsViewController alloc] initWithAccount:self.account];
         [self.navigationController pushViewController:vc animated:YES];
         [vc release];
     }

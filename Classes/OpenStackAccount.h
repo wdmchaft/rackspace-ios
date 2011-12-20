@@ -51,6 +51,9 @@
 @property (nonatomic, retain) NSMutableDictionary *loadBalancers;
 @property (nonatomic, retain) NSMutableArray *lbProtocols;
 
+@property (nonatomic, strong) NSMutableDictionary *domains;
+
+
 + (NSArray *)accounts;
 - (void)persist;
 + (void)persist:(NSArray *)accountArray;
@@ -71,5 +74,6 @@
 - (NSArray *)sortedRateLimits;
 - (NSArray *)sortedContainers;
 - (NSArray *)sortedLoadBalancers;
+- (NSArray *)sortedDomains;
 
 @end

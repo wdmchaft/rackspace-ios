@@ -28,7 +28,7 @@ static NSMutableDictionary *timers = nil;
 @synthesize uuid, provider, username, projectId, images, flavors, servers, serversURL, filesURL, cdnURL, manager, rateLimits,
             lastUsedFlavorId, lastUsedImageId,
             containerCount, totalBytesUsed, containers, hasBeenRefreshed, flaggedForDelete,
-            loadBalancers, lbProtocols, serversByPublicIP, apiVersion, ignoresSSLValidation;
+            loadBalancers, lbProtocols, serversByPublicIP, apiVersion, ignoresSSLValidation, domains;
 
 + (void)initialize {
     accounts = [[Archiver retrieve:@"accounts"] retain];
@@ -96,6 +96,10 @@ static NSMutableDictionary *timers = nil;
     NSArray *sortedArray = [NSArray arrayWithArray:[allLoadBalancers sortedArrayUsingSelector:@selector(compare:)]];
     [allLoadBalancers release];
     return sortedArray;
+}
+
+- (NSArray *)sortedDomains {
+    return [[self.domains allValues] sortedArrayUsingSelector:@selector(compare:)];
 }
 
 - (void)setServers:(NSMutableDictionary *)s {
@@ -489,6 +493,7 @@ static NSMutableDictionary *timers = nil;
     [lastUsedFlavorId release];
     [lastUsedImageId release];
     [apiVersion release];
+    [domains release];
     
     [super dealloc];
 }

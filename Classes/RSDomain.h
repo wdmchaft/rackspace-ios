@@ -11,11 +11,13 @@
 @interface RSDomain : NSObject
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *id;
+@property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *comment;
 @property (nonatomic, strong) NSString *accountId;
 @property (nonatomic, strong) NSString *emailAddress;
 @property (nonatomic, strong) NSDate *updated;
 @property (nonatomic, strong) NSDate *created;
+
++ (RSDomain *)fromJSON:(NSDictionary *)dict;
 
 @end

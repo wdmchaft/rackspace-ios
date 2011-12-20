@@ -11,5 +11,6 @@
 @interface DNSRequest : OpenStackRequest
 
 + (DNSRequest *)getDomainsRequest:(OpenStackAccount *)account;
+- (NSMutableDictionary *)domains;
 
 @end

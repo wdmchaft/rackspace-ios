@@ -281,6 +281,12 @@
 		27295C1213C6563200A32F20 /* dark-grey-highlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C0F13C6563100A32F20 /* dark-grey-highlight@2x.png */; };
 		27295C1313C6563200A32F20 /* dark-grey-highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C1013C6563100A32F20 /* dark-grey-highlight.png */; };
 		27295C1413C6563200A32F20 /* dark-grey-highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 27295C1013C6563100A32F20 /* dark-grey-highlight.png */; };
+		272BDA0914A0476D00F83775 /* RSDomainsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA0614A0476D00F83775 /* RSDomainsViewController.h */; };
+		272BDA0A14A0476D00F83775 /* RSDomainsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA0714A0476D00F83775 /* RSDomainsViewController.m */; };
+		272BDA0B14A0476D00F83775 /* RSDomainsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */; };
+		272BDA0C14A0485B00F83775 /* RSDomainsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA0614A0476D00F83775 /* RSDomainsViewController.h */; };
+		272BDA0D14A0485F00F83775 /* RSDomainsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA0714A0476D00F83775 /* RSDomainsViewController.m */; };
+		272BDA0E14A0486400F83775 /* RSDomainsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */; };
 		27300F0F12775D580082E457 /* UIColor+MoreColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F0D12775D580082E457 /* UIColor+MoreColors.m */; };
 		27300F1112775D580082E457 /* UIColor+MoreColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F0D12775D580082E457 /* UIColor+MoreColors.m */; };
 		27300F3512775FE70082E457 /* SimpleImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F3212775FE70082E457 /* SimpleImagePickerViewController.m */; };
@@ -1146,6 +1152,9 @@
 		27295C0913C6560F00A32F20 /* blue-camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-camera@2x.png"; sourceTree = "<group>"; };
 		27295C0F13C6563100A32F20 /* dark-grey-highlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dark-grey-highlight@2x.png"; sourceTree = "<group>"; };
 		27295C1013C6563100A32F20 /* dark-grey-highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dark-grey-highlight.png"; sourceTree = "<group>"; };
+		272BDA0614A0476D00F83775 /* RSDomainsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSDomainsViewController.h; sourceTree = "<group>"; };
+		272BDA0714A0476D00F83775 /* RSDomainsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDomainsViewController.m; sourceTree = "<group>"; };
+		272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RSDomainsViewController.xib; sourceTree = "<group>"; };
 		27300F0C12775D580082E457 /* UIColor+MoreColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+MoreColors.h"; sourceTree = "<group>"; };
 		27300F0D12775D580082E457 /* UIColor+MoreColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MoreColors.m"; sourceTree = "<group>"; };
 		27300F3112775FE70082E457 /* SimpleImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleImagePickerViewController.h; sourceTree = "<group>"; };
@@ -1971,6 +1980,16 @@
 			name = "API and Account Limits";
 			sourceTree = "<group>";
 		};
+		272BDA0414A0474000F83775 /* DNS */ = {
+			isa = PBXGroup;
+			children = (
+				272BDA0614A0476D00F83775 /* RSDomainsViewController.h */,
+				272BDA0714A0476D00F83775 /* RSDomainsViewController.m */,
+				272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */,
+			);
+			name = DNS;
+			sourceTree = "<group>";
+		};
 		2730103E12776AD10082E457 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -2210,6 +2229,7 @@
 				2798AD81125EA4BC00E02475 /* Compute */,
 				27F852EE12AEF68F003327C0 /* Object Storage */,
 				273E51721309B78100E3BCBA /* Load Balancing */,
+				272BDA0414A0474000F83775 /* DNS */,
 				277B821F12B839A3006483B0 /* RSS Feeds */,
 				2798ACF4125E9C9F00E02475 /* Contact Information */,
 				278696091263A41C00CE3435 /* API Logs */,
@@ -3676,6 +3696,7 @@
 				27295C1313C6563200A32F20 /* dark-grey-highlight.png in Resources */,
 				27C38BC013D0D48500CC7222 /* red-delete-button@2x.png in Resources */,
 				27C38BC213D0D48500CC7222 /* red-delete-button.png in Resources */,
+				272BDA0B14A0476D00F83775 /* RSDomainsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4004,6 +4025,7 @@
 				27295C1413C6563200A32F20 /* dark-grey-highlight.png in Resources */,
 				27C38BC113D0D48500CC7222 /* red-delete-button@2x.png in Resources */,
 				27C38BC313D0D48500CC7222 /* red-delete-button.png in Resources */,
+				272BDA0E14A0486400F83775 /* RSDomainsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4196,6 +4218,8 @@
 				27F4783314972750006B4AAF /* RSDNSJob.m in Sources */,
 				27F47837149731A0006B4AAF /* DNSRequest.h in Sources */,
 				27F47838149731A0006B4AAF /* DNSRequest.m in Sources */,
+				272BDA0914A0476D00F83775 /* RSDomainsViewController.h in Sources */,
+				272BDA0A14A0476D00F83775 /* RSDomainsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4357,6 +4381,8 @@
 				27F4783E1497323C006B4AAF /* RSDNSJob.m in Sources */,
 				27F4783F14973247006B4AAF /* DNSRequest.h in Sources */,
 				27F4784014973247006B4AAF /* DNSRequest.m in Sources */,
+				272BDA0C14A0485B00F83775 /* RSDomainsViewController.h in Sources */,
+				272BDA0D14A0485F00F83775 /* RSDomainsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

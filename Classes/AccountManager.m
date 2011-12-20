@@ -534,26 +534,13 @@
 
 - (APICallback *)getDomains {
     __block DNSRequest *request = [DNSRequest getDomainsRequest:self.account];
-    return [self callbackWithRequest:request success:^(OpenStackRequest *request) {
+    return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
         
+        NSLog(@"domains response: %@", [response responseString]);
+        self.account.domains = [(DNSRequest *)response domains];
         
-        NSLog(@"domains response: %@", [request responseString]);
-        
-        /*
-        if (!self.account.loadBalancers) {
-            self.account.loadBalancers = [[[NSMutableDictionary alloc] initWithCapacity:2] autorelease];
-        }
-        
-        NSMutableDictionary *lbs = [(LoadBalancerRequest *)request loadBalancers:self.account];
-        
-        for (NSString *identifier in lbs) {
-            LoadBalancer *lb = [lbs objectForKey:identifier];
-            lb.region = [self.account loadBalancerRegionForEndpoint:endpoint];
-        }
-        
-        [self.account.loadBalancers setObject:lbs forKey:endpoint];
-        [self.account persist];
-         */
+        NSLog(@"domains: %@", self.account.domains);
+
     }];
 }
 
