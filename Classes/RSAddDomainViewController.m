@@ -11,6 +11,7 @@
 #import "AccountManager.h"
 #import "RSDomain.h"
 #import "UIViewController+Conveniences.h"
+#import "RSTextFieldCell.h"
 
 /*
  Name: example.com

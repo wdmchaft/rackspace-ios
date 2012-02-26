@@ -537,8 +537,7 @@
     return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
         
         NSLog(@"domains response: %@", [response responseString]);
-        self.account.domains = [(DNSRequest *)response domains];
-        
+        self.account.domains = [(DNSRequest *)response domains];        
         NSLog(@"domains: %@", self.account.domains);
 
     }];

@@ -72,8 +72,7 @@
     [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 }
 
-#pragma mark -
-#pragma mark Button Handlers
+#pragma mark - Button Handlers
 
 - (void)saveButtonPressed:(id)sender {
     
