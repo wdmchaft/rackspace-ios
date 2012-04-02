@@ -8,14 +8,11 @@
 	<string>Rackspace</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string>rackspacecloud114.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>rackspacecloud114.png</string>
-		<string>rackspacecloud57.png</string>
-		<string>rackspacecloud72.png</string>
-		<string>rackspacecloud29.png</string>
+		<string>rackspacecloud-icon@2x.png</string>
+		<string>rackspacecloud-icon.png</string>
+		<string>rackspacecloud-icon-ipad.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.rackspacecloud.iphone</string>
@@ -28,7 +25,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.1.4</string>
+	<string>2.1.5</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMainNibFile</key>

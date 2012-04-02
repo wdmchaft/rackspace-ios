@@ -610,14 +610,14 @@
 		276868271368D51200B04AF3 /* rackspacecloud29.png in Resources */ = {isa = PBXBuildFile; fileRef = 2768681F1368D51200B04AF3 /* rackspacecloud29.png */; };
 		276868281368D51200B04AF3 /* rackspacecloud50.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868201368D51200B04AF3 /* rackspacecloud50.png */; };
 		276868291368D51200B04AF3 /* rackspacecloud50.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868201368D51200B04AF3 /* rackspacecloud50.png */; };
-		2768682A1368D51200B04AF3 /* rackspacecloud57.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868211368D51200B04AF3 /* rackspacecloud57.png */; };
-		2768682B1368D51200B04AF3 /* rackspacecloud57.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868211368D51200B04AF3 /* rackspacecloud57.png */; };
+		2768682A1368D51200B04AF3 /* rackspacecloud-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868211368D51200B04AF3 /* rackspacecloud-icon.png */; };
+		2768682B1368D51200B04AF3 /* rackspacecloud-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868211368D51200B04AF3 /* rackspacecloud-icon.png */; };
 		2768682C1368D51200B04AF3 /* rackspacecloud58.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868221368D51200B04AF3 /* rackspacecloud58.png */; };
 		2768682D1368D51200B04AF3 /* rackspacecloud58.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868221368D51200B04AF3 /* rackspacecloud58.png */; };
-		2768682E1368D51200B04AF3 /* rackspacecloud72.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868231368D51200B04AF3 /* rackspacecloud72.png */; };
-		2768682F1368D51200B04AF3 /* rackspacecloud72.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868231368D51200B04AF3 /* rackspacecloud72.png */; };
-		276868301368D51200B04AF3 /* rackspacecloud114.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868241368D51200B04AF3 /* rackspacecloud114.png */; };
-		276868311368D51200B04AF3 /* rackspacecloud114.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868241368D51200B04AF3 /* rackspacecloud114.png */; };
+		2768682E1368D51200B04AF3 /* rackspacecloud-icon-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868231368D51200B04AF3 /* rackspacecloud-icon-ipad.png */; };
+		2768682F1368D51200B04AF3 /* rackspacecloud-icon-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868231368D51200B04AF3 /* rackspacecloud-icon-ipad.png */; };
+		276868301368D51200B04AF3 /* rackspacecloud-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868241368D51200B04AF3 /* rackspacecloud-icon@2x.png */; };
+		276868311368D51200B04AF3 /* rackspacecloud-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868241368D51200B04AF3 /* rackspacecloud-icon@2x.png */; };
 		276868321368D51200B04AF3 /* rackspacecloud512.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868251368D51200B04AF3 /* rackspacecloud512.png */; };
 		276868331368D51200B04AF3 /* rackspacecloud512.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868251368D51200B04AF3 /* rackspacecloud512.png */; };
 		276868391368D53C00B04AF3 /* openstack_72.png in Resources */ = {isa = PBXBuildFile; fileRef = 276868341368D53C00B04AF3 /* openstack_72.png */; };
@@ -1327,10 +1327,10 @@
 		276868161368D4F800B04AF3 /* Rackspace-Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Rackspace-Default@2x.png"; path = "Images/Rackspace-Default@2x.png"; sourceTree = "<group>"; };
 		2768681F1368D51200B04AF3 /* rackspacecloud29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rackspacecloud29.png; path = Images/rackspacecloud29.png; sourceTree = "<group>"; };
 		276868201368D51200B04AF3 /* rackspacecloud50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rackspacecloud50.png; path = Images/rackspacecloud50.png; sourceTree = "<group>"; };
-		276868211368D51200B04AF3 /* rackspacecloud57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rackspacecloud57.png; path = Images/rackspacecloud57.png; sourceTree = "<group>"; };
+		276868211368D51200B04AF3 /* rackspacecloud-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rackspacecloud-icon.png"; path = "Images/rackspacecloud-icon.png"; sourceTree = "<group>"; };
 		276868221368D51200B04AF3 /* rackspacecloud58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rackspacecloud58.png; path = Images/rackspacecloud58.png; sourceTree = "<group>"; };
-		276868231368D51200B04AF3 /* rackspacecloud72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rackspacecloud72.png; path = Images/rackspacecloud72.png; sourceTree = "<group>"; };
-		276868241368D51200B04AF3 /* rackspacecloud114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rackspacecloud114.png; path = Images/rackspacecloud114.png; sourceTree = "<group>"; };
+		276868231368D51200B04AF3 /* rackspacecloud-icon-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rackspacecloud-icon-ipad.png"; path = "Images/rackspacecloud-icon-ipad.png"; sourceTree = "<group>"; };
+		276868241368D51200B04AF3 /* rackspacecloud-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rackspacecloud-icon@2x.png"; path = "Images/rackspacecloud-icon@2x.png"; sourceTree = "<group>"; };
 		276868251368D51200B04AF3 /* rackspacecloud512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rackspacecloud512.png; path = Images/rackspacecloud512.png; sourceTree = "<group>"; };
 		276868341368D53C00B04AF3 /* openstack_72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = openstack_72.png; path = Images/openstack_72.png; sourceTree = "<group>"; };
 		276868351368D53C00B04AF3 /* openstack_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = openstack_icon.png; path = Images/openstack_icon.png; sourceTree = "<group>"; };
@@ -2463,10 +2463,10 @@
 			children = (
 				2768681F1368D51200B04AF3 /* rackspacecloud29.png */,
 				276868201368D51200B04AF3 /* rackspacecloud50.png */,
-				276868211368D51200B04AF3 /* rackspacecloud57.png */,
+				276868211368D51200B04AF3 /* rackspacecloud-icon.png */,
 				276868221368D51200B04AF3 /* rackspacecloud58.png */,
-				276868231368D51200B04AF3 /* rackspacecloud72.png */,
-				276868241368D51200B04AF3 /* rackspacecloud114.png */,
+				276868231368D51200B04AF3 /* rackspacecloud-icon-ipad.png */,
+				276868241368D51200B04AF3 /* rackspacecloud-icon@2x.png */,
 				276868251368D51200B04AF3 /* rackspacecloud512.png */,
 			);
 			name = "App Icons";
@@ -3483,10 +3483,10 @@
 				2768681D1368D4F800B04AF3 /* Rackspace-Default@2x.png in Resources */,
 				276868261368D51200B04AF3 /* rackspacecloud29.png in Resources */,
 				276868281368D51200B04AF3 /* rackspacecloud50.png in Resources */,
-				2768682A1368D51200B04AF3 /* rackspacecloud57.png in Resources */,
+				2768682A1368D51200B04AF3 /* rackspacecloud-icon.png in Resources */,
 				2768682C1368D51200B04AF3 /* rackspacecloud58.png in Resources */,
-				2768682E1368D51200B04AF3 /* rackspacecloud72.png in Resources */,
-				276868301368D51200B04AF3 /* rackspacecloud114.png in Resources */,
+				2768682E1368D51200B04AF3 /* rackspacecloud-icon-ipad.png in Resources */,
+				276868301368D51200B04AF3 /* rackspacecloud-icon@2x.png in Resources */,
 				276868321368D51200B04AF3 /* rackspacecloud512.png in Resources */,
 				276868391368D53C00B04AF3 /* openstack_72.png in Resources */,
 				2768683B1368D53C00B04AF3 /* openstack_icon.png in Resources */,
@@ -3812,10 +3812,10 @@
 				2768681E1368D4F800B04AF3 /* Rackspace-Default@2x.png in Resources */,
 				276868271368D51200B04AF3 /* rackspacecloud29.png in Resources */,
 				276868291368D51200B04AF3 /* rackspacecloud50.png in Resources */,
-				2768682B1368D51200B04AF3 /* rackspacecloud57.png in Resources */,
+				2768682B1368D51200B04AF3 /* rackspacecloud-icon.png in Resources */,
 				2768682D1368D51200B04AF3 /* rackspacecloud58.png in Resources */,
-				2768682F1368D51200B04AF3 /* rackspacecloud72.png in Resources */,
-				276868311368D51200B04AF3 /* rackspacecloud114.png in Resources */,
+				2768682F1368D51200B04AF3 /* rackspacecloud-icon-ipad.png in Resources */,
+				276868311368D51200B04AF3 /* rackspacecloud-icon@2x.png in Resources */,
 				276868331368D51200B04AF3 /* rackspacecloud512.png in Resources */,
 				2768683A1368D53C00B04AF3 /* openstack_72.png in Resources */,
 				2768683C1368D53C00B04AF3 /* openstack_icon.png in Resources */,
@@ -4524,8 +4524,8 @@
 					UIKit,
 				);
 				PRODUCT_NAME = "Rackspace Cloud";
-				PROVISIONING_PROFILE = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCFCA41-4E17-4282-8CE2-0F993731422B";
+				PROVISIONING_PROFILE = "2CF5E8BC-FD3B-4523-926B-4C7924AD0C74";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2CF5E8BC-FD3B-4523-926B-4C7924AD0C74";
 				SDKROOT = iphoneos;
 				ZERO_LINK = NO;
 			};
