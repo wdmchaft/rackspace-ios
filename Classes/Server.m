@@ -124,6 +124,9 @@
 }
 
 - (NSString *)toJSON:(NSString *)apiVersion {
+    
+    NSLog(@"apiVersion: %@", apiVersion);
+    
     BOOL version1 = ![apiVersion isEqualToString:@"1.1"];
     
     NSString *json

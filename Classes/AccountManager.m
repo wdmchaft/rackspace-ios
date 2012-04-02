@@ -492,9 +492,12 @@
                 for (NSDictionary *service in services) {
                     
                     if ([[service valueForKey:@"type"] isEqualToString:@"compute"]) {
-                        
+                    
                         NSDictionary *endpoint = [[service valueForKey:@"endpoints"] objectAtIndex:0];                        
                         self.account.serversURL = [NSURL URLWithString:[endpoint valueForKey:@"publicURL"]];
+                        NSLog(@"servers url: %@", self.account.serversURL);
+                        
+                        self.account.serversURL = [NSURL URLWithString:@"https://servers.api.rackspacecloud.com/v1.0/48126"];
                         
                     } else if ([[service valueForKey:@"type"] isEqualToString:@"object-store"]) {
                      

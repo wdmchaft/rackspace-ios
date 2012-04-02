@@ -485,6 +485,9 @@ static NSRecursiveLock *accessDetailsLock = nil;
 }
 
 + (OpenStackRequest *)createServerRequest:(OpenStackAccount *)account server:(Server *)server {
+    
+    NSLog(@"server url: %@", account.serversURL);
+    
 	NSString *body = [server toJSON:account.apiVersion];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/servers", account.serversURL]];
     NSLog(@"create server: %@", body);

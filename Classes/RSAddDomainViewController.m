@@ -22,15 +22,14 @@
 
 typedef enum {
     RSAddDomainNameSection,
-    RSAddDomainTTLSection,
-    RSAddDomainCommentSection,
     RSAddDomainEmailAddressSection,
+    RSAddDomainTTLSection,
     RSAddDomainNumberOfSections
 } RSAddDomainSectionType;
 
 @implementation RSAddDomainViewController
 
-@synthesize account;
+@synthesize account, domainNameTextField, emailTextField, ttlTextField;
 
 - (id)initWithAccount:(OpenStackAccount *)anAccount {
     self = [super initWithStyle:UITableViewStyleGrouped];
@@ -71,29 +70,57 @@ typedef enum {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     static NSString *CellIdentifier = @"Cell";
+    BOOL becomeFirstResponder = NO;
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    RSTextFieldCell *cell = (RSTextFieldCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier] autorelease];
     }
     
     // Configure the cell...
+    switch (indexPath.section) {
+        case RSAddDomainNameSection:
+            cell.textLabel.text = @"Name";
+            if (!self.domainNameTextField) {
+                becomeFirstResponder = YES;
+            }
+            self.domainNameTextField = cell.textField;
+            self.domainNameTextField.delegate = self;
+            break;
+        case RSAddDomainEmailAddressSection:
+            cell.textLabel.text = @"Email";
+            self.emailTextField = cell.textField;
+            self.emailTextField.delegate = self;
+            break;
+        case RSAddDomainTTLSection:
+            cell.textLabel.text = @"TTL";
+            self.ttlTextField = cell.textField;
+            self.ttlTextField.delegate = self;
+            break;
+        default:
+            break;
+    }
+    
+    if (becomeFirstResponder) {
+        [cell.textField becomeFirstResponder];
+    }
     
     return cell;
 }
 
-#pragma mark - Table view delegate
+#pragma mark - Text Field Delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    [textField resignFirstResponder];
+    
+    if ([textField isEqual:self.domainNameTextField]) {
+        [self.emailTextField becomeFirstResponder];
+    } else if ([textField isEqual:self.emailTextField]) {
+        [self.ttlTextField becomeFirstResponder];
+    }
+    
+    return NO;
 }
 
 #pragma mark - Button Handlers

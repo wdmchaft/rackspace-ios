@@ -10,9 +10,12 @@
 
 @class OpenStackAccount;
 
-@interface RSAddDomainViewController : UITableViewController
+@interface RSAddDomainViewController : UITableViewController <UITextFieldDelegate>
 
 @property (nonatomic, strong) OpenStackAccount *account;
+@property (nonatomic, strong) UITextField *domainNameTextField;
+@property (nonatomic, strong) UITextField *emailTextField;
+@property (nonatomic, strong) UITextField *ttlTextField;
 
 - (id)initWithAccount:(OpenStackAccount *)account;
 
