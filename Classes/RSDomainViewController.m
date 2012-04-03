@@ -8,6 +8,25 @@
 
 #import "RSDomainViewController.h"
 
+/*
+ [nav bar: right hand edit to delete domains]
+ 
+ [overview]
+ domain name
+ domain contact (perhaps allow choose from contacts?)
+ 
+ [domain details]
+ nameservers
+ ttl > (goes to edit ttl)
+ 
+ [domains]
+ blah.overhrd.com - A - 1.1.1.1 > (goes to edit record)
+ overhrd.com - NS - dns1.stabletransit.com > (goes to edit record)
+ ...
+ Add Record
+ 
+ */
+
 @interface RSDomainViewController ()
 
 @end
