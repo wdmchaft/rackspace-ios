@@ -27,6 +27,18 @@
  
  */
 
+typedef enum {
+    RSDomainOverviewSection,
+    RSDomainDetailsSection,
+    RSDomainDomainsSection,
+    RSDomainNumberOfSections
+} RSDomainSectionType;
+
+typedef enum {
+    RSDomainOverviewNameRow,
+    RSDomainOverviewContactRow
+} RSDomainOverviewRowType;
+
 @interface RSDomainViewController ()
 
 @end
@@ -58,13 +70,27 @@
     self.tableView = nil;
 }
 
-#pragma mark - Table View Data Source
+#pragma mark - Table View Data Source and Delegate
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return RSDomainNumberOfSections;
 }
 
-#pragma mark - Table View Delegate
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 1;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *CellId = @"Cell";
+    
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellId];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellId];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    return cell;
+}
 
 #pragma mark - Button Handlers
 
