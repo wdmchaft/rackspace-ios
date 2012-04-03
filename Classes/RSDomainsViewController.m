@@ -12,6 +12,7 @@
 #import "RSDomain.h"
 #import "UIViewController+Conveniences.h"
 #import "RSAddDomainViewController.h"
+#import "RSDomainViewController.h"
 
 @implementation RSDomainsViewController
 
@@ -59,6 +60,14 @@
     
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    RSDomain *domain = [[self.account sortedDomains] objectAtIndex:indexPath.row];
+    RSDomainViewController *vc = [[RSDomainViewController alloc] initWithAccount:self.account domain:domain];
+    [self presentPrimaryViewController:vc];
+    
 }
 
 #pragma mark - Button Handlers

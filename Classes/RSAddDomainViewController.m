@@ -135,14 +135,13 @@ typedef enum {
     [[self.account.manager createDomain:domain] success:^(OpenStackRequest *request) {
         
         [self alert:nil message:[request responseString]];
+        [self dismissModalViewControllerAnimated:YES];
         
     } failure:^(OpenStackRequest *request) {
         
         [self alert:@"fail" message:[request responseString]];
 
     }];
-    
-//    [self dismissModalViewControllerAnimated:YES];
     
 }
 

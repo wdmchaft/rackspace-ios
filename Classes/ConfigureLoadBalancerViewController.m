@@ -49,6 +49,7 @@
     if (self) {
         self.account = a;
         self.loadBalancer = lb;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     }
     return self;
 }

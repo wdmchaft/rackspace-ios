@@ -365,6 +365,12 @@
 		2748C581126E90FD00A24941 /* PingIPAddressViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748C57E126E90FD00A24941 /* PingIPAddressViewController.xib */; };
 		2748C583126E90FD00A24941 /* PingIPAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748C57D126E90FD00A24941 /* PingIPAddressViewController.m */; };
 		2748C584126E90FD00A24941 /* PingIPAddressViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748C57E126E90FD00A24941 /* PingIPAddressViewController.xib */; };
+		2748E890152ACEA400C2D0CE /* RSDomainViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2748E88D152ACEA400C2D0CE /* RSDomainViewController.h */; };
+		2748E891152ACEA400C2D0CE /* RSDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748E88E152ACEA400C2D0CE /* RSDomainViewController.m */; };
+		2748E892152ACEA400C2D0CE /* RSDomainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748E88F152ACEA400C2D0CE /* RSDomainViewController.xib */; };
+		2748E894152AD07300C2D0CE /* RSDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748E88E152ACEA400C2D0CE /* RSDomainViewController.m */; };
+		2748E895152AD08C00C2D0CE /* RSDomainViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2748E88D152ACEA400C2D0CE /* RSDomainViewController.h */; };
+		2748E896152AD09700C2D0CE /* RSDomainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748E88F152ACEA400C2D0CE /* RSDomainViewController.xib */; };
 		27528797126F84E40024E553 /* ServerActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27528795126F84E40024E553 /* ServerActionViewController.m */; };
 		27528799126F84E40024E553 /* ServerActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27528795126F84E40024E553 /* ServerActionViewController.m */; };
 		275287B3126F84F70024E553 /* RenameServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2752879B126F84F70024E553 /* RenameServerViewController.m */; };
@@ -1221,6 +1227,9 @@
 		2748C57C126E90FD00A24941 /* PingIPAddressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PingIPAddressViewController.h; sourceTree = "<group>"; };
 		2748C57D126E90FD00A24941 /* PingIPAddressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PingIPAddressViewController.m; sourceTree = "<group>"; };
 		2748C57E126E90FD00A24941 /* PingIPAddressViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PingIPAddressViewController.xib; sourceTree = "<group>"; };
+		2748E88D152ACEA400C2D0CE /* RSDomainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSDomainViewController.h; sourceTree = "<group>"; };
+		2748E88E152ACEA400C2D0CE /* RSDomainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDomainViewController.m; sourceTree = "<group>"; };
+		2748E88F152ACEA400C2D0CE /* RSDomainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RSDomainViewController.xib; sourceTree = "<group>"; };
 		27528794126F84E40024E553 /* ServerActionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerActionViewController.h; sourceTree = "<group>"; };
 		27528795126F84E40024E553 /* ServerActionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerActionViewController.m; sourceTree = "<group>"; };
 		2752879A126F84F70024E553 /* RenameServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenameServerViewController.h; sourceTree = "<group>"; };
@@ -2000,6 +2009,9 @@
 				272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */,
 				272BDA1514A07CBE00F83775 /* RSAddDomainViewController.h */,
 				272BDA1614A07CBE00F83775 /* RSAddDomainViewController.m */,
+				2748E88D152ACEA400C2D0CE /* RSDomainViewController.h */,
+				2748E88E152ACEA400C2D0CE /* RSDomainViewController.m */,
+				2748E88F152ACEA400C2D0CE /* RSDomainViewController.xib */,
 			);
 			name = DNS;
 			sourceTree = "<group>";
@@ -3715,6 +3727,7 @@
 				272BDA0B14A0476D00F83775 /* RSDomainsViewController.xib in Resources */,
 				272BDA1114A07A4100F83775 /* cloud-dns-icon.png in Resources */,
 				272BDA1314A07A4100F83775 /* cloud-dns-icon@2x.png in Resources */,
+				2748E892152ACEA400C2D0CE /* RSDomainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4046,6 +4059,7 @@
 				272BDA0E14A0486400F83775 /* RSDomainsViewController.xib in Resources */,
 				272BDA1214A07A4100F83775 /* cloud-dns-icon.png in Resources */,
 				272BDA1414A07A4100F83775 /* cloud-dns-icon@2x.png in Resources */,
+				2748E896152AD09700C2D0CE /* RSDomainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4242,6 +4256,8 @@
 				272BDA0A14A0476D00F83775 /* RSDomainsViewController.m in Sources */,
 				272BDA1714A07CBE00F83775 /* RSAddDomainViewController.h in Sources */,
 				272BDA1914A07CBE00F83775 /* RSAddDomainViewController.m in Sources */,
+				2748E890152ACEA400C2D0CE /* RSDomainViewController.h in Sources */,
+				2748E891152ACEA400C2D0CE /* RSDomainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4407,6 +4423,8 @@
 				272BDA0D14A0485F00F83775 /* RSDomainsViewController.m in Sources */,
 				272BDA1814A07CBE00F83775 /* RSAddDomainViewController.h in Sources */,
 				272BDA1A14A07CBE00F83775 /* RSAddDomainViewController.m in Sources */,
+				2748E894152AD07300C2D0CE /* RSDomainViewController.m in Sources */,
+				2748E895152AD08C00C2D0CE /* RSDomainViewController.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
