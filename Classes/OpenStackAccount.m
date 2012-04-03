@@ -99,7 +99,8 @@ static NSMutableDictionary *timers = nil;
 }
 
 - (NSArray *)sortedDomains {
-    return [[self.domains allValues] sortedArrayUsingSelector:@selector(compare:)];
+//    return [[self.domains allValues] sortedArrayUsingSelector:@selector(compare:)];
+    return [[self.domains allValues] sortedArrayUsingSelector:@selector(name)];
 }
 
 - (void)setServers:(NSMutableDictionary *)s {

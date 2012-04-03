@@ -52,4 +52,17 @@
     return objects;
 }
 
++ (DNSRequest *)createDomainRequest:(OpenStackAccount *)account domain:(RSDomain *)domain {
+    
+	NSString *body = [domain toJSON];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/domains", account.dnsURL]];
+    NSLog(@"create domain: %@", body);
+    DNSRequest *request = [OpenStackRequest request:account method:@"POST" url:url];    
+	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
+	[request setPostBody:[NSMutableData dataWithData:data]];
+	return request;
+    
+}
+
+
 @end

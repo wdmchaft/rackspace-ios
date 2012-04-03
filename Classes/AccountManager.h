@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "APICallback.h"
 
-@class OpenStackAccount, Server, Flavor, Image, Container, StorageObject, OpenStackRequest, ASINetworkQueue, LoadBalancer, LoadBalancerNode;
+@class OpenStackAccount, Server, Flavor, Image, Container, StorageObject, OpenStackRequest, ASINetworkQueue, LoadBalancer, LoadBalancerNode, RSDomain;
 
 @interface AccountManager : NSObject {
     OpenStackAccount *account;
@@ -79,5 +79,6 @@
 #pragma mark - DNS
 
 - (APICallback *)getDomains;
+- (APICallback *)createDomain:(RSDomain *)domain;
 
 @end

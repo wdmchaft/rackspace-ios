@@ -8,9 +8,13 @@
 
 #import "OpenStackRequest.h"
 
+@class RSDomain;
+
 @interface DNSRequest : OpenStackRequest
 
 + (DNSRequest *)getDomainsRequest:(OpenStackAccount *)account;
 - (NSMutableDictionary *)domains;
+
++ (DNSRequest *)createDomainRequest:(OpenStackAccount *)account domain:(RSDomain *)domain;
 
 @end

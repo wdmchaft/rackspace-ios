@@ -17,7 +17,9 @@
 @property (nonatomic, strong) NSString *emailAddress;
 @property (nonatomic, strong) NSDate *updated;
 @property (nonatomic, strong) NSDate *created;
+@property (nonatomic, strong) NSString *ttl;
 
 + (RSDomain *)fromJSON:(NSDictionary *)dict;
+- (NSString *)toJSON;
 
 @end

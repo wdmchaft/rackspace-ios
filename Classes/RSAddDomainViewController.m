@@ -126,8 +126,23 @@ typedef enum {
 #pragma mark - Button Handlers
 
 - (void)saveButtonPressed:(id)sender {
+  
+    RSDomain *domain = [[[RSDomain alloc] init] autorelease];
+    domain.name = self.domainNameTextField.text;
+    domain.ttl = self.ttlTextField.text;
+    domain.emailAddress = self.emailTextField.text;
     
-    [self dismissModalViewControllerAnimated:YES];
+    [[self.account.manager createDomain:domain] success:^(OpenStackRequest *request) {
+        
+        [self alert:nil message:[request responseString]];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        [self alert:@"fail" message:[request responseString]];
+
+    }];
+    
+//    [self dismissModalViewControllerAnimated:YES];
     
 }
 

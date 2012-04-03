@@ -486,6 +486,7 @@
                 [parser release];
 
                 self.account.authToken = [[jsonObject objectForKey:@"token"] objectForKey:@"id"];
+                NSLog(@"auth token: %@", self.account.authToken);
                 
                 NSArray *services = [jsonObject objectForKey:@"serviceCatalog"];
                 
@@ -497,7 +498,7 @@
                         self.account.serversURL = [NSURL URLWithString:[endpoint valueForKey:@"publicURL"]];
                         NSLog(@"servers url: %@", self.account.serversURL);
                         
-                        self.account.serversURL = [NSURL URLWithString:@"https://servers.api.rackspacecloud.com/v1.0/48126"];
+//                        self.account.serversURL = [NSURL URLWithString:@"https://servers.api.rackspacecloud.com/v1.0/48126"];
                         
                     } else if ([[service valueForKey:@"type"] isEqualToString:@"object-store"]) {
                      
@@ -545,6 +546,12 @@
 
     }];
 }
+
+- (APICallback *)createDomain:(RSDomain *)domain {
+    __block DNSRequest *request = [DNSRequest createDomainRequest:account domain:domain];
+    return [self callbackWithRequest:request];
+}
+
 
 #pragma mark - Memory Management
 

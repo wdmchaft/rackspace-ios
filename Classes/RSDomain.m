@@ -7,10 +7,11 @@
 //
 
 #import "RSDomain.h"
+#import "NSString+Conveniences.h"
 
 @implementation RSDomain
 
-@synthesize name, identifier, comment, accountId, emailAddress, updated, created;
+@synthesize name, identifier, comment, accountId, emailAddress, updated, created, ttl;
 
 - (void)dealloc {
     [name release];
@@ -20,6 +21,7 @@
     [emailAddress release];
     [updated release];
     [created release];
+    [ttl release];
     [super dealloc];
 }
 
@@ -35,6 +37,36 @@
     RSDomain *rsDomain = [[[RSDomain alloc] init] autorelease];
     [rsDomain populateWithJSON:dict];
     return rsDomain;
+}
+
+- (NSString *)toJSON {
+    
+    NSString *json
+        = @"{ \"domains\" : [ {"
+        "    \"name\" : \"<name>\","
+        "    \"ttl\" : <ttl>,"
+        "    \"emailAddress\" : \"<email>\""
+        "} ] }";
+    json = [json replace:@"<name>" with:self.name];
+    json = [json replace:@"<ttl>" with:self.ttl];
+    json = [json replace:@"<email>" with:self.emailAddress];
+    return json;
+    
+    
+    /*
+{ "domains" : [ {
+    "name" : "example.com",
+    "comment" : "Optional domain comment...",
+    "recordsList" : {
+    "records" : []
+    },
+    "subdomains" : {
+    "domains" : []
+    },
+    "ttl" : 3600,
+    "emailAddress" : "sample@rackspace.com"
+} ] }
+     */
 }
 
 @end
