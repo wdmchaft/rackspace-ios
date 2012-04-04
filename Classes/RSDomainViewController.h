@@ -18,6 +18,8 @@
 @property (nonatomic, retain) UITextField *contactTextField;
 @property (nonatomic, retain) UITextField *ttlTextField;
 
+@property (nonatomic, assign) BOOL isLoading;
+
 - (id)initWithAccount:(OpenStackAccount *)account domain:(RSDomain *)domain;
 
 @end

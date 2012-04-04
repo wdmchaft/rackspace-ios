@@ -48,7 +48,7 @@ typedef enum {
 
 @implementation RSDomainViewController
 
-@synthesize account, domain, contactTextField, ttlTextField;
+@synthesize account, domain, contactTextField, ttlTextField, isLoading;
 
 #pragma mark - Constructors
 
@@ -63,23 +63,43 @@ typedef enum {
 
 #pragma mark - View Lifecycle
 
+- (void)loadDomain {
+    
+    self.isLoading = YES;
+    
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    spinner.frame = CGRectMake(0, 0, 320, 220);
+    [spinner startAnimating];
+    self.tableView.tableFooterView = spinner;
+    
+    [[self.account.manager getDomainDetails:self.domain] success:^(OpenStackRequest *request) {
+        
+        self.isLoading = NO;
+        self.tableView.tableFooterView = nil;
+        [self.tableView reloadData];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        self.isLoading = NO;
+        self.tableView.tableFooterView = nil;
+
+    }];
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Domain";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    [[self.account.manager getDomainDetails:self.domain] success:^(OpenStackRequest *request) {
-        
-    } failure:^(OpenStackRequest *request) {
-    
-    }];
+  
+    [self loadDomain];
     
 }
 
 #pragma mark - Table View Data Source and Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return RSDomainNumberOfSections;
+    return self.isLoading ? 1 : RSDomainNumberOfSections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
