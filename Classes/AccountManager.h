@@ -80,5 +80,6 @@
 
 - (APICallback *)getDomains;
 - (APICallback *)createDomain:(RSDomain *)domain;
+- (APICallback *)getDomainDetails:(RSDomain *)domain;
 
 @end

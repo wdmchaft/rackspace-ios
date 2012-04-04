@@ -552,6 +552,24 @@
     return [self callbackWithRequest:request];
 }
 
+- (APICallback *)getDomainDetails:(RSDomain *)domain {
+    __block DNSRequest *request = [DNSRequest getDomainRequest:self.account domain:domain];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
+        
+        NSLog(@"domain response: %@", [response responseString]);
+        
+        
+        
+        /*
+        LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer:self.account];
+        loadBalancer.status = newLB.status;
+        loadBalancer.nodes = newLB.nodes;
+        loadBalancer.connectionLoggingEnabled = newLB.connectionLoggingEnabled;
+        */
+        
+        
+    }];
+}
 
 #pragma mark - Memory Management
 

@@ -74,13 +74,13 @@ typedef enum {
     
     RSTextFieldCell *cell = (RSTextFieldCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
     
     // Configure the cell...
     switch (indexPath.section) {
         case RSAddDomainNameSection:
-            cell.textLabel.text = @"Name";
+            cell.textLabel.text = @"Domain Name";
             if (!self.domainNameTextField) {
                 becomeFirstResponder = YES;
             }

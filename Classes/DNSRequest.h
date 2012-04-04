@@ -17,4 +17,7 @@
 
 + (DNSRequest *)createDomainRequest:(OpenStackAccount *)account domain:(RSDomain *)domain;
 
++ (DNSRequest *)getDomainRequest:(OpenStackAccount *)account domain:(RSDomain *)domain;
+- (RSDomain *)domain;
+
 @end

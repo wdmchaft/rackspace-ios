@@ -11,7 +11,7 @@
 
 @implementation RSDomain
 
-@synthesize name, identifier, comment, accountId, emailAddress, updated, created, ttl;
+@synthesize name, identifier, comment, accountId, emailAddress, updated, created, ttl, nameservers;
 
 - (void)dealloc {
     [name release];
@@ -22,6 +22,7 @@
     [updated release];
     [created release];
     [ttl release];
+    [nameservers release];
     [super dealloc];
 }
 
@@ -30,7 +31,7 @@
     self.identifier = [dict objectForKey:@"id"];
     self.comment = [dict objectForKey:@"comment"];
     self.accountId = [dict objectForKey:@"accountId"];
-    self.emailAddress = [dict objectForKey:@"emailAddress"];    
+    self.emailAddress = [dict objectForKey:@"emailAddress"];
 }
 
 + (RSDomain *)fromJSON:(NSDictionary *)dict {

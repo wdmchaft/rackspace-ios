@@ -10,11 +10,13 @@
 #import "RSDomain.h"
 #import "OpenStackAccount.h"
 
-@interface RSDomainViewController : OpenStackViewController <UITableViewDelegate, UITableViewDataSource>
+@interface RSDomainViewController : UITableViewController <UITextFieldDelegate>
 
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) RSDomain *domain;
+
+@property (nonatomic, retain) UITextField *contactTextField;
+@property (nonatomic, retain) UITextField *ttlTextField;
 
 - (id)initWithAccount:(OpenStackAccount *)account domain:(RSDomain *)domain;
 
