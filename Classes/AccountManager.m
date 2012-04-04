@@ -558,7 +558,7 @@
         
         NSLog(@"domain response: %@", [response responseString]);
         
-        
+        NSLog(@"obj: %@", [request domain]);
         
         /*
         LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer:self.account];

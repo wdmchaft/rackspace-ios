@@ -86,18 +86,12 @@
         "nameservers":[{"name":"ns.rackspace.com"},{"name":"ns2.rackspace.com"}]}         
      */
     
-    
     SBJSON *parser = [[SBJSON alloc] init];
-    NSArray *jsonObjects = [[parser objectWithString:[self responseString]] objectForKey:@"domains"];
-    NSMutableDictionary *objects = [[[NSMutableDictionary alloc] initWithCapacity:[jsonObjects count]] autorelease];
-    for (int i = 0; i < [jsonObjects count]; i++) {
-        NSDictionary *dict = [jsonObjects objectAtIndex:i];
-        RSDomain *rsDomain = [RSDomain fromJSON:dict];
-        [objects setObject:rsDomain forKey:rsDomain.identifier];
-    }
+    NSDictionary *dict = [parser objectWithString:[self responseString]];
+    RSDomain *rsDomain = [RSDomain fromJSON:dict];
     [parser release];
-    return objects;
-
+    return rsDomain;
+    
 }
 
 
