@@ -9,6 +9,8 @@
 #import "RSDomainViewController.h"
 #import "RSTextFieldCell.h"
 #import "AccountManager.h"
+#import "DNSRequest.h"
+#import "RSRecord.h"
 
 /*
  [nav bar: right hand edit to delete domains]
@@ -74,6 +76,8 @@ typedef enum {
     
     [[self.account.manager getDomainDetails:self.domain] success:^(OpenStackRequest *request) {
         
+        DNSRequest *dnsRequest = (DNSRequest *)request;
+        self.domain = [dnsRequest domain];
         self.isLoading = NO;
         self.tableView.tableFooterView = nil;
         [self.tableView reloadData];
@@ -107,9 +111,9 @@ typedef enum {
         case RSDomainOverviewSection:
             return 3;
         case RSDomainDetailsSection:
-            return 3;
+            return [self.domain.nameservers count];
         default:
-            return 1;
+            return [self.domain.records count];
     }
 }
 
@@ -179,6 +183,17 @@ typedef enum {
             
         }
         
+    } else if (indexPath.section == RSDomainDetailsSection) {
+        
+        cell.textLabel.text = [self.domain.nameservers objectAtIndex:indexPath.row];
+        
+    } else if (indexPath.section == RSDomainDomainsSection) {
+        
+        RSRecord *record = [self.domain.records objectAtIndex:indexPath.row];
+//        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", record.type, record.name];
+        cell.textLabel.text = record.type;
+        cell.detailTextLabel.text = record.name;
+    
     } else {
         cell.textLabel.text = @"";
         cell.detailTextLabel.text = @"";

@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSDate *created;
 @property (nonatomic, strong) NSString *ttl;
 @property (nonatomic, strong) NSMutableArray *nameservers;
+@property (nonatomic, strong) NSMutableArray *records;
 
 + (RSDomain *)fromJSON:(NSDictionary *)dict;
 - (NSString *)toJSON;

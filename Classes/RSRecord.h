@@ -18,4 +18,6 @@
 @property (nonatomic, strong) NSDate *updated;
 @property (nonatomic, strong) NSDate *created;
 
+- (void)populateWithJSON:(NSDictionary *)dict;
+
 @end
