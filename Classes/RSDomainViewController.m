@@ -55,10 +55,11 @@ typedef enum {
 #pragma mark - Constructors
 
 - (id)initWithAccount:(OpenStackAccount *)anAccount domain:(RSDomain *)aDomain {
-    self = [self initWithNibName:@"RSDomainViewController" bundle:nil];
+    self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.account = anAccount;
         self.domain = aDomain;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     }
     return self;
 }
@@ -149,11 +150,13 @@ typedef enum {
     }
         
     return cell;
+    
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    cell.accessoryType = UITableViewCellAccessoryNone;
     
     if (indexPath.section == RSDomainOverviewSection) {
         
@@ -190,9 +193,9 @@ typedef enum {
     } else if (indexPath.section == RSDomainDomainsSection) {
         
         RSRecord *record = [self.domain.records objectAtIndex:indexPath.row];
-//        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", record.type, record.name];
         cell.textLabel.text = record.type;
         cell.detailTextLabel.text = record.name;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     } else {
         cell.textLabel.text = @"";

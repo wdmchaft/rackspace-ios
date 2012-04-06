@@ -22,6 +22,8 @@
 		271726F112555EC0003A1319 /* Provider.m in Sources */ = {isa = PBXBuildFile; fileRef = 271726EF12555EC0003A1319 /* Provider.m */; };
 		2717275A12565ED9003A1319 /* OpenStackAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 2717275812565ED9003A1319 /* OpenStackAccount.m */; };
 		2717282512567D61003A1319 /* Keychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 2717282312567D61003A1319 /* Keychain.m */; };
+		27199A4F152ED016004DBFF1 /* RSRecordViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27199A4D152ED016004DBFF1 /* RSRecordViewController.h */; };
+		27199A50152ED016004DBFF1 /* RSRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27199A4E152ED016004DBFF1 /* RSRecordViewController.m */; };
 		271B09331279184D00525011 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B0A1D81278047900A31CED /* QuartzCore.framework */; };
 		271EF653127B333200431D19 /* AnimatedProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 271EF651127B333200431D19 /* AnimatedProgressView.m */; };
 		271EF655127B333200431D19 /* AnimatedProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 271EF651127B333200431D19 /* AnimatedProgressView.m */; };
@@ -1109,6 +1111,8 @@
 		2717277912566335003A1319 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		2717282212567D61003A1319 /* Keychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keychain.h; sourceTree = "<group>"; };
 		2717282312567D61003A1319 /* Keychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Keychain.m; sourceTree = "<group>"; };
+		27199A4D152ED016004DBFF1 /* RSRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSRecordViewController.h; sourceTree = "<group>"; };
+		27199A4E152ED016004DBFF1 /* RSRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSRecordViewController.m; sourceTree = "<group>"; };
 		271EF650127B333200431D19 /* AnimatedProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedProgressView.h; sourceTree = "<group>"; };
 		271EF651127B333200431D19 /* AnimatedProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedProgressView.m; sourceTree = "<group>"; };
 		271EFC81127B89F200431D19 /* SettingsPluginHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsPluginHandler.h; sourceTree = "<group>"; };
@@ -2012,6 +2016,8 @@
 				2748E88D152ACEA400C2D0CE /* RSDomainViewController.h */,
 				2748E88E152ACEA400C2D0CE /* RSDomainViewController.m */,
 				2748E88F152ACEA400C2D0CE /* RSDomainViewController.xib */,
+				27199A4D152ED016004DBFF1 /* RSRecordViewController.h */,
+				27199A4E152ED016004DBFF1 /* RSRecordViewController.m */,
 			);
 			name = DNS;
 			sourceTree = "<group>";
@@ -4258,6 +4264,8 @@
 				272BDA1914A07CBE00F83775 /* RSAddDomainViewController.m in Sources */,
 				2748E890152ACEA400C2D0CE /* RSDomainViewController.h in Sources */,
 				2748E891152ACEA400C2D0CE /* RSDomainViewController.m in Sources */,
+				27199A4F152ED016004DBFF1 /* RSRecordViewController.h in Sources */,
+				27199A50152ED016004DBFF1 /* RSRecordViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
