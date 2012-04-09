@@ -992,6 +992,8 @@
 		27DADC1713B94D6C00F9E906 /* LBNodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DADC1313B94D6B00F9E906 /* LBNodeViewController.m */; };
 		27DC5DD813CB8F0F00091902 /* LoadBalancerConnectionThrottle.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DC5DD613CB8F0F00091902 /* LoadBalancerConnectionThrottle.m */; };
 		27DC5DDA13CB925200091902 /* LoadBalancerConnectionThrottle.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DC5DD613CB8F0F00091902 /* LoadBalancerConnectionThrottle.m */; };
+		27DD4A211532B9F20029A0A7 /* RSRecordViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27199A4D152ED016004DBFF1 /* RSRecordViewController.h */; };
+		27DD4A231532B9F50029A0A7 /* RSRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27199A4E152ED016004DBFF1 /* RSRecordViewController.m */; };
 		27E6B5D812D9211C00EA623F /* MediaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E6B5D512D9211C00EA623F /* MediaViewController.m */; };
 		27E6B5D912D9211C00EA623F /* MediaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27E6B5D612D9211C00EA623F /* MediaViewController.xib */; };
 		27E6B5DB12D9211C00EA623F /* MediaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E6B5D512D9211C00EA623F /* MediaViewController.m */; };
@@ -4433,6 +4435,8 @@
 				272BDA1A14A07CBE00F83775 /* RSAddDomainViewController.m in Sources */,
 				2748E894152AD07300C2D0CE /* RSDomainViewController.m in Sources */,
 				2748E895152AD08C00C2D0CE /* RSDomainViewController.h in Sources */,
+				27DD4A211532B9F20029A0A7 /* RSRecordViewController.h in Sources */,
+				27DD4A231532B9F50029A0A7 /* RSRecordViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

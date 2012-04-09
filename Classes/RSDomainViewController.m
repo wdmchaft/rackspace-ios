@@ -11,6 +11,7 @@
 #import "AccountManager.h"
 #import "DNSRequest.h"
 #import "RSRecord.h"
+#import "RSRecordViewController.h"
 
 /*
  [nav bar: right hand edit to delete domains]
@@ -206,6 +207,19 @@ typedef enum {
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return indexPath.section == RSDomainDomainsSection;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == RSDomainDomainsSection) {
+        
+        RSRecord *record = [self.domain.records objectAtIndex:indexPath.row];
+        RSRecordViewController *vc = [[RSRecordViewController alloc] initWithRecord:record domain:self.domain account:self.account];
+        [self.navigationController pushViewController:vc animated:YES];
+        [vc release];
+        
+    }
+    
 }
 
 #pragma mark - Text Field Delegate

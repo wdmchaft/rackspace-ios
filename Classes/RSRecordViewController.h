@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@class RSDomain, RSRecord;
+@class OpenStackAccount, RSDomain, RSRecord;
 
 @interface RSRecordViewController : UITableViewController
 
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) RSDomain *domain;
 @property (nonatomic, retain) RSRecord *record;
+
+- (id)initWithRecord:(RSRecord *)record domain:(RSDomain *)domain account:(OpenStackAccount *)account;
 
 @end

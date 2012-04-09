@@ -72,6 +72,7 @@
     RSDomain *domain = [[self.account sortedDomains] objectAtIndex:indexPath.row];
     RSDomainViewController *vc = [[RSDomainViewController alloc] initWithAccount:self.account domain:domain];
     [self presentPrimaryViewController:vc];
+    [vc release];
     
 }
 

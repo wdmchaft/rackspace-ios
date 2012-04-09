@@ -16,17 +16,20 @@
 
 @synthesize account, domain, record;
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
+- (id)initWithRecord:(RSRecord *)aRecord domain:(RSDomain *)aDomain account:(OpenStackAccount *)anAccount {
+    
+    self = [self initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        // Custom initialization
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.record = aRecord;
+        self.domain = aDomain;
+        self.account = anAccount;
     }
     return self;
+    
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
     // Uncomment the following line to preserve selection between presentations.
@@ -36,15 +39,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
