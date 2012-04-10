@@ -115,7 +115,7 @@ typedef enum {
         case RSDomainDetailsSection:
             return [self.domain.nameservers count];
         default:
-            return [self.domain.records count];
+            return [self.domain.records count] + 1;
     }
 }
 
@@ -195,10 +195,22 @@ typedef enum {
         
     } else if (indexPath.section == RSDomainDomainsSection) {
         
-        RSRecord *record = [self.domain.records objectAtIndex:indexPath.row];
-        cell.textLabel.text = record.type;
-        cell.detailTextLabel.text = record.name;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if (indexPath.row == [self.domain.records count]) {
+            
+            cell.textLabel.text = @"Add Record";
+            cell.detailTextLabel.text = @"";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            
+        } else {
+
+            RSRecord *record = [self.domain.records objectAtIndex:indexPath.row];
+            cell.textLabel.text = record.type;
+            cell.detailTextLabel.text = record.name;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            
+        }
     
     } else {
         cell.textLabel.text = @"";
@@ -209,6 +221,16 @@ typedef enum {
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return indexPath.section == RSDomainDomainsSection;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)aTableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row == [self.domain.records count]) {
+        return UITableViewCellEditingStyleInsert;
+    } else {
+        return UITableViewCellEditingStyleDelete;        
+    }
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
