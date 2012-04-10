@@ -10,16 +10,28 @@
 
 @implementation RSRecord
 
-@synthesize name, id, type, data, ttl, updated, created;
+@synthesize name, identifier, type, data, ttl, priority, updated, created;
 
 - (void)populateWithJSON:(NSDictionary *)dict {
 
     self.name = [dict objectForKey:@"name"];
-    self.id = [dict objectForKey:@"id"];
+    self.identifier = [dict objectForKey:@"id"];
     self.type = [dict objectForKey:@"type"];
     self.data = [dict objectForKey:@"data"];
     self.ttl = [NSString stringWithFormat:@"%i", [[dict objectForKey:@"ttl"] intValue]];
 
+}
+
+- (void)dealloc {
+    [name release];
+    [identifier release];
+    [type release];
+    [data release];
+    [ttl release];
+    [priority release];
+    [updated release];
+    [created release];
+    [super dealloc];
 }
 
 @end
