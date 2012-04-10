@@ -7,6 +7,15 @@
 //
 
 #import "RSRecordViewController.h"
+#import "RSRecord.h"
+
+typedef enum {
+    RSRecordNameRow,
+    RSRecordTypeRow,
+    RSRecordDataRow,
+    RSRecordMoreInfoRow,
+    RSRecordNumberOfRows
+} RSRecordRowType;
 
 @interface RSRecordViewController ()
 
@@ -31,6 +40,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationItem.title = @"Record";
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -45,42 +56,56 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return RSRecordNumberOfRows;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
-}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    // Configure the cell...
+    if (cell == nil) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+    }
     
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+//    if (indexPath.row == RSRecordNameRow) {
+//        
+//    }
+//    cell.textLabel.text = @"hello";
+//    cell.detailTextLabel.text = @"world";
+    
+    switch (indexPath.row) {
+        case RSRecordNameRow:
+            cell.textLabel.text = @"Name";
+            cell.detailTextLabel.text = self.record.name;
+            break;            
+        case RSRecordTypeRow:
+            cell.textLabel.text = @"Type";
+            cell.detailTextLabel.text = self.record.type;
+            break;            
+        case RSRecordDataRow:
+            cell.textLabel.text = @"Data";
+            cell.detailTextLabel.text = self.record.data;
+            break;            
+        case RSRecordMoreInfoRow:
+            cell.textLabel.text = @"More Info";
+            cell.detailTextLabel.text = @"";
+            break;            
+        default:
+            break;
+    }
+    
+    
+}
+
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)dealloc {

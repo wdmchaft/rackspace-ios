@@ -63,7 +63,6 @@
     cell.textLabel.text = rsDomain.name;
     cell.detailTextLabel.text = rsDomain.comment;
     
-    
     return cell;
 }
 

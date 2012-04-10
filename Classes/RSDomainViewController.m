@@ -183,12 +183,14 @@ typedef enum {
             self.ttlTextField = textFieldCell.textField;
             self.ttlTextField.delegate = self;
             self.ttlTextField.placeholder = @"Time to live (minutes)";
-            self.ttlTextField.text = self.domain.ttl;
-            
+            if (![self.domain.ttl isEqualToString:@"0"]) {
+                self.ttlTextField.text = self.domain.ttl;
+            }
         }
         
     } else if (indexPath.section == RSDomainDetailsSection) {
         
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.text = [self.domain.nameservers objectAtIndex:indexPath.row];
         
     } else if (indexPath.section == RSDomainDomainsSection) {
