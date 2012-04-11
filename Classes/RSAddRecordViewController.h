@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "OpenStackAccount.h"
+#import "RSRecordTypeViewController.h"
 
-@interface RSAddRecordViewController : UITableViewController
+@interface RSAddRecordViewController : UITableViewController <RSRecordTypeViewControllerDelegate>
 
 @property (nonatomic, retain) OpenStackAccount *account;
 @property (nonatomic, retain) IBOutlet UITextField *nameTextField;

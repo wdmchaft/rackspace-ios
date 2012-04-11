@@ -111,6 +111,24 @@ typedef enum {
      [detailViewController release];
      */
     
+    if (indexPath.row == RSRecordTypeRow) {
+        
+        RSRecordTypeViewController *vc = [[RSRecordTypeViewController alloc] initWithDelegate:self];
+        vc.selectedRecordType = self.recordType;
+        [self.navigationController pushViewController:vc animated:YES];
+        [vc release];
+        
+    }
+    
+}
+
+#pragma mark - RSRecordTypeViewControllerDelegate
+
+- (void)recordTypeViewController:(RSRecordTypeViewController *)recordTypeViewController didSelectRecordType:(NSString *)type {
+    
+    self.recordType = type;
+    [self.tableView reloadData];
+    
 }
 
 #pragma mark - Memory Management
