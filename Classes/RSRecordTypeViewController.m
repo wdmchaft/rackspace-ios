@@ -32,6 +32,7 @@
     [super viewDidLoad];
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.navigationItem.title = @"Record Type";
 
 }
 
