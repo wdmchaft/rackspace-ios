@@ -858,6 +858,13 @@
 		27C0517A12B0134F00CB21C7 /* AddContainerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27C0517712B0134F00CB21C7 /* AddContainerViewController.xib */; };
 		27C0517C12B0134F00CB21C7 /* AddContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0517612B0134F00CB21C7 /* AddContainerViewController.m */; };
 		27C0517D12B0134F00CB21C7 /* AddContainerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27C0517712B0134F00CB21C7 /* AddContainerViewController.xib */; };
+		27C0AF1D1535345B00070296 /* RSAddRecordViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF1B1535345B00070296 /* RSAddRecordViewController.h */; };
+		27C0AF1E1535345B00070296 /* RSAddRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF1C1535345B00070296 /* RSAddRecordViewController.m */; };
+		27C0AF201535492C00070296 /* RSAddRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF1C1535345B00070296 /* RSAddRecordViewController.m */; };
+		27C0AF231535522E00070296 /* RSRecordTypeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF211535522D00070296 /* RSRecordTypeViewController.h */; };
+		27C0AF241535522E00070296 /* RSRecordTypeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF211535522D00070296 /* RSRecordTypeViewController.h */; };
+		27C0AF251535522E00070296 /* RSRecordTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF221535522D00070296 /* RSRecordTypeViewController.m */; };
+		27C0AF261535522E00070296 /* RSRecordTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF221535522D00070296 /* RSRecordTypeViewController.m */; };
 		27C15CAA13A7C46A00A1BB9F /* Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 279754941256BA2100D7A533 /* Base64.m */; };
 		27C15CAB13A7C48200A1BB9F /* OpenStackAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 2717275812565ED9003A1319 /* OpenStackAccount.m */; };
 		27C15CAC13A7C4BD00A1BB9F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -1528,6 +1535,10 @@
 		27C0517512B0134F00CB21C7 /* AddContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContainerViewController.h; sourceTree = "<group>"; };
 		27C0517612B0134F00CB21C7 /* AddContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContainerViewController.m; sourceTree = "<group>"; };
 		27C0517712B0134F00CB21C7 /* AddContainerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddContainerViewController.xib; sourceTree = "<group>"; };
+		27C0AF1B1535345B00070296 /* RSAddRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSAddRecordViewController.h; sourceTree = "<group>"; };
+		27C0AF1C1535345B00070296 /* RSAddRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSAddRecordViewController.m; sourceTree = "<group>"; };
+		27C0AF211535522D00070296 /* RSRecordTypeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSRecordTypeViewController.h; sourceTree = "<group>"; };
+		27C0AF221535522D00070296 /* RSRecordTypeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSRecordTypeViewController.m; sourceTree = "<group>"; };
 		27C15CC413A7D81D00A1BB9F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27C38BBE13D0D48400CC7222 /* red-delete-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-delete-button@2x.png"; sourceTree = "<group>"; };
 		27C38BBF13D0D48500CC7222 /* red-delete-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-delete-button.png"; sourceTree = "<group>"; };
@@ -2020,6 +2031,10 @@
 				2748E88F152ACEA400C2D0CE /* RSDomainViewController.xib */,
 				27199A4D152ED016004DBFF1 /* RSRecordViewController.h */,
 				27199A4E152ED016004DBFF1 /* RSRecordViewController.m */,
+				27C0AF1B1535345B00070296 /* RSAddRecordViewController.h */,
+				27C0AF1C1535345B00070296 /* RSAddRecordViewController.m */,
+				27C0AF211535522D00070296 /* RSRecordTypeViewController.h */,
+				27C0AF221535522D00070296 /* RSRecordTypeViewController.m */,
 			);
 			name = DNS;
 			sourceTree = "<group>";
@@ -4268,6 +4283,10 @@
 				2748E891152ACEA400C2D0CE /* RSDomainViewController.m in Sources */,
 				27199A4F152ED016004DBFF1 /* RSRecordViewController.h in Sources */,
 				27199A50152ED016004DBFF1 /* RSRecordViewController.m in Sources */,
+				27C0AF1D1535345B00070296 /* RSAddRecordViewController.h in Sources */,
+				27C0AF1E1535345B00070296 /* RSAddRecordViewController.m in Sources */,
+				27C0AF231535522E00070296 /* RSRecordTypeViewController.h in Sources */,
+				27C0AF251535522E00070296 /* RSRecordTypeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4437,6 +4456,9 @@
 				2748E895152AD08C00C2D0CE /* RSDomainViewController.h in Sources */,
 				27DD4A211532B9F20029A0A7 /* RSRecordViewController.h in Sources */,
 				27DD4A231532B9F50029A0A7 /* RSRecordViewController.m in Sources */,
+				27C0AF201535492C00070296 /* RSAddRecordViewController.m in Sources */,
+				27C0AF241535522E00070296 /* RSRecordTypeViewController.h in Sources */,
+				27C0AF261535522E00070296 /* RSRecordTypeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

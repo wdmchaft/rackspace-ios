@@ -10,15 +10,17 @@
 
 @interface RSRecord : NSObject
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *identifier;
-@property (nonatomic, strong) NSString *type;
-@property (nonatomic, strong) NSString *data;
-@property (nonatomic, strong) NSNumber *ttl;
-@property (nonatomic, strong) NSString *priority;
-@property (nonatomic, strong) NSDate *updated;
-@property (nonatomic, strong) NSDate *created;
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *identifier;
+@property (nonatomic, retain) NSString *type;
+@property (nonatomic, retain) NSString *data;
+@property (nonatomic, retain) NSNumber *ttl;
+@property (nonatomic, retain) NSString *priority;
+@property (nonatomic, retain) NSDate *updated;
+@property (nonatomic, retain) NSDate *created;
 
 - (void)populateWithJSON:(NSDictionary *)dict;
+
++ (NSArray *)recordTypes;
 
 @end

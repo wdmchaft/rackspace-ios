@@ -1,13 +1,13 @@
 //
-//  RSRecordViewController.m
+//  RSAddRecordViewController.m
 //  OpenStack
 //
-//  Created by Mike Mayo on 4/6/12.
+//  Created by Mike Mayo on 4/10/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "RSRecordViewController.h"
-#import "RSRecord.h"
+#import "RSAddRecordViewController.h"
+#import "RSTextFieldCell.h"
 
 typedef enum {
     RSRecordNameRow,
@@ -17,41 +17,32 @@ typedef enum {
     RSRecordNumberOfRows
 } RSRecordRowType;
 
-@interface RSRecordViewController ()
+@interface RSAddRecordViewController ()
 
 @end
 
-@implementation RSRecordViewController
+@implementation RSAddRecordViewController
 
-@synthesize account, domain, record;
+@synthesize account, nameTextField, typeTextField, dataTextField;
 
-- (id)initWithRecord:(RSRecord *)aRecord domain:(RSDomain *)aDomain account:(OpenStackAccount *)anAccount {
-    
-    self = [self initWithStyle:UITableViewStyleGrouped];
+- (id)initWithAccount:(OpenStackAccount *)anAccount {
+    self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        self.record = aRecord;
-        self.domain = aDomain;
         self.account = anAccount;
     }
     return self;
-    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.title = @"Record";
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
@@ -61,12 +52,14 @@ typedef enum {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    RSTextFieldCell *cell = (RSTextFieldCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
+    
+    // Configure the cell...
     
     return cell;
 }
@@ -76,15 +69,12 @@ typedef enum {
     switch (indexPath.row) {
         case RSRecordNameRow:
             cell.textLabel.text = @"Name";
-            cell.detailTextLabel.text = self.record.name;
             break;            
         case RSRecordTypeRow:
             cell.textLabel.text = @"Type";
-            cell.detailTextLabel.text = self.record.type;
             break;            
         case RSRecordDataRow:
             cell.textLabel.text = @"Data";
-            cell.detailTextLabel.text = self.record.data;
             break;            
         case RSRecordMoreInfoRow:
             cell.textLabel.text = @"More Info";
@@ -93,18 +83,31 @@ typedef enum {
         default:
             break;
     }
-        
+    
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    // Navigation logic may go here. Create and push another view controller.
+    /*
+     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
+     // ...
+     // Pass the selected object to the new view controller.
+     [self.navigationController pushViewController:detailViewController animated:YES];
+     [detailViewController release];
+     */
+    
 }
+
+#pragma mark - Memory Management
 
 - (void)dealloc {
     [account release];
-    [domain release];
-    [record release];
+    [nameTextField release];
+    [typeTextField release];
+    [dataTextField release];
     [super dealloc];
 }
 

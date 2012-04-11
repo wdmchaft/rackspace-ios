@@ -12,6 +12,10 @@
 
 @synthesize name, identifier, type, data, ttl, priority, updated, created;
 
++ (NSArray *)recordTypes {
+    return [NSArray arrayWithObjects:@"A/AAAA", @"CNAME", @"MX", @"NS", @"SRV", @"TXT", nil];
+}
+
 - (void)populateWithJSON:(NSDictionary *)dict {
 
     self.name = [dict objectForKey:@"name"];

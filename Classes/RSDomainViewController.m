@@ -12,6 +12,7 @@
 #import "DNSRequest.h"
 #import "RSRecord.h"
 #import "RSRecordViewController.h"
+#import "RSAddRecordViewController.h"
 
 /*
  [nav bar: right hand edit to delete domains]
@@ -237,11 +238,20 @@ typedef enum {
     
     if (indexPath.section == RSDomainDomainsSection) {
         
-        RSRecord *record = [self.domain.records objectAtIndex:indexPath.row];
-        RSRecordViewController *vc = [[RSRecordViewController alloc] initWithRecord:record domain:self.domain account:self.account];
-        [self.navigationController pushViewController:vc animated:YES];
-        [vc release];
-        
+        if (indexPath.row == [self.domain.records count]) {
+            
+            RSAddRecordViewController *vc = [[RSAddRecordViewController alloc] initWithAccount:self.account];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
+            
+        } else {        
+            
+            RSRecord *record = [self.domain.records objectAtIndex:indexPath.row];
+            RSRecordViewController *vc = [[RSRecordViewController alloc] initWithRecord:record domain:self.domain account:self.account];
+            [self.navigationController pushViewController:vc animated:YES];
+            [vc release];
+            
+        }
     }
     
 }
