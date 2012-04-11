@@ -8,6 +8,7 @@
 
 #import "RSAddRecordViewController.h"
 #import "RSTextFieldCell.h"
+#import "RSRecord.h"
 
 typedef enum {
     RSRecordNameRow,
@@ -23,7 +24,7 @@ typedef enum {
 
 @implementation RSAddRecordViewController
 
-@synthesize account, nameTextField, typeTextField, dataTextField;
+@synthesize account, nameTextField, typeTextField, dataTextField, recordType;
 
 - (id)initWithAccount:(OpenStackAccount *)anAccount {
     self = [super initWithStyle:UITableViewStyleGrouped];
@@ -37,12 +38,11 @@ typedef enum {
     [super viewDidLoad];
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    
+    if (!self.recordType) {
+        self.recordType = [[RSRecord recordTypes] objectAtIndex:0];
+    }
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 #pragma mark - Table view data source
@@ -51,12 +51,20 @@ typedef enum {
     return RSRecordNumberOfRows;
 }
 
+- (Class)cellClassForIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == RSRecordTypeRow) {
+        return [UITableViewCell class];
+    } else {
+        return [RSTextFieldCell class];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"Cell";
-    RSTextFieldCell *cell = (RSTextFieldCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    Class klass = [self cellClassForIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(klass)];
     if (cell == nil) {
-        cell = [[[RSTextFieldCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[klass alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass(klass)] autorelease];
     }
     
     // Configure the cell...
@@ -66,12 +74,16 @@ typedef enum {
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    
     switch (indexPath.row) {
         case RSRecordNameRow:
             cell.textLabel.text = @"Name";
             break;            
         case RSRecordTypeRow:
             cell.textLabel.text = @"Type";
+            cell.detailTextLabel.text = self.recordType;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             break;            
         case RSRecordDataRow:
             cell.textLabel.text = @"Data";

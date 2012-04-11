@@ -16,6 +16,7 @@
 @property (nonatomic, retain) IBOutlet UITextField *typeTextField;
 @property (nonatomic, retain) IBOutlet UITextField *dataTextField;
 
+@property (nonatomic, retain) NSString *recordType;
 
 //RSRecordNameRow,
 //RSRecordTypeRow,
