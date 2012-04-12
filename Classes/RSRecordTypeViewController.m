@@ -69,7 +69,9 @@
     NSString *recordType = [[RSRecord recordTypes] objectAtIndex:indexPath.row];
     self.selectedRecordType = recordType;
     [self.delegate recordTypeViewController:self didSelectRecordType:recordType];
-    [self.tableView reloadData];
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
     
 }
 

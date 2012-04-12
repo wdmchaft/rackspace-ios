@@ -198,6 +198,7 @@ typedef enum {
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.text = [self.domain.nameservers objectAtIndex:indexPath.row];
+        cell.detailTextLabel.text = @"";
         
     } else if (indexPath.section == RSDomainDomainsSection) {
         
