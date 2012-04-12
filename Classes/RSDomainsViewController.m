@@ -66,7 +66,7 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     RSDomain *domain = [[self.account sortedDomains] objectAtIndex:indexPath.row];
     RSDomainViewController *vc = [[RSDomainViewController alloc] initWithAccount:self.account domain:domain];

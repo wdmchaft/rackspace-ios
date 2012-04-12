@@ -75,7 +75,8 @@
 
 + (DNSRequest *)getDomainRequest:(OpenStackAccount *)account domain:(RSDomain *)domain {
     
-    NSString *path = [NSString stringWithFormat:@"/domains/%@?showRecords=true&showSubdomains=true", domain.identifier];
+    NSString *now = [[[NSDate date] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *path = [NSString stringWithFormat:@"/domains/%@?showRecords=true&showSubdomains=true&now=%@", domain.identifier, now];
     return [DNSRequest dnsRequest:account method:@"GET" path:path];
     
 }

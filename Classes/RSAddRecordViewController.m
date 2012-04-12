@@ -173,12 +173,14 @@ typedef enum {
         
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-        record.ttl = [formatter numberFromString:@"42"];
+        record.ttl = [formatter numberFromString:self.ttlTextField.text];
         [formatter release];        
         
         [[self.account.manager createRecord:record domain:self.domain] success:^(OpenStackRequest *request) {
             
-            [self alert:nil message:@"success"];
+            [self alert:@"It worked." request:request];
+            
+//            [self.domain.records addObject:record];
             
         } failure:^(OpenStackRequest *request) {
             

@@ -14,7 +14,7 @@
 @synthesize name, identifier, type, data, ttl, priority, updated, created;
 
 + (NSArray *)recordTypes {
-    return [NSArray arrayWithObjects:@"A/AAAA", @"CNAME", @"MX", @"NS", @"SRV", @"TXT", nil];
+    return [NSArray arrayWithObjects:@"A", @"CNAME", @"MX", @"NS", @"SRV", @"TXT", nil];
 }
 
 - (void)populateWithJSON:(NSDictionary *)dict {
@@ -32,7 +32,7 @@
     NSString *json
         = @"{  \"name\" : \"<name>\","
             "  \"type\" : \"<type>\","
-            "  \"data\" : \"<data>\""
+            "  \"data\" : \"<data>\","
             "  \"ttl\" : <ttl>"
             "  <priority>"
             "}";
@@ -43,7 +43,7 @@
     
     NSString *priorityString = @"";
     if (self.priority) {
-        priorityString = [NSString stringWithFormat:@"\"priority\" : %@", self.priority];
+        priorityString = [NSString stringWithFormat:@", \"priority\" : %@", self.priority];
     }
     json = [json replace:@"<priority>" with:priorityString];
     
