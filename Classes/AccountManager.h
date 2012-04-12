@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "APICallback.h"
 
-@class OpenStackAccount, Server, Flavor, Image, Container, StorageObject, OpenStackRequest, ASINetworkQueue, LoadBalancer, LoadBalancerNode, RSDomain;
+@class OpenStackAccount, Server, Flavor, Image, Container, StorageObject, OpenStackRequest, ASINetworkQueue, LoadBalancer, LoadBalancerNode, RSDomain, RSRecord;
 
 @interface AccountManager : NSObject {
     OpenStackAccount *account;
@@ -81,5 +81,11 @@
 - (APICallback *)getDomains;
 - (APICallback *)createDomain:(RSDomain *)domain;
 - (APICallback *)getDomainDetails:(RSDomain *)domain;
+- (APICallback *)updateDomain:(RSDomain *)domain;
+- (APICallback *)deleteDomain:(RSDomain *)domain;
+- (APICallback *)createRecord:(RSRecord *)record domain:(RSDomain *)domain;
+- (APICallback *)updateRecord:(RSRecord *)record domain:(RSDomain *)domain;
+- (APICallback *)deleteRecord:(RSRecord *)record domain:(RSDomain *)domain;
+
 
 @end

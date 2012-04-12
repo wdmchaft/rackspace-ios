@@ -556,17 +556,41 @@
     __block DNSRequest *request = [DNSRequest getDomainRequest:self.account domain:domain];
     return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
         
-        NSLog(@"domain response: %@", [response responseString]);
+    }];
+
+}
+
+- (APICallback *)updateDomain:(RSDomain *)domain {
+    __block DNSRequest *request = [DNSRequest updateDomainRequest:self.account domain:domain];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
         
-        NSLog(@"obj: %@", [request domain]);
+    }];
+}
+
+- (APICallback *)deleteDomain:(RSDomain *)domain {
+    __block DNSRequest *request = [DNSRequest deleteDomainRequest:self.account domain:domain];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
         
-        /*
-        LoadBalancer *newLB = [(LoadBalancerRequest *)request loadBalancer:self.account];
-        loadBalancer.status = newLB.status;
-        loadBalancer.nodes = newLB.nodes;
-        loadBalancer.connectionLoggingEnabled = newLB.connectionLoggingEnabled;
-        */
+    }];
+}
+
+- (APICallback *)createRecord:(RSRecord *)record domain:(RSDomain *)domain {
+    __block DNSRequest *request = [DNSRequest createRecordRequest:self.account domain:domain record:record];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
         
+    }];
+}
+
+- (APICallback *)updateRecord:(RSRecord *)record domain:(RSDomain *)domain {
+    __block DNSRequest *request = [DNSRequest updateRecordRequest:self.account domain:domain record:record];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
+        
+    }];
+}
+
+- (APICallback *)deleteRecord:(RSRecord *)record domain:(RSDomain *)domain {
+    __block DNSRequest *request = [DNSRequest deleteRecordRequest:self.account domain:domain record:record];
+    return [self callbackWithRequest:request success:^(OpenStackRequest *response) {
         
     }];
 }
