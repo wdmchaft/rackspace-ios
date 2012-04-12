@@ -98,9 +98,14 @@ typedef enum {
     [super viewDidLoad];
     self.navigationItem.title = @"Domain";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-  
+    self.isLoading = YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.isLoading = YES;
+    [self.tableView reloadData];
     [self loadDomain];
-    
 }
 
 #pragma mark - Table View Data Source and Delegate

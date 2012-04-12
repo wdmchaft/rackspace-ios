@@ -134,8 +134,8 @@ typedef enum {
     
     [[self.account.manager createDomain:domain] success:^(OpenStackRequest *request) {
         
-        [self alert:nil message:[request responseString]];
-        [self dismissModalViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
+        [self alert:nil message:@"Your record is queued to be created."];
         
     } failure:^(OpenStackRequest *request) {
         
