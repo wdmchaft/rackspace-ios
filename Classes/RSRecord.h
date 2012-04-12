@@ -10,17 +10,22 @@
 
 @interface RSRecord : NSObject
 
-@property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *identifier;
 @property (nonatomic, retain) NSString *type;
+@property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *data;
 @property (nonatomic, retain) NSNumber *ttl;
+
+// priority is only available for MX and SRV records
 @property (nonatomic, retain) NSString *priority;
+
 @property (nonatomic, retain) NSDate *updated;
 @property (nonatomic, retain) NSDate *created;
 
 - (void)populateWithJSON:(NSDictionary *)dict;
 
 + (NSArray *)recordTypes;
+
+- (NSString *)toJSON;
 
 @end

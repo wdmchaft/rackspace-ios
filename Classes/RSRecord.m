@@ -7,6 +7,7 @@
 //
 
 #import "RSRecord.h"
+#import "NSString+Conveniences.h"
 
 @implementation RSRecord
 
@@ -24,6 +25,30 @@
     self.data = [dict objectForKey:@"data"];
     self.ttl = [NSString stringWithFormat:@"%i", [[dict objectForKey:@"ttl"] intValue]];
 
+}
+
+- (NSString *)toJSON {
+    
+    NSString *json
+        = @"{  \"name\" : \"<name>\","
+            "  \"type\" : \"<type>\","
+            "  \"data\" : \"<data>\""
+            "  \"ttl\" : <ttl>"
+            "  <priority>"
+            "}";
+    json = [json replace:@"<name>" with:self.name];
+    json = [json replace:@"<type>" with:self.type];
+    json = [json replace:@"<data>" with:self.data];
+    json = [json replace:@"<ttl>" with:[NSString stringWithFormat:@"%i", [self.ttl intValue]]];
+    
+    NSString *priorityString = @"";
+    if (self.priority) {
+        priorityString = [NSString stringWithFormat:@"\"priority\" : %@", self.priority];
+    }
+    json = [json replace:@"<priority>" with:priorityString];
+    
+    return json;
+    
 }
 
 - (void)dealloc {
