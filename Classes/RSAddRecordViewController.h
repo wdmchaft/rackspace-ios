@@ -9,22 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "OpenStackAccount.h"
 #import "RSRecordTypeViewController.h"
+#import "RSDomain.h"
 
-@interface RSAddRecordViewController : UITableViewController <RSRecordTypeViewControllerDelegate>
+@interface RSAddRecordViewController : UITableViewController <RSRecordTypeViewControllerDelegate, UITextFieldDelegate>
 
 @property (nonatomic, retain) OpenStackAccount *account;
-@property (nonatomic, retain) IBOutlet UITextField *nameTextField;
-@property (nonatomic, retain) IBOutlet UITextField *typeTextField;
-@property (nonatomic, retain) IBOutlet UITextField *dataTextField;
-
+@property (nonatomic, retain) RSDomain *domain;
+@property (nonatomic, retain) UITextField *nameTextField;
+@property (nonatomic, retain) UITextField *dataTextField;
+@property (nonatomic, retain) UITextField *ttlTextField;
+@property (nonatomic, retain) UITextField *priorityTextField;
 @property (nonatomic, retain) NSString *recordType;
 
-//RSRecordNameRow,
-//RSRecordTypeRow,
-//RSRecordDataRow,
-//RSRecordMoreInfoRow,
-
-
-- (id)initWithAccount:(OpenStackAccount *)account;
+- (id)initWithAccount:(OpenStackAccount *)account domain:(RSDomain *)domain;
 
 @end

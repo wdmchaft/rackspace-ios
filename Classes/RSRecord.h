@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSNumber *ttl;
 
 // priority is only available for MX and SRV records
+// max value is 65535
 @property (nonatomic, retain) NSString *priority;
 
 @property (nonatomic, retain) NSDate *updated;

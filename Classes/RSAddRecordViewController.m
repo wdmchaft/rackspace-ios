@@ -7,13 +7,16 @@
 //
 
 #import "RSAddRecordViewController.h"
+#import "UIViewController+Conveniences.h"
 #import "RSTextFieldCell.h"
 #import "RSRecord.h"
+#import "AccountManager.h"
 
 typedef enum {
     RSRecordNameRow,
     RSRecordTypeRow,
     RSRecordDataRow,
+    RSRecordTTLRow,
     RSRecordMoreInfoRow,
     RSRecordNumberOfRows
 } RSRecordRowType;
@@ -24,12 +27,13 @@ typedef enum {
 
 @implementation RSAddRecordViewController
 
-@synthesize account, nameTextField, typeTextField, dataTextField, recordType;
+@synthesize account, domain, nameTextField, dataTextField, ttlTextField, priorityTextField, recordType;
 
-- (id)initWithAccount:(OpenStackAccount *)anAccount {
+- (id)initWithAccount:(OpenStackAccount *)anAccount domain:(RSDomain *)aDomain {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         self.account = anAccount;
+        self.domain = aDomain;
     }
     return self;
 }
@@ -37,7 +41,9 @@ typedef enum {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationItem.title = @"Add Record";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    [self addSaveButton];
     
     if (!self.recordType) {
         self.recordType = [[RSRecord recordTypes] objectAtIndex:0];
@@ -68,6 +74,9 @@ typedef enum {
     }
     
     // Configure the cell...
+    if ([cell isKindOfClass:[RSTextFieldCell class]]) {
+        ((RSTextFieldCell *)cell).textField.delegate = self;
+    }
     
     return cell;
 }
@@ -75,10 +84,11 @@ typedef enum {
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     cell.accessoryType = UITableViewCellAccessoryNone;
-    
+        
     switch (indexPath.row) {
         case RSRecordNameRow:
             cell.textLabel.text = @"Name";
+            self.nameTextField = ((RSTextFieldCell *)cell).textField;
             break;            
         case RSRecordTypeRow:
             cell.textLabel.text = @"Type";
@@ -87,7 +97,12 @@ typedef enum {
             break;            
         case RSRecordDataRow:
             cell.textLabel.text = @"Data";
-            break;            
+            self.dataTextField = ((RSTextFieldCell *)cell).textField;
+            break;
+        case RSRecordTTLRow:
+            cell.textLabel.text = @"TTL (mins)";
+            self.ttlTextField = ((RSTextFieldCell *)cell).textField;
+            break;
         case RSRecordMoreInfoRow:
             cell.textLabel.text = @"More Info";
             cell.detailTextLabel.text = @"";
@@ -101,15 +116,6 @@ typedef enum {
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
     
     if (indexPath.row == RSRecordTypeRow) {
         
@@ -131,13 +137,68 @@ typedef enum {
     
 }
 
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    
+    self.ttlTextField.keyboardType = UIKeyboardTypeNumberPad;
+    self.priorityTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    return YES;
+    
+}
+
+#pragma mark - Button Handlers
+
+- (BOOL)isValid {
+    
+    return self.nameTextField.text && self.dataTextField.text && self.ttlTextField.text 
+        && ![self.nameTextField.text isEqualToString:@""] && ![self.dataTextField.text isEqualToString:@""]
+        && ![self.ttlTextField.text isEqualToString:@""];
+    
+}
+
+- (void)saveButtonPressed:(id)sender {
+    
+    if (![self isValid]) {
+        
+        [self alert:@"Error" message:@"Please fill out all fields."];
+        
+    } else {
+        
+        RSRecord *record = [[[RSRecord alloc] init] autorelease];
+        record.name = self.nameTextField.text;
+        record.type = self.recordType;
+        record.data = self.dataTextField.text;
+        
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        record.ttl = [formatter numberFromString:@"42"];
+        [formatter release];        
+        
+        [[self.account.manager createRecord:record domain:self.domain] success:^(OpenStackRequest *request) {
+            
+            [self alert:nil message:@"success"];
+            
+        } failure:^(OpenStackRequest *request) {
+            
+            [self alert:@"There was a problem creating this record." request:request];
+            
+        }];
+        
+    }
+    
+}
+
 #pragma mark - Memory Management
 
 - (void)dealloc {
     [account release];
+    [domain release];
     [nameTextField release];
-    [typeTextField release];
     [dataTextField release];
+    [ttlTextField release];
+    [priorityTextField release];
     [super dealloc];
 }
 

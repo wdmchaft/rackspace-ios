@@ -240,7 +240,7 @@ typedef enum {
         
         if (indexPath.row == [self.domain.records count]) {
             
-            RSAddRecordViewController *vc = [[RSAddRecordViewController alloc] initWithAccount:self.account];
+            RSAddRecordViewController *vc = [[RSAddRecordViewController alloc] initWithAccount:self.account domain:self.domain];
             [self.navigationController pushViewController:vc animated:YES];
             [vc release];
             
