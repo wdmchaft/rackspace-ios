@@ -13,6 +13,7 @@
 #import "RSRecord.h"
 #import "RSRecordViewController.h"
 #import "RSAddRecordViewController.h"
+#import "UIViewController+Conveniences.h"
 
 /*
  [nav bar: right hand edit to delete domains]
@@ -103,9 +104,7 @@ typedef enum {
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    self.isLoading = YES;
-    [self.tableView reloadData];
-    [self loadDomain];
+    [self.tableView reloadData];    [self loadDomain];
 }
 
 #pragma mark - Table View Data Source and Delegate
@@ -238,6 +237,26 @@ typedef enum {
         return UITableViewCellEditingStyleDelete;        
     }
 
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        RSRecord *record = [self.domain.records objectAtIndex:indexPath.row];
+        [[self.account.manager deleteRecord:record domain:self.domain] success:^(OpenStackRequest *request) {
+            
+            [self.domain.records removeObject:record];
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+        } failure:^(OpenStackRequest *request) {
+            
+            [self alert:@"There was a problem deleting your record." request:request]; 
+            
+        }];
+        
+    }
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

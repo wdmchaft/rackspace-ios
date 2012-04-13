@@ -17,7 +17,7 @@ typedef enum {
     RSRecordTypeRow,
     RSRecordDataRow,
     RSRecordTTLRow,
-    RSRecordMoreInfoRow,
+    RSRecordPriorityRow,
     RSRecordNumberOfRows
 } RSRecordRowType;
 
@@ -53,8 +53,12 @@ typedef enum {
 
 #pragma mark - Table view data source
 
+- (BOOL)recordTypeHasPriority {
+    return [self.recordType isEqualToString:@"MX"] || [self.recordType isEqualToString:@"SRV"];
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return RSRecordNumberOfRows;
+    return [self recordTypeHasPriority] ? RSRecordNumberOfRows : RSRecordNumberOfRows - 1;
 }
 
 - (Class)cellClassForIndexPath:(NSIndexPath *)indexPath {
@@ -103,9 +107,9 @@ typedef enum {
             cell.textLabel.text = @"TTL (mins)";
             self.ttlTextField = ((RSTextFieldCell *)cell).textField;
             break;
-        case RSRecordMoreInfoRow:
-            cell.textLabel.text = @"More Info";
-            cell.detailTextLabel.text = @"";
+        case RSRecordPriorityRow:
+            cell.textLabel.text = @"Priority";
+            self.priorityTextField = ((RSTextFieldCell *)cell).textField;
             break;            
         default:
             break;
@@ -170,6 +174,10 @@ typedef enum {
         record.name = self.nameTextField.text;
         record.type = self.recordType;
         record.data = self.dataTextField.text;
+        
+        if (self.priorityTextField.text && ![self.priorityTextField.text isEqualToString:@""]) {
+            record.priority = self.priorityTextField.text;
+        }
         
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
