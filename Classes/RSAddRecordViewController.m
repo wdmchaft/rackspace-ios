@@ -152,6 +152,27 @@ typedef enum {
     
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    [textField resignFirstResponder];
+
+    if (![textField.text isEqualToString:@""]) {
+
+        if ([textField isEqual:self.nameTextField]) {
+            [self.dataTextField becomeFirstResponder];
+        } else if ([textField isEqual:self.dataTextField]) {
+            [self.ttlTextField becomeFirstResponder];
+        } else if ([textField isEqual:self.ttlTextField]) {
+            if ([self recordTypeHasPriority]) {
+                [self.priorityTextField becomeFirstResponder];
+            }
+        }
+        
+    }
+    
+    return NO;
+}
+
 #pragma mark - Button Handlers
 
 - (BOOL)isValid {

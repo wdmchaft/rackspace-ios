@@ -61,7 +61,6 @@
     
     RSDomain *rsDomain = [[self.account sortedDomains] objectAtIndex:indexPath.row];
     cell.textLabel.text = rsDomain.name;
-    cell.detailTextLabel.text = rsDomain.comment;
     
     return cell;
 }
