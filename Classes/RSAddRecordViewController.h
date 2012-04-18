@@ -23,4 +23,6 @@
 
 - (id)initWithAccount:(OpenStackAccount *)account domain:(RSDomain *)domain;
 
+- (BOOL)isValid;
+
 @end

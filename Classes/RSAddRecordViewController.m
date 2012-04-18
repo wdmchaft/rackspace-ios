@@ -207,9 +207,7 @@ typedef enum {
         
         [[self.account.manager createRecord:record domain:self.domain] success:^(OpenStackRequest *request) {
             
-            [self alert:@"It worked." request:request];
-            
-//            [self.domain.records addObject:record];
+            [self alert:@"Your record has been submitted." request:request];
             
         } failure:^(OpenStackRequest *request) {
             

@@ -55,7 +55,7 @@
     
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellId];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellId];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellId] autorelease];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
@@ -98,6 +98,7 @@
     
     RSAddDomainViewController *vc = [[RSAddDomainViewController alloc] initWithAccount:self.account];
     [self presentModalViewControllerWithNavigation:vc];
+    [vc release];
     
 }
 

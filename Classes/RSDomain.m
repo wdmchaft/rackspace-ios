@@ -43,15 +43,16 @@
     
     NSArray *jsonRecords = [[dict objectForKey:@"recordsList"] objectForKey:@"records"];
     
-    self.records = [[NSMutableArray alloc] initWithCapacity:[jsonRecords count]];
+    self.records = [[[NSMutableArray alloc] initWithCapacity:[jsonRecords count]] autorelease];
     for (NSDictionary *recordDict in jsonRecords) {
         RSRecord *record = [[RSRecord alloc] init];
         [record populateWithJSON:recordDict];
         [self.records addObject:record];
+        [record release];
     }
 
     NSArray *jsonNameservers = [dict objectForKey:@"nameservers"];
-    self.nameservers = [[NSMutableArray alloc] initWithCapacity:[jsonNameservers count]];
+    self.nameservers = [[[NSMutableArray alloc] initWithCapacity:[jsonNameservers count]] autorelease];
     for (NSDictionary *nsDict in jsonNameservers) {
         [self.nameservers addObject:[nsDict objectForKey:@"name"]];
     }

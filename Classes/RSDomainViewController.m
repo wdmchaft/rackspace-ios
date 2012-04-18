@@ -73,7 +73,7 @@ typedef enum {
     
     self.isLoading = YES;
     
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIActivityIndicatorView *spinner = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] autorelease];
     spinner.frame = CGRectMake(0, 0, 320, 220);
     [spinner startAnimating];
     self.tableView.tableFooterView = spinner;
@@ -152,7 +152,7 @@ typedef enum {
     
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:className];
     if (cell == nil) {
-        cell = [[klass alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:className];
+        cell = [[[klass alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:className] autorelease];
     }
         
     return cell;

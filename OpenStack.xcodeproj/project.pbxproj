@@ -286,7 +286,6 @@
 		272BDA0914A0476D00F83775 /* RSDomainsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA0614A0476D00F83775 /* RSDomainsViewController.h */; };
 		272BDA0A14A0476D00F83775 /* RSDomainsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA0714A0476D00F83775 /* RSDomainsViewController.m */; };
 		272BDA0B14A0476D00F83775 /* RSDomainsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */; };
-		272BDA0C14A0485B00F83775 /* RSDomainsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA0614A0476D00F83775 /* RSDomainsViewController.h */; };
 		272BDA0D14A0485F00F83775 /* RSDomainsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA0714A0476D00F83775 /* RSDomainsViewController.m */; };
 		272BDA0E14A0486400F83775 /* RSDomainsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA0814A0476D00F83775 /* RSDomainsViewController.xib */; };
 		272BDA1114A07A4100F83775 /* cloud-dns-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA0F14A07A4100F83775 /* cloud-dns-icon.png */; };
@@ -294,7 +293,6 @@
 		272BDA1314A07A4100F83775 /* cloud-dns-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA1014A07A4100F83775 /* cloud-dns-icon@2x.png */; };
 		272BDA1414A07A4100F83775 /* cloud-dns-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 272BDA1014A07A4100F83775 /* cloud-dns-icon@2x.png */; };
 		272BDA1714A07CBE00F83775 /* RSAddDomainViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA1514A07CBE00F83775 /* RSAddDomainViewController.h */; };
-		272BDA1814A07CBE00F83775 /* RSAddDomainViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA1514A07CBE00F83775 /* RSAddDomainViewController.h */; };
 		272BDA1914A07CBE00F83775 /* RSAddDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA1614A07CBE00F83775 /* RSAddDomainViewController.m */; };
 		272BDA1A14A07CBE00F83775 /* RSAddDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 272BDA1614A07CBE00F83775 /* RSAddDomainViewController.m */; };
 		27300F0F12775D580082E457 /* UIColor+MoreColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 27300F0D12775D580082E457 /* UIColor+MoreColors.m */; };
@@ -371,7 +369,6 @@
 		2748E891152ACEA400C2D0CE /* RSDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748E88E152ACEA400C2D0CE /* RSDomainViewController.m */; };
 		2748E892152ACEA400C2D0CE /* RSDomainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748E88F152ACEA400C2D0CE /* RSDomainViewController.xib */; };
 		2748E894152AD07300C2D0CE /* RSDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2748E88E152ACEA400C2D0CE /* RSDomainViewController.m */; };
-		2748E895152AD08C00C2D0CE /* RSDomainViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2748E88D152ACEA400C2D0CE /* RSDomainViewController.h */; };
 		2748E896152AD09700C2D0CE /* RSDomainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2748E88F152ACEA400C2D0CE /* RSDomainViewController.xib */; };
 		27528797126F84E40024E553 /* ServerActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27528795126F84E40024E553 /* ServerActionViewController.m */; };
 		27528799126F84E40024E553 /* ServerActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27528795126F84E40024E553 /* ServerActionViewController.m */; };
@@ -862,7 +859,6 @@
 		27C0AF1E1535345B00070296 /* RSAddRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF1C1535345B00070296 /* RSAddRecordViewController.m */; };
 		27C0AF201535492C00070296 /* RSAddRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF1C1535345B00070296 /* RSAddRecordViewController.m */; };
 		27C0AF231535522E00070296 /* RSRecordTypeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF211535522D00070296 /* RSRecordTypeViewController.h */; };
-		27C0AF241535522E00070296 /* RSRecordTypeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF211535522D00070296 /* RSRecordTypeViewController.h */; };
 		27C0AF251535522E00070296 /* RSRecordTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF221535522D00070296 /* RSRecordTypeViewController.m */; };
 		27C0AF261535522E00070296 /* RSRecordTypeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C0AF221535522D00070296 /* RSRecordTypeViewController.m */; };
 		27C15CAA13A7C46A00A1BB9F /* Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 279754941256BA2100D7A533 /* Base64.m */; };
@@ -999,7 +995,6 @@
 		27DADC1713B94D6C00F9E906 /* LBNodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DADC1313B94D6B00F9E906 /* LBNodeViewController.m */; };
 		27DC5DD813CB8F0F00091902 /* LoadBalancerConnectionThrottle.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DC5DD613CB8F0F00091902 /* LoadBalancerConnectionThrottle.m */; };
 		27DC5DDA13CB925200091902 /* LoadBalancerConnectionThrottle.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DC5DD613CB8F0F00091902 /* LoadBalancerConnectionThrottle.m */; };
-		27DD4A211532B9F20029A0A7 /* RSRecordViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27199A4D152ED016004DBFF1 /* RSRecordViewController.h */; };
 		27DD4A231532B9F50029A0A7 /* RSRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27199A4E152ED016004DBFF1 /* RSRecordViewController.m */; };
 		27E6B5D812D9211C00EA623F /* MediaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E6B5D512D9211C00EA623F /* MediaViewController.m */; };
 		27E6B5D912D9211C00EA623F /* MediaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27E6B5D612D9211C00EA623F /* MediaViewController.xib */; };
@@ -1022,13 +1017,9 @@
 		27F4783314972750006B4AAF /* RSDNSJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4783114972750006B4AAF /* RSDNSJob.m */; };
 		27F47837149731A0006B4AAF /* DNSRequest.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F47835149731A0006B4AAF /* DNSRequest.h */; };
 		27F47838149731A0006B4AAF /* DNSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F47836149731A0006B4AAF /* DNSRequest.m */; };
-		27F478391497323C006B4AAF /* RSDomain.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782414972267006B4AAF /* RSDomain.h */; };
 		27F4783A1497323C006B4AAF /* RSDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782514972267006B4AAF /* RSDomain.m */; };
-		27F4783B1497323C006B4AAF /* RSRecord.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782C14972286006B4AAF /* RSRecord.h */; };
 		27F4783C1497323C006B4AAF /* RSRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4782D14972286006B4AAF /* RSRecord.m */; };
-		27F4783D1497323C006B4AAF /* RSDNSJob.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F4783014972750006B4AAF /* RSDNSJob.h */; };
 		27F4783E1497323C006B4AAF /* RSDNSJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F4783114972750006B4AAF /* RSDNSJob.m */; };
-		27F4783F14973247006B4AAF /* DNSRequest.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F47835149731A0006B4AAF /* DNSRequest.h */; };
 		27F4784014973247006B4AAF /* DNSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F47836149731A0006B4AAF /* DNSRequest.m */; };
 		27F73E05125F73B2002C6CB0 /* ServersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F73E02125F73B2002C6CB0 /* ServersViewController.m */; };
 		27F73E06125F73B2002C6CB0 /* ServersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27F73E03125F73B2002C6CB0 /* ServersViewController.xib */; };
@@ -4440,24 +4431,15 @@
 				2726C64F13B28D1000BC7330 /* ConfigureLoadBalancerViewController.m in Sources */,
 				27DADC1713B94D6C00F9E906 /* LBNodeViewController.m in Sources */,
 				27DC5DDA13CB925200091902 /* LoadBalancerConnectionThrottle.m in Sources */,
-				27F478391497323C006B4AAF /* RSDomain.h in Sources */,
 				27F4783A1497323C006B4AAF /* RSDomain.m in Sources */,
-				27F4783B1497323C006B4AAF /* RSRecord.h in Sources */,
 				27F4783C1497323C006B4AAF /* RSRecord.m in Sources */,
-				27F4783D1497323C006B4AAF /* RSDNSJob.h in Sources */,
 				27F4783E1497323C006B4AAF /* RSDNSJob.m in Sources */,
-				27F4783F14973247006B4AAF /* DNSRequest.h in Sources */,
 				27F4784014973247006B4AAF /* DNSRequest.m in Sources */,
-				272BDA0C14A0485B00F83775 /* RSDomainsViewController.h in Sources */,
 				272BDA0D14A0485F00F83775 /* RSDomainsViewController.m in Sources */,
-				272BDA1814A07CBE00F83775 /* RSAddDomainViewController.h in Sources */,
 				272BDA1A14A07CBE00F83775 /* RSAddDomainViewController.m in Sources */,
 				2748E894152AD07300C2D0CE /* RSDomainViewController.m in Sources */,
-				2748E895152AD08C00C2D0CE /* RSDomainViewController.h in Sources */,
-				27DD4A211532B9F20029A0A7 /* RSRecordViewController.h in Sources */,
 				27DD4A231532B9F50029A0A7 /* RSRecordViewController.m in Sources */,
 				27C0AF201535492C00070296 /* RSAddRecordViewController.m in Sources */,
-				27C0AF241535522E00070296 /* RSRecordTypeViewController.h in Sources */,
 				27C0AF261535522E00070296 /* RSRecordTypeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

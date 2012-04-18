@@ -8,18 +8,8 @@
 
 #import "RSRecordViewController.h"
 #import "RSRecord.h"
-
-typedef enum {
-    RSRecordNameRow,
-    RSRecordTypeRow,
-    RSRecordDataRow,
-    RSRecordMoreInfoRow,
-    RSRecordNumberOfRows
-} RSRecordRowType;
-
-@interface RSRecordViewController ()
-
-@end
+#import "UIViewController+Conveniences.h"
+#import "AccountManager.h"
 
 @implementation RSRecordViewController
 
@@ -27,83 +17,65 @@ typedef enum {
 
 - (id)initWithRecord:(RSRecord *)aRecord domain:(RSDomain *)aDomain account:(OpenStackAccount *)anAccount {
     
-    self = [self initWithStyle:UITableViewStyleGrouped];
+    self = [super initWithAccount:anAccount domain:aDomain];
     if (self) {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         self.record = aRecord;
-        self.domain = aDomain;
-        self.account = anAccount;
     }
     return self;
     
 }
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
-    
     self.navigationItem.title = @"Record";
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return RSRecordNumberOfRows;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
-    }
     
-    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    [super tableView:self.tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
+    self.nameTextField.text = self.record.name;
+    self.nameTextField.enabled = NO;
+    self.dataTextField.text = self.record.data;
+    self.ttlTextField.text = [self.record.ttl description];
+    self.priorityTextField.text = self.record.priority;
     
-    switch (indexPath.row) {
-        case RSRecordNameRow:
-            cell.textLabel.text = @"Name";
-            cell.detailTextLabel.text = self.record.name;
-            break;            
-        case RSRecordTypeRow:
-            cell.textLabel.text = @"Type";
-            cell.detailTextLabel.text = self.record.type;
-            break;            
-        case RSRecordDataRow:
-            cell.textLabel.text = @"Data";
-            cell.detailTextLabel.text = self.record.data;
-            break;            
-        case RSRecordMoreInfoRow:
-            cell.textLabel.text = @"More Info";
-            cell.detailTextLabel.text = @"";
-            break;            
-        default:
-            break;
-    }
-        
 }
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)saveButtonPressed:(id)sender {
+    
+    if (![super isValid]) {
+        
+        [self alert:@"Error" message:@"Please fill out all fields."];
+        
+    } else {
+        
+        self.record.type = self.recordType;
+        self.record.data = self.dataTextField.text;
+        
+        if (self.priorityTextField.text && ![self.priorityTextField.text isEqualToString:@""]) {
+            self.record.priority = self.priorityTextField.text;
+        }
+        
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        self.record.ttl = [formatter numberFromString:self.ttlTextField.text];
+        [formatter release];        
+        
+        [[self.account.manager updateRecord:record domain:self.domain] success:^(OpenStackRequest *request) {
+                        
+        } failure:^(OpenStackRequest *request) {
+            
+            [self alert:@"There was a problem creating this record." request:request];
+            
+        }];
+        
+    }
+    
 }
 
 - (void)dealloc {
-    [account release];
-    [domain release];
     [record release];
     [super dealloc];
 }
