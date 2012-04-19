@@ -80,31 +80,29 @@
 - (NSString *)toJSON {
     
     NSString *json
-        = @"{ \"domains\" : [ {"
+        = @"{"
         "    \"name\" : \"<name>\","
         "    \"ttl\" : <ttl>,"
         "    \"emailAddress\" : \"<email>\""
-        "} ] }";
+        "}";
     json = [json replace:@"<name>" with:self.name];
     json = [json replace:@"<ttl>" with:self.ttl];
     json = [json replace:@"<email>" with:self.emailAddress];
     return json;
+        
+}
+
+- (NSString *)toUpdateJSON {
     
+    NSString *json
+    = @"{"
+    "    \"ttl\" : <ttl>,"
+    "    \"emailAddress\" : \"<email>\""
+    "}";
+    json = [json replace:@"<ttl>" with:self.ttl];
+    json = [json replace:@"<email>" with:self.emailAddress];
+    return json;
     
-    /*
-{ "domains" : [ {
-    "name" : "example.com",
-    "comment" : "Optional domain comment...",
-    "recordsList" : {
-    "records" : []
-    },
-    "subdomains" : {
-    "domains" : []
-    },
-    "ttl" : 3600,
-    "emailAddress" : "sample@rackspace.com"
-} ] }
-     */
 }
 
 @end

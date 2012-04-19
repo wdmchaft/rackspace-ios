@@ -55,7 +55,7 @@
 
 + (DNSRequest *)createDomainRequest:(OpenStackAccount *)account domain:(RSDomain *)domain {
     
-	NSString *body = [domain toJSON];
+	NSString *body = [NSString stringWithFormat:@"{ \"domains\" : [ %@ ] }", [domain toJSON]];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/domains", account.dnsURL]];
     NSLog(@"create domain: %@", body);
     DNSRequest *request = [OpenStackRequest request:account method:@"POST" url:url];    
@@ -66,7 +66,15 @@
 }
 
 + (DNSRequest *)updateDomainRequest:(OpenStackAccount *)account domain:(RSDomain *)domain {
-    return nil;
+
+	NSString *body = [domain toUpdateJSON];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/domains/%@", account.dnsURL, domain.identifier]];
+    NSLog(@"update domain: %@", body);
+    DNSRequest *request = [OpenStackRequest request:account method:@"PUT" url:url];
+	NSData *data = [body dataUsingEncoding:NSUTF8StringEncoding];
+	[request setPostBody:[NSMutableData dataWithData:data]];
+	return request;
+
 }
 
 + (DNSRequest *)deleteDomainRequest:(OpenStackAccount *)account domain:(RSDomain *)domain {

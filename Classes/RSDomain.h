@@ -10,18 +10,19 @@
 
 @interface RSDomain : NSObject
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *identifier;
-@property (nonatomic, strong) NSString *comment;
-@property (nonatomic, strong) NSString *accountId;
-@property (nonatomic, strong) NSString *emailAddress;
-@property (nonatomic, strong) NSDate *updated;
-@property (nonatomic, strong) NSDate *created;
-@property (nonatomic, strong) NSString *ttl;
-@property (nonatomic, strong) NSMutableArray *nameservers;
-@property (nonatomic, strong) NSMutableArray *records;
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *identifier;
+@property (nonatomic, retain) NSString *comment;
+@property (nonatomic, retain) NSString *accountId;
+@property (nonatomic, retain) NSString *emailAddress;
+@property (nonatomic, retain) NSDate *updated;
+@property (nonatomic, retain) NSDate *created;
+@property (nonatomic, retain) NSString *ttl;
+@property (nonatomic, retain) NSMutableArray *nameservers;
+@property (nonatomic, retain) NSMutableArray *records;
 
 + (RSDomain *)fromJSON:(NSDictionary *)dict;
 - (NSString *)toJSON;
+- (NSString *)toUpdateJSON;
 
 @end

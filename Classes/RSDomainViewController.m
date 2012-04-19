@@ -104,7 +104,8 @@ typedef enum {
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.tableView reloadData];    [self loadDomain];
+    [self.tableView reloadData];    
+    [self loadDomain];
 }
 
 #pragma mark - Table View Data Source and Delegate
@@ -166,11 +167,12 @@ typedef enum {
     
     if (indexPath.section == RSDomainOverviewSection) {
         
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         if (indexPath.row == RSDomainOverviewNameRow) {
             
             cell.textLabel.text = @"Domain Name";
             cell.detailTextLabel.text = self.domain.name;
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
         } else if (indexPath.row == RSDomainOverviewContactRow) {
             
@@ -282,6 +284,38 @@ typedef enum {
 }
 
 #pragma mark - Text Field Delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    __block NSString *email = [[NSString stringWithString:self.domain.emailAddress] retain];
+    __block NSString *ttl = [[NSString stringWithString:self.domain.ttl] retain];
+    
+    self.domain.emailAddress = self.contactTextField.text;
+    self.domain.ttl = self.ttlTextField.text;
+    
+    [[self.account.manager updateDomain:self.domain] success:^(OpenStackRequest *request) {
+        
+        [email release];
+        [ttl release];
+        
+    } failure:^(OpenStackRequest *request) {
+        
+        [self alert:@"There was a problem updating this domain." request:request];
+        self.domain.emailAddress = email;
+        self.domain.ttl = ttl;
+        self.contactTextField.text = email;
+        self.ttlTextField.text = ttl;
+        
+        [email release];
+        [ttl release];
+        
+        
+    }];
+    
+    [textField resignFirstResponder];
+    
+    return NO;
+}
 
 #pragma mark - Button Handlers
 
