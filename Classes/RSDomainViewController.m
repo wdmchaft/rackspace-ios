@@ -111,7 +111,8 @@ typedef enum {
 #pragma mark - Table View Data Source and Delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.isLoading ? 1 : RSDomainNumberOfSections;
+//    return self.isLoading ? 1 : RSDomainNumberOfSections;
+    return RSDomainNumberOfSections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

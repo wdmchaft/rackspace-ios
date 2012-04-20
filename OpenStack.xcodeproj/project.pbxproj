@@ -836,6 +836,9 @@
 		27B1BBC2146C32B700FAC8E5 /* GANTracker.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B1BBC0146C32B700FAC8E5 /* GANTracker.h */; };
 		27B1BBC3146C32B700FAC8E5 /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B1BBC1146C32B700FAC8E5 /* libGoogleAnalytics.a */; };
 		27B1BBC4146C32C000FAC8E5 /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B1BBC1146C32B700FAC8E5 /* libGoogleAnalytics.a */; };
+		27B608DC15412AFB00EAFA22 /* RSIPAddressesViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B608DA15412AFB00EAFA22 /* RSIPAddressesViewController.h */; };
+		27B608DD15412AFB00EAFA22 /* RSIPAddressesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B608DB15412AFB00EAFA22 /* RSIPAddressesViewController.m */; };
+		27B608DE15412B0200EAFA22 /* RSIPAddressesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B608DB15412AFB00EAFA22 /* RSIPAddressesViewController.m */; };
 		27B8ECCC132FC8BD00A1EE08 /* puppet_plugin_client_template in Resources */ = {isa = PBXBuildFile; fileRef = 27B8ECC9132FC8BD00A1EE08 /* puppet_plugin_client_template */; };
 		27B8ECCD132FC8BD00A1EE08 /* puppet_plugin_client_template in Resources */ = {isa = PBXBuildFile; fileRef = 27B8ECC9132FC8BD00A1EE08 /* puppet_plugin_client_template */; };
 		27B8ECCE132FC8BD00A1EE08 /* puppet_plugin_crontab in Resources */ = {isa = PBXBuildFile; fileRef = 27B8ECCA132FC8BD00A1EE08 /* puppet_plugin_crontab */; };
@@ -1513,6 +1516,8 @@
 		27B0A1D81278047900A31CED /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		27B1BBC0146C32B700FAC8E5 /* GANTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = GANTracker.h; sourceTree = "<group>"; };
 		27B1BBC1146C32B700FAC8E5 /* libGoogleAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalytics.a; sourceTree = "<group>"; };
+		27B608DA15412AFB00EAFA22 /* RSIPAddressesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.objj.h; path = RSIPAddressesViewController.h; sourceTree = "<group>"; };
+		27B608DB15412AFB00EAFA22 /* RSIPAddressesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSIPAddressesViewController.m; sourceTree = "<group>"; };
 		27B8ECC9132FC8BD00A1EE08 /* puppet_plugin_client_template */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = puppet_plugin_client_template; sourceTree = "<group>"; };
 		27B8ECCA132FC8BD00A1EE08 /* puppet_plugin_crontab */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = puppet_plugin_crontab; sourceTree = "<group>"; };
 		27B8ECCB132FC8BD00A1EE08 /* puppet_plugin_install_script */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = puppet_plugin_install_script; sourceTree = "<group>"; };
@@ -2026,6 +2031,8 @@
 				27C0AF1C1535345B00070296 /* RSAddRecordViewController.m */,
 				27C0AF211535522D00070296 /* RSRecordTypeViewController.h */,
 				27C0AF221535522D00070296 /* RSRecordTypeViewController.m */,
+				27B608DA15412AFB00EAFA22 /* RSIPAddressesViewController.h */,
+				27B608DB15412AFB00EAFA22 /* RSIPAddressesViewController.m */,
 			);
 			name = DNS;
 			sourceTree = "<group>";
@@ -4278,6 +4285,8 @@
 				27C0AF1E1535345B00070296 /* RSAddRecordViewController.m in Sources */,
 				27C0AF231535522E00070296 /* RSRecordTypeViewController.h in Sources */,
 				27C0AF251535522E00070296 /* RSRecordTypeViewController.m in Sources */,
+				27B608DC15412AFB00EAFA22 /* RSIPAddressesViewController.h in Sources */,
+				27B608DD15412AFB00EAFA22 /* RSIPAddressesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4441,6 +4450,7 @@
 				27DD4A231532B9F50029A0A7 /* RSRecordViewController.m in Sources */,
 				27C0AF201535492C00070296 /* RSAddRecordViewController.m in Sources */,
 				27C0AF261535522E00070296 /* RSRecordTypeViewController.m in Sources */,
+				27B608DE15412B0200EAFA22 /* RSIPAddressesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

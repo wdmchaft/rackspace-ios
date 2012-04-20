@@ -11,6 +11,7 @@
 #import "RSTextFieldCell.h"
 #import "RSRecord.h"
 #import "AccountManager.h"
+#import "RSIPAddressesViewController.h"
 
 typedef enum {
     RSRecordNameRow,
@@ -27,7 +28,7 @@ typedef enum {
 
 @implementation RSAddRecordViewController
 
-@synthesize account, domain, nameTextField, dataTextField, ttlTextField, priorityTextField, recordType;
+@synthesize account, domain, nameTextField, dataTextField, ttlTextField, priorityTextField, recordType, dataToolbar;
 
 - (id)initWithAccount:(OpenStackAccount *)anAccount domain:(RSDomain *)aDomain {
     self = [super initWithStyle:UITableViewStyleGrouped];
@@ -48,7 +49,7 @@ typedef enum {
     if (!self.recordType) {
         self.recordType = [[RSRecord recordTypes] objectAtIndex:0];
     }
-
+    
 }
 
 #pragma mark - Table view data source
@@ -141,12 +142,101 @@ typedef enum {
     
 }
 
+- (void)configureToolbar {
+    
+    if (!self.dataToolbar) {
+    
+        CGRect start = CGRectMake(0, 460, 320, 44);
+        CGRect end = CGRectMake(0, 156, 320, 44);
+        
+        self.dataToolbar = [[UIToolbar alloc] initWithFrame:start];
+        self.dataToolbar.barStyle = UIBarStyleBlack;
+        self.dataToolbar.translucent = YES;
+        
+        UIBarButtonItem *ipButton = [[UIBarButtonItem alloc] initWithTitle:@"Cloud Server IPs" style:UIBarButtonItemStyleBordered target:self action:@selector(ipButtonPressed:)];
+        UIBarButtonItem *domainButton = [[UIBarButtonItem alloc] initWithTitle:[NSString stringWithFormat:@"%@", self.domain.name] style:UIBarButtonItemStyleBordered target:self action:@selector(domainButtonPressed:)];
+        UIBarButtonItem	*flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonPressed:)];
+        
+        self.dataToolbar.items = [NSArray arrayWithObjects:ipButton, domainButton, flexibleSpace, doneButton, nil];
+        
+        [self.tableView addSubview:self.dataToolbar];
+        
+        [UIView animateWithDuration:0.35 animations:^{
+            
+            self.dataToolbar.frame = end;
+            self.tableView.scrollEnabled = NO;
+            
+        }];
+        
+    }
+    
+}
+
+- (void)hideDataToolbar {
+    
+    CGRect start = CGRectMake(0, 460, 320, 44);
+    
+    [UIView animateWithDuration:0.25 delay:0 options:0 animations:^{
+        
+        self.dataToolbar.frame = start;
+        self.tableView.scrollEnabled = YES;
+        
+    } completion:^(BOOL finished) {
+        
+        [self.dataToolbar removeFromSuperview];
+        self.dataToolbar = nil;
+        
+    }];
+
+}
+
+- (void)doneButtonPressed:(id)sender {
+    
+    [self.dataTextField resignFirstResponder];
+    [self hideDataToolbar];
+    
+}
+
+- (void)ipButtonPressed:(id)sender {
+    
+    RSIPAddressesViewController *vc = [[RSIPAddressesViewController alloc] initWithDelegate:self account:self.account];
+    [self presentModalViewControllerWithNavigation:vc];
+    [vc release];
+    
+}
+
+- (void)domainButtonPressed:(id)sender {
+    
+    NSString *string = [NSString stringWithFormat:@"%@%@", self.dataTextField.text, self.domain.name];
+    self.dataTextField.text = string;
+    [self.dataTextField resignFirstResponder];
+    [self hideDataToolbar];
+    
+}
+
+- (void)ipAddressesViewController:(RSIPAddressesViewController *)viewController didSelectIPAddress:(NSString *)ipAddress {
+    
+    self.dataTextField.text = ipAddress;
+    [self.dataTextField resignFirstResponder];
+    [self hideDataToolbar];    
+    
+}
+
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     
     self.ttlTextField.keyboardType = UIKeyboardTypeNumberPad;
     self.priorityTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    if ([textField isEqual:self.dataTextField]) {
+        
+        // show the toolbar for the data text field
+        [self configureToolbar];
+        
+    }
+             
     
     return YES;
     
@@ -228,6 +318,7 @@ typedef enum {
     [dataTextField release];
     [ttlTextField release];
     [priorityTextField release];
+    [dataToolbar release];
     [super dealloc];
 }
 

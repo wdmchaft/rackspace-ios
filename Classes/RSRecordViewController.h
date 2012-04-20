@@ -11,7 +11,7 @@
 
 @class OpenStackAccount, RSDomain, RSRecord;
 
-@interface RSRecordViewController : RSAddRecordViewController // UITableViewController
+@interface RSRecordViewController : RSAddRecordViewController
 
 @property (nonatomic, retain) RSRecord *record;
 

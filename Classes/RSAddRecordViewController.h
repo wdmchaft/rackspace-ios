@@ -21,6 +21,8 @@
 @property (nonatomic, retain) UITextField *priorityTextField;
 @property (nonatomic, retain) NSString *recordType;
 
+@property (nonatomic, retain) UIToolbar *dataToolbar;
+
 - (id)initWithAccount:(OpenStackAccount *)account domain:(RSDomain *)domain;
 
 - (BOOL)isValid;

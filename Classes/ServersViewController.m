@@ -190,9 +190,9 @@
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)aTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {    
-    if ([account.servers count] == 0 && serversLoaded) {
+    if ([self.account.servers count] == 0 && serversLoaded) {
         return [self tableView:tableView emptyCellWithImage:[UIImage imageNamed:@"empty-servers.png"] title:@"No Servers" subtitle:@"Tap the + button to create a new Cloud Server"];
-    } else if ([account.servers count] == 0) {
+    } else if ([self.account.servers count] == 0) {
         return nil; // there will be no cells present while loading
     } else {
         static NSString *CellIdentifier = @"Cell";
