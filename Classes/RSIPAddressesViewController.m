@@ -45,8 +45,6 @@
     
     self.ipAddresses = [[NSMutableArray alloc] init];
     
-//    for (LoadBalancer
-    
     for (Server *server in [self.account sortedServers]) {
         
         NSArray *publicIPs = [server.addresses objectForKey:@"public"];        
